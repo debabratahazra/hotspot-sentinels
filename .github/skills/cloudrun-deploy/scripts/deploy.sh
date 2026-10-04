@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Build, push, and deploy the HotSpot Sentinels backend to Cloud Run, then verify it.
+# Build, push and deploy both HotSpot Sentinels services to Cloud Run, then verify
+# each one separately.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
@@ -23,22 +24,22 @@ echo "  region  : $REGION"
 echo "  service : $SERVICE"
 echo "  image   : $IMAGE"
 
-log "1/5 Artifact Registry repository"
+log "1/7 Artifact Registry repository"
 if ! gcloud artifacts repositories describe "$REPO" --location="$REGION" --project="$PROJECT" >/dev/null 2>&1; then
   gcloud artifacts repositories create "$REPO" \
     --repository-format=docker --location="$REGION" --project="$PROJECT"
 fi
 gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 
-log "2/5 Build (context = backend/ so the Dockerfile's COPY paths resolve)"
+log "2/7 Build backend (context = backend/ so the Dockerfile's COPY paths resolve)"
 # Cloud Run only runs linux/amd64. Without this pin an Apple-silicon host pushes an
 # arm64 image and the revision fails with "Container manifest type must support amd64/linux".
 docker build --platform linux/amd64 -f backend/Dockerfile -t "$IMAGE" backend
 
-log "3/5 Push"
+log "3/7 Push backend"
 docker push "$IMAGE"
 
-log "4/5 Deploy"
+log "4/7 Deploy backend"
 # BIGQUERY_LOCATION is the one ratified exception to asia-southeast1: the NOAA GSOD
 # public dataset is US multi-region and a cross-location job fails.
 # GOOGLE_MAPS_API_KEY is injected at runtime only and never baked into the image.
@@ -54,13 +55,42 @@ gcloud run deploy "$SERVICE" \
 URL="$(gcloud run services describe "$SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.url)')"
 REVISION="$(gcloud run services describe "$SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.latestReadyRevisionName)')"
 
-log "5/5 Verify"
+log "5/7 Verify backend"
 if curl -fsS "${URL}/api/health" >/dev/null; then
-  echo "health OK"
+  echo "backend health OK"
 else
-  echo "HEALTH CHECK FAILED — recent logs:" >&2
+  echo "BACKEND HEALTH CHECK FAILED — recent logs:" >&2
   gcloud run services logs read "$SERVICE" --region "$REGION" --project "$PROJECT" --limit 30 >&2 || true
   exit 1
 fi
 
-printf '\nDEPLOYED\n  url      : %s\n  revision : %s\n  image    : %s\n' "$URL" "$REVISION" "$IMAGE"
+# The frontend is deployed and verified separately and on purpose. BUG-026 hid for
+# three sprints because every container proof targeted the backend only, while the
+# deployed dashboard was down: buildpacks had booted Streamlit under gunicorn and
+# streamlit was not even installed.
+log "6/7 Build, push and deploy frontend"
+FRONTEND_SERVICE="${FRONTEND_SERVICE_NAME:-hotspot-frontend}"
+FRONTEND_IMAGE="${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/${FRONTEND_SERVICE}:${TAG}"
+docker build --platform linux/amd64 -f frontend/Dockerfile -t "$FRONTEND_IMAGE" frontend
+docker push "$FRONTEND_IMAGE"
+gcloud run deploy "$FRONTEND_SERVICE" \
+  --image "$FRONTEND_IMAGE" \
+  --project "$PROJECT" \
+  --region "$REGION" \
+  --port 8080 \
+  --set-env-vars "API_BASE_URL=${URL}"
+
+FRONTEND_URL="$(gcloud run services describe "$FRONTEND_SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.url)')"
+FRONTEND_REVISION="$(gcloud run services describe "$FRONTEND_SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.latestReadyRevisionName)')"
+
+log "7/7 Verify frontend"
+if curl -fsS "${FRONTEND_URL}/_stcore/health" >/dev/null; then
+  echo "frontend health OK"
+else
+  echo "FRONTEND HEALTH CHECK FAILED — recent logs:" >&2
+  gcloud run services logs read "$FRONTEND_SERVICE" --region "$REGION" --project "$PROJECT" --limit 30 >&2 || true
+  exit 1
+fi
+
+printf '\nDEPLOYED\n  backend  : %s\n             revision %s\n             image    %s\n  frontend : %s\n             revision %s\n             image    %s\n' \
+  "$URL" "$REVISION" "$IMAGE" "$FRONTEND_URL" "$FRONTEND_REVISION" "$FRONTEND_IMAGE"

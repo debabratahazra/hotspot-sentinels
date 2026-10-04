@@ -2770,7 +2770,7 @@
       ],
       "priority": "P1",
       "estimate": 3,
-      "status": "todo",
+      "status": "done",
       "sprint": null,
       "files": [
         "tests/test_deploy_script.py",
@@ -2778,7 +2778,7 @@
       ],
       "source": "retro",
       "created": "2026-10-04T12:45:00+00:00",
-      "updated": "2026-10-04T12:45:00+00:00"
+      "updated": "2026-10-04T18:12:20+00:00"
     },
     {
       "id": "TASK-039",
@@ -3146,7 +3146,7 @@
       ],
       "priority": "P1",
       "estimate": 2,
-      "status": "new",
+      "status": "done",
       "sprint": null,
       "files": [
         "frontend/Dockerfile",
@@ -3155,7 +3155,7 @@
       ],
       "source": "retro",
       "created": "2026-10-04T11:19:30+00:00",
-      "updated": "2026-10-04T11:19:30+00:00"
+      "updated": "2026-10-04T18:12:20+00:00"
     },
     {
       "id": "TASK-052",
