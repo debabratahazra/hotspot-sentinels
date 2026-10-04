@@ -37,10 +37,18 @@ Grant the runtime service account exactly these, and nothing broader:
 | Gemini via Vertex AI     | `roles/aiplatform.user`      |
 | Firestore                | `roles/datastore.user`       |
 | Pub/Sub alerts           | `roles/pubsub.publisher`     |
+| Pub/Sub readiness probe  | `roles/pubsub.viewer`        |
 | BigQuery climate queries | `roles/bigquery.jobUser`     |
 | GCS sample reads         | `roles/storage.objectViewer` |
 
-Prefer a dedicated service account over the default Compute Engine one. Never grant `roles/owner` or `roles/editor` to clear a 403 — the hook blocks that anyway.
+`roles/pubsub.viewer` is required in addition to `publisher` because `/api/health`
+calls `get_topic`, and `publisher` grants only `pubsub.topics.publish`. Without it
+the service answers `degraded` with `pubsub: unavailable` while publishing still
+works. Verified on 2026-10-04.
+
+The runtime account is `hotspot-run@PROJECT.iam.gserviceaccount.com`. Prefer it over
+the default Compute Engine account, which carries `roles/editor`. Never grant
+`roles/owner` or `roles/editor` to clear a 403 — the hook blocks that anyway.
 
 ## Verify
 

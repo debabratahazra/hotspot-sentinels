@@ -105,6 +105,7 @@ model, not hardcoded, so treat them as highly likely rather than guaranteed.
 | Analysis exceeds ~30 s | Cold start. Run one throwaway analysis first, then record. |
 | `/api/health` reports `degraded` | Read which dependency is down. Analysis still works if `gemini` is ready; climate falls back to 38.5 °C and the UI labels it as a fallback. |
 | Coordinate returns 502 | That coordinate has no cached image. Use the other scenario and warm the failing one again. |
+| Analysis returns 502 | The model occasionally returns a payload that fails schema validation; one run in four did so on 2026-10-04. The backend correctly refuses it rather than showing a malformed report. Simply run it again — two immediate retries both succeeded. Do a throwaway run before recording so a retry is not your opening shot. |
 | Score differs from the table | Not a failure — the model re-reads the image. Narrate the score actually shown; the band is what matters. |
 | Dashboard unreachable | Check the frontend revision is serving: `gcloud run services describe hotspot-frontend --region asia-southeast1`. |
 
