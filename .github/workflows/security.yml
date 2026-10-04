@@ -1,0 +1,33 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# `pull_request` (not `pull_request_target`) means fork pull requests run with a
+# read-only token and no secrets, so an untrusted branch cannot exfiltrate one.
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: a credential removed from the working tree can still be
+          # present in an earlier commit of a public repository.
+          fetch-depth: 0
+
+      # --redact replaces any finding's value with REDACTED, so a real leak fails
+      # the check without republishing the secret in logs or annotations.
+      - name: Scan the working tree and history for secrets
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.21.2 \
+            detect --source=/repo --redact --no-banner --exit-code 1

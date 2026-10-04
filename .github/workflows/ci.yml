@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Fork pull requests run with a read-only token and receive no secrets (NFR-17).
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.12.3"
+
+jobs:
+  test:
+    name: Offline suite and coverage floor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install the locked environment
+        run: uv sync --locked --group dev --group frontend
+
+      # No cloud credentials are configured for this job. tests/conftest.py clears
+      # credentials, denies sockets, and refuses real GenAI/Firestore/Pub-Sub/
+      # BigQuery/Storage clients, so the suite cannot silently reach a live service.
+      - name: Run the offline suite with coverage
+        run: |
+          uv run python -m pytest -o addopts='' -q \
+            --cov-config=tests/coverage.ini --cov=backend \
+            --cov-report=term-missing --cov-report=json:coverage.json
+
+      - name: Enforce the 70 percent per-file coverage floor
+        run: |
+          uv run python -c "
+          import json, sys
+          data = json.load(open('coverage.json'))
+          print('total coverage:', round(data['totals']['percent_covered'], 1), '%')
+          below = {path: round(entry['summary']['percent_covered'], 1)
+                   for path, entry in data['files'].items()
+                   if entry['summary']['percent_covered'] < 70}
+          for path, percent in sorted(below.items()):
+              print(f'::error file={path}::{path} is {percent}% covered, below the 70% floor')
+          sys.exit(1 if below else 0)
+          "
+
+  exports:
+    name: Generated dependency exports are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      # pyproject.toml and uv.lock are authoritative; all three exports are generated.
+      - name: Regenerate every export
+        run: |
+          uv export --locked --group frontend --group dev --no-hashes --no-emit-project --output-file requirements.txt
+          uv export --locked --no-dev --no-hashes --no-emit-project --output-file backend/requirements.txt
+          uv export --locked --no-hashes --only-group frontend -o frontend/requirements.txt
+
+      - name: Fail when a committed export is stale
+        run: |
+          if ! git diff --exit-code -- requirements.txt backend/requirements.txt frontend/requirements.txt; then
+            echo "::error::A committed requirements export is stale. Re-run the uv export commands from this job and commit the result."
+            exit 1
+          fi
+          echo "All three exports match pyproject.toml and uv.lock."
+
+  image:
+    # Separate matrix jobs report independently, so a passing backend image can
+    # never mask a failing frontend image (this is how BUG-026 stayed hidden).
+    name: Build ${{ matrix.service }} image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Cloud Run only runs linux/amd64; an arm64 image is rejected at deploy time.
+      - name: Build the ${{ matrix.service }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.service }}
+          file: ${{ matrix.service }}/Dockerfile
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: hotspot-${{ matrix.service }}:ci
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}

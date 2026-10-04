@@ -1,7 +1,7 @@
 {
   "version": 1,
   "product": "HotSpot Sentinels",
-  "current_sprint": 7,
+  "current_sprint": 8,
   "sprints": [
     {
       "number": 1,
@@ -382,6 +382,20 @@
         "TEST-002"
       ],
       "carried_over": []
+    },
+    {
+      "number": 8,
+      "goal": "Every change to the public repository is automatically tested, coverage-gated, secret-scanned, and proven to build both Cloud Run images",
+      "capacity": 10,
+      "committed": [
+        "STORY-038",
+        "STORY-039",
+        "STORY-040",
+        "STORY-041"
+      ],
+      "started": "2026-10-04T12:59:25+00:00",
+      "closed": null,
+      "retro": null
     }
   ],
   "items": [
@@ -3219,8 +3233,8 @@
       ],
       "priority": "P2",
       "estimate": 3,
-      "status": "new",
-      "sprint": null,
+      "status": "in_sprint",
+      "sprint": 8,
       "files": [
         ".github/workflows/ci.yml",
         "pyproject.toml",
@@ -3228,7 +3242,7 @@
       ],
       "source": "requirements",
       "created": "2026-10-04T12:10:52+00:00",
-      "updated": "2026-10-04T12:11:10+00:00"
+      "updated": "2026-10-04T12:59:25+00:00"
     },
     {
       "id": "STORY-039",
@@ -3243,8 +3257,8 @@
       ],
       "priority": "P2",
       "estimate": 2,
-      "status": "new",
-      "sprint": null,
+      "status": "in_sprint",
+      "sprint": 8,
       "files": [
         ".github/workflows/ci.yml",
         "pyproject.toml",
@@ -3255,7 +3269,7 @@
       ],
       "source": "requirements",
       "created": "2026-10-04T12:11:31+00:00",
-      "updated": "2026-10-04T12:11:31+00:00"
+      "updated": "2026-10-04T12:59:25+00:00"
     },
     {
       "id": "STORY-040",
@@ -3271,8 +3285,8 @@
       ],
       "priority": "P2",
       "estimate": 3,
-      "status": "new",
-      "sprint": null,
+      "status": "in_sprint",
+      "sprint": 8,
       "files": [
         ".github/workflows/ci.yml",
         "backend/Dockerfile",
@@ -3280,7 +3294,7 @@
       ],
       "source": "requirements",
       "created": "2026-10-04T12:11:37+00:00",
-      "updated": "2026-10-04T12:11:37+00:00"
+      "updated": "2026-10-04T12:59:25+00:00"
     },
     {
       "id": "STORY-041",
@@ -3295,14 +3309,14 @@
       ],
       "priority": "P2",
       "estimate": 2,
-      "status": "new",
-      "sprint": null,
+      "status": "in_sprint",
+      "sprint": 8,
       "files": [
         ".github/workflows/security.yml"
       ],
       "source": "requirements",
       "created": "2026-10-04T12:11:44+00:00",
-      "updated": "2026-10-04T12:11:44+00:00"
+      "updated": "2026-10-04T12:59:25+00:00"
     },
     {
       "id": "STORY-042",

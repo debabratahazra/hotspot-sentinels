@@ -150,7 +150,7 @@ The IDs and titles below are those returned by `python3 .github/skills/agile-sdl
 | EPIC-008 | Quality Assurance and Test Coverage         | [E8]            |
 | EPIC-009 | Demo, Documentation and Submission          | [E9]            |
 | EPIC-010 | Coordinate-Based Maps Imagery               | [R]             |
-| EPIC-011 | GitHub Actions CI/CD and Release Automation | [R]              |
+| EPIC-011 | GitHub Actions CI/CD and Release Automation | [R]             |
 
 **Coverage:** 39/39 functional requirements map to exactly one epic; 11/11 epics receive at least one functional requirement; no FR or epic is uncovered. The 17 non-functional requirements apply across their cited scopes. OQ-1, OQ-3, OQ-4, OQ-6 and OQ-7 are resolved; OQ-2 and OQ-5 remain unresolved decisions for their affected items, so the full Phase 0 exit remains conditional on those answers.
 
