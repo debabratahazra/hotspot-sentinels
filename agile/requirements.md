@@ -39,6 +39,12 @@ Enable urban analysts and city planners to identify heat-island hotspots from ae
 31. **FR-31 — Retain scan imagery:** Persist uploaded aerial crops and generated heatmaps to `GCS_BUCKET_NAME` under deterministic object prefixes with their stored object URIs in the persisted scan record, logging storage failures safely and continuing analysis without claiming successful object storage. ([G], §2; resolved OQ-3, 2026-10-02; NFR-5, NFR-7 and NFR-14)
 32. **FR-32 — Analyse Maps imagery by coordinate:** Accept a valid latitude and longitude instead of an uploaded file, fetch satellite imagery from the Maps Static API on the backend, and analyse it through the existing heat-report flow while continuing to accept uploads. ([G], §3; resolved OQ-6, 2026-10-03)
 33. **FR-33 — Report image-source provenance:** Include `image_source` in each new analysis response and stored scan with `caller` for an uploaded image or `google_maps` for imagery fetched for the requested coordinate. ([G], §3; resolved OQ-6, 2026-10-03)
+34. **FR-34 — Gate changes with offline CI:** Run the complete offline test suite and enforce the configured 70% per-file coverage floor on pushes and pull requests. ([R], human request, 2026-10-04)
+35. **FR-35 — Verify dependency exports:** Fail CI when any generated root, backend or frontend requirements export is stale relative to `pyproject.toml` and `uv.lock`. ([R], human request, 2026-10-04)
+36. **FR-36 — Build both release images:** Build the backend and frontend Docker images using their respective build contexts for `linux/amd64`, with reusable layer caching. ([R], human request, 2026-10-04)
+37. **FR-37 — Scan changes for exposed secrets:** Run secret detection on pushes and pull requests and report findings without printing detected secret values. ([R], human request, 2026-10-04)
+38. **FR-38 — Protect the main branch with CI checks:** Require the designated CI and secret-scan statuses to pass before a pull request can merge into `main`. ([R], human request, 2026-10-04)
+39. **FR-39 — Deploy versioned releases from GitHub Actions:** Deploy both validated `linux/amd64` service images to their Cloud Run services in `asia-southeast1` from versioned release tags after required checks pass, then verify both services. ([R], human request, 2026-10-04)
 
 ## Non-functional requirements
 
@@ -58,6 +64,7 @@ Enable urban analysts and city planners to identify heat-island hotspots from ae
 14. **NFR-14 — Controlled cloud boundaries:** Lazily construct and cache module-level cloud clients and translate SDK failures at service boundaries rather than leaking raw exceptions to callers. ([C], Conventions; [E4], Failure policy)
 15. **NFR-15 — Keep the Maps API key secret:** Keep `GOOGLE_MAPS_API_KEY` on the backend and never expose it to the browser, logs, logged request URLs or client-facing errors. ([R], 2026-10-03)
 16. **NFR-16 — Preserve Maps attribution and conserve quota:** Keep Google's imagery attribution watermark visible and serve an identical normalized imagery request from cache without another Maps API fetch. ([R], 2026-10-03)
+17. **NFR-17 — Secure GitHub Actions credentials:** In this public repository, workflows shall expose no secrets or cloud credentials to fork pull requests, shall never print secret values, and shall authenticate to Google Cloud only through Workload Identity Federation rather than service-account key files. ([R], human request, 2026-10-04)
 
 ## Out of scope
 
@@ -65,6 +72,8 @@ Enable urban analysts and city planners to identify heat-island hotspots from ae
 - Pub/Sub subscribers or delivery through notification channels such as email or SMS. ([E4], Scope)
 - Live cloud calls in the automated QA suite; live integration remains a separate manual pre-deploy or pre-demo check. ([E8], Scope)
 - New product features added solely for the demo or submission. ([E9], Scope)
+- Pull-request preview environments and automatic deployment of every push to production; production deployment automation is limited to validated versioned release tags and is scheduled after the 2026-10-11 submission. ([R], human request, 2026-10-04)
+- Automated semantic-version calculation, changelog generation and publication, and a broad Python-version test matrix; the release tag is the explicit version input, and the supported runtime remains Python 3.10+. ([R], human request, 2026-10-04; NFR-11)
 
 ## Open questions
 
@@ -122,6 +131,12 @@ The IDs and titles below are those returned by `python3 .github/skills/agile-sdl
 | FR-31       | EPIC-005           |
 | FR-32       | EPIC-010           |
 | FR-33       | EPIC-010           |
+| FR-34       | EPIC-011           |
+| FR-35       | EPIC-011           |
+| FR-36       | EPIC-011           |
+| FR-37       | EPIC-011           |
+| FR-38       | EPIC-011           |
+| FR-39       | EPIC-011           |
 
 | Epic ID  | Exact backlog title                         | Source document |
 | -------- | ------------------------------------------- | --------------- |
@@ -135,8 +150,9 @@ The IDs and titles below are those returned by `python3 .github/skills/agile-sdl
 | EPIC-008 | Quality Assurance and Test Coverage         | [E8]            |
 | EPIC-009 | Demo, Documentation and Submission          | [E9]            |
 | EPIC-010 | Coordinate-Based Maps Imagery               | [R]             |
+| EPIC-011 | GitHub Actions CI/CD and Release Automation | [R]              |
 
-**Coverage:** 33/33 functional requirements map to exactly one epic; 10/10 epics receive at least one functional requirement; no FR or epic is uncovered. The 16 non-functional requirements apply across their cited scopes. OQ-1, OQ-3, OQ-4, OQ-6 and OQ-7 are resolved; OQ-2 and OQ-5 remain unresolved decisions for their affected items, so the full Phase 0 exit remains conditional on those answers.
+**Coverage:** 39/39 functional requirements map to exactly one epic; 11/11 epics receive at least one functional requirement; no FR or epic is uncovered. The 17 non-functional requirements apply across their cited scopes. OQ-1, OQ-3, OQ-4, OQ-6 and OQ-7 are resolved; OQ-2 and OQ-5 remain unresolved decisions for their affected items, so the full Phase 0 exit remains conditional on those answers.
 
 [G]: ../COPILOT_GUIDE.md
 [B]: ../Epics_Stories.md
@@ -150,4 +166,4 @@ The IDs and titles below are those returned by `python3 .github/skills/agile-sdl
 [E7]: ../.github/docs/epics/EPIC-07-dashboard.md
 [E8]: ../.github/docs/epics/EPIC-08-quality-assurance.md
 [E9]: ../.github/docs/epics/EPIC-09-demo-submission.md
-[R]: Human requirement and verified Maps Static API behavior, 2026-10-03
+[R]: Human requirements and verified Maps Static API behavior, 2026-10-03–2026-10-04

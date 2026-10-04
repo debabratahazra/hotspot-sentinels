@@ -2726,7 +2726,7 @@
       "type": "task",
       "parent": "EPIC-009",
       "title": "Choose demo coordinates that show a critical hotspot",
-      "description": "Found in sprint 7 during live demo verification; closed 2026-10-04. The old Singapore default 1.3521/103.8198 resolves at zoom 19 to dense tree canopy and correctly scores HVI 1.5 LOW — a weak opening frame for a 3-minute urban-heat recording. Five coordinates were probed against the deployed backend and all are now shipped in frontend/app.py CITY_COORDINATES: Singapore Port Terminal 1.2897/103.7540 scored CRITICAL 8.7 (100 percent asphalt, zero canopy) and is the opener; Singapore Urban Core 1.3343/103.8563 HIGH 6.6; Singapore Botanic Gardens 1.3521/103.8198 LOW 1.5 as the deliberate contrast; Bangkok City Centre HIGH 7.0; Delhi Karol Bagh HIGH 7.2. Scores reproduced identically on a second run, and the opener published a real Pub/Sub alert (alert_attempted and alert_dispatched both true, banner reads 'CRITICAL HEAT RISK: Automated Pub/Sub alert dispatched. Published successfully.'). The opening coordinate now follows the first entry of the map instead of a hardcoded key. IMPORTANT DEMO CONFIGURATION: the imagery cache is per-process (see TASK-047), and with maxScale 3 the dashboard's follow-up GET /api/imagery could land on an instance that never fetched the image, producing the attribution-unavailable error after a successful analysis. Ten consecutive 502s were observed this way. The backend was therefore pinned with 'gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=1' (revision hotspot-backend-00006-8ds), after which all three Singapore coordinates serve cached imagery at 200 consistently. That pin is a demo-time setting, not a production one; TASK-046 remains the real fix.",
+      "description": "Found in sprint 7 during live demo verification; closed 2026-10-04. The old Singapore default 1.3521/103.8198 resolves at zoom 19 to dense tree canopy and correctly scores HVI 1.5 LOW \u2014 a weak opening frame for a 3-minute urban-heat recording. Five coordinates were probed against the deployed backend and all are now shipped in frontend/app.py CITY_COORDINATES: Singapore Port Terminal 1.2897/103.7540 scored CRITICAL 8.7 (100 percent asphalt, zero canopy) and is the opener; Singapore Urban Core 1.3343/103.8563 HIGH 6.6; Singapore Botanic Gardens 1.3521/103.8198 LOW 1.5 as the deliberate contrast; Bangkok City Centre HIGH 7.0; Delhi Karol Bagh HIGH 7.2. Scores reproduced identically on a second run, and the opener published a real Pub/Sub alert (alert_attempted and alert_dispatched both true, banner reads 'CRITICAL HEAT RISK: Automated Pub/Sub alert dispatched. Published successfully.'). The opening coordinate now follows the first entry of the map instead of a hardcoded key. IMPORTANT DEMO CONFIGURATION: the imagery cache is per-process (see TASK-047), and with maxScale 3 the dashboard's follow-up GET /api/imagery could land on an instance that never fetched the image, producing the attribution-unavailable error after a successful analysis. Ten consecutive 502s were observed this way. The backend was therefore pinned with 'gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=1' (revision hotspot-backend-00006-8ds), after which all three Singapore coordinates serve cached imagery at 200 consistently. That pin is a demo-time setting, not a production one; TASK-046 remains the real fix.",
       "acceptance_criteria": [
         "Demo coordinates are chosen that reliably produce a HIGH or CRITICAL risk level.",
         "At least one scripted scenario exercises the critical alert path end to end.",
@@ -3188,6 +3188,171 @@
       "source": "retro",
       "created": "2026-10-04T11:19:45+00:00",
       "updated": "2026-10-04T11:19:45+00:00"
+    },
+    {
+      "id": "EPIC-011",
+      "type": "epic",
+      "parent": null,
+      "title": "GitHub Actions CI/CD and Release Automation",
+      "description": "Delivers FR-34 through FR-39: establish GitHub Actions quality gates for the offline suite and coverage floor, generated dependency exports, both linux/amd64 container builds and public-repository secret scanning; protect main with required checks; then deploy validated versioned releases to Cloud Run using Workload Identity Federation. CI and build visibility are useful before the 2026-10-11 competition submission, but this epic does not block submission; branch protection and production deployment automation are post-submission work.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "requirements",
+      "created": "2026-10-04T12:09:21+00:00",
+      "updated": "2026-10-04T12:09:21+00:00"
+    },
+    {
+      "id": "STORY-038",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As a contributor I can see test and coverage results for every change",
+      "description": "Submission-adjacent CI foundation, useful before 2026-10-11 but not a submission gate. Establishes the clean-runner quality check; account for TASK-053 first so packaging acceptance no longer depends on a pre-existing local Docker image.",
+      "acceptance_criteria": [
+        "The workflow executes python3 -m pytest -o addopts='' -q on pushes and pull requests and reports the completed test result.",
+        "The coverage job uses tests/coverage.ini and fails when the configured 70% per-file floor is missed.",
+        "The test and coverage jobs run without cloud credentials or network access to application services.",
+        "The workflow caches uv dependencies with cache invalidation tied to uv.lock."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/ci.yml",
+        "pyproject.toml",
+        "tests/coverage.ini"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:10:52+00:00",
+      "updated": "2026-10-04T12:11:10+00:00"
+    },
+    {
+      "id": "STORY-039",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As a maintainer I can detect stale dependency exports before merge",
+      "description": "Submission-adjacent consistency check. pyproject.toml and uv.lock remain authoritative; requirements.txt, backend/requirements.txt and frontend/requirements.txt are generated exports and must not drift silently.",
+      "acceptance_criteria": [
+        "CI regenerates all three requirements exports from the authoritative project metadata and lockfile.",
+        "CI fails when a committed export differs from the generated output.",
+        "A clean export check leaves all generated files unchanged when they are current."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/ci.yml",
+        "pyproject.toml",
+        "uv.lock",
+        "requirements.txt",
+        "backend/requirements.txt",
+        "frontend/requirements.txt"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:11:31+00:00",
+      "updated": "2026-10-04T12:11:31+00:00"
+    },
+    {
+      "id": "STORY-040",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As an operator I can see both production images build for Cloud Run",
+      "description": "Submission-adjacent build matrix prompted by BUG-026: backend-only container proof hid a broken deployed frontend for three sprints. Build checks depend on TASK-053 so a clean runner does not require a stale local image hash. This is build proof, not a replacement for TASK-051's separate frontend runtime and release verification.",
+      "acceptance_criteria": [
+        "Push and pull-request checks build the backend with context backend and backend/Dockerfile.",
+        "Push and pull-request checks build the frontend with context frontend and frontend/Dockerfile.",
+        "Both builds explicitly target linux/amd64 and use reusable GitHub Actions Docker layer caching.",
+        "CI reports each image build independently, so one successful image cannot mask failure of the other."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/ci.yml",
+        "backend/Dockerfile",
+        "frontend/Dockerfile"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:11:37+00:00",
+      "updated": "2026-10-04T12:11:37+00:00"
+    },
+    {
+      "id": "STORY-041",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As a maintainer I can catch exposed credentials before code is merged",
+      "description": "Public-repository guard for pushes and pull requests. Findings must be safe to report: detected credential values are never written to workflow logs, and scanning must not require cloud credentials.",
+      "acceptance_criteria": [
+        "The secret scan runs on pushes and pull requests, including pull requests from forks.",
+        "A detected secret produces a failing, visible status check without exposing the secret value in logs or annotations.",
+        "The scan runs without GitHub secrets or Google Cloud credentials, including for fork pull requests."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/security.yml"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:11:44+00:00",
+      "updated": "2026-10-04T12:11:44+00:00"
+    },
+    {
+      "id": "STORY-042",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As a maintainer I can prevent merges when required GitHub checks fail",
+      "description": "Post-submission repository-governance work. Configure a GitHub ruleset for main after the CI and secret-scan check names are stable; this is a repository setting, not a workflow-file substitute.",
+      "acceptance_criteria": [
+        "The main-branch ruleset requires the designated CI and secret-scan checks before merge.",
+        "A pull request cannot merge when either required check is failing or has not completed.",
+        "The ruleset applies to main and is visible in the public repository settings."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:11:52+00:00",
+      "updated": "2026-10-04T12:11:52+00:00"
+    },
+    {
+      "id": "STORY-043",
+      "type": "story",
+      "parent": "EPIC-011",
+      "title": "As an operator I can deploy a verified release to Cloud Run without key files",
+      "description": "Post-submission only; current manual deployment remains the submission path. Do not enable until TASK-048's deploy-script findings are corrected, TASK-051 proves frontend runtime/release verification, and TASK-053 removes local-image-hash dependence. Use manually created vMAJOR.MINOR.PATCH tags as release identifiers; automated semantic version calculation and changelog generation are out of scope.",
+      "acceptance_criteria": [
+        "Deployment runs only for a vMAJOR.MINOR.PATCH release tag whose commit is on main and whose required CI and secret-scan checks passed; pull-request events never deploy.",
+        "The workflow authenticates to Google Cloud with Workload Identity Federation and creates or uses no service-account key file.",
+        "The workflow deploys both linux/amd64 images to hotspot-backend and hotspot-frontend in asia-southeast1, preserving the backend's BIGQUERY_LOCATION=US exception and required runtime configuration.",
+        "Release evidence reports backend and frontend verification separately, including backend health and frontend health plus a coordinate-analysis check.",
+        "Fork pull requests receive no GitHub secrets or cloud credentials, and workflow logs contain no secret values."
+      ],
+      "priority": "P2",
+      "estimate": 5,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/workflows/deploy.yml",
+        ".github/skills/cloudrun-deploy/scripts/deploy.sh",
+        "backend/Dockerfile",
+        "frontend/Dockerfile"
+      ],
+      "source": "requirements",
+      "created": "2026-10-04T12:12:04+00:00",
+      "updated": "2026-10-04T12:12:04+00:00"
     }
   ]
 }
