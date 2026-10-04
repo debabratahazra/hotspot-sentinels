@@ -239,12 +239,23 @@ def test_alert_message_carries_coordinates_temperature_and_urgent_actions(monkey
 
 @pytest.fixture(scope="module")
 def hardened_image():
+    """Build the hardened image from the current source so the proof is never stale.
+
+    A pre-existing tag cannot certify the working tree: any edit after the last
+    manual build makes the layer-content check fail for the wrong reason, which
+    is exactly what happened mid-sprint. Building here gives a clean checkout and
+    CI a deterministic path. Anything that prevents the build is an explicit skip,
+    never a pass, because an uncertified image must not look like a certified one.
+    """
     if not shutil.which("docker"):
         pytest.skip("Docker unavailable; hardened runtime cannot be certified")
-    image = "hotspot-hardened:latest"
-    result = subprocess.run(["docker", "image", "inspect", image], capture_output=True, text=True)
-    if result.returncode:
-        pytest.skip("Cached hardened image unavailable; no network builds allowed")
+    image = "hotspot-hardened:pytest"
+    build = subprocess.run(
+        ["docker", "build", "--platform", "linux/amd64", "-f", "backend/Dockerfile", "-t", image, "backend"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if build.returncode:
+        pytest.skip(f"Hardened image could not be built, so it is uncertified: {build.stderr.strip()[-300:]}")
     return image
 
 

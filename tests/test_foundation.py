@@ -77,6 +77,17 @@ def test_env_example_contains_eight_contract_variables_without_secrets():
         assert re.search(r"[A-Za-z0-9+/=_-]{40,}", value) is None
 
 
+def test_setup_script_honours_a_supplied_pubsub_topic_id():
+    source = (ROOT / "setup_gcp.sh").read_text(encoding="utf-8")
+    assert re.search(r'export PUBSUB_TOPIC="\$\{PUBSUB_TOPIC_ID:-heat-resilience-alerts\}"', source), (
+        "setup_gcp.sh must provision the configured topic, not a bare literal"
+    )
+    # The topic it creates and the topic it writes into .env must be the same value,
+    # or provisioning and runtime configuration silently disagree.
+    assert "PUBSUB_TOPIC_ID=${PUBSUB_TOPIC}" in source
+    assert "gcloud pubsub topics create $PUBSUB_TOPIC" in source
+
+
 def test_setup_script_emits_allowed_origins_and_all_contract_variables():
     source = (ROOT / "setup_gcp.sh").read_text(encoding="utf-8")
     match = re.search(r"cat\s*<<\s*EOF\s*>\s*\.env\s*\n(.*?)\nEOF", source, re.DOTALL)

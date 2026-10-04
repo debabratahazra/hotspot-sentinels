@@ -104,6 +104,11 @@ def main() -> int:
 
     committed = [i for i in data["items"] if i["id"] in sprint.get("committed", [])]
     done = [i for i in committed if i["status"] == "done"]
+    # Work pulled into the sprint after planning. Reporting it separately keeps an
+    # overrun visible instead of letting it hide inside the committed total.
+    unplanned = [i for i in data["items"]
+                 if i.get("sprint") == sprint_no and i["id"] not in sprint.get("committed", [])]
+    points = lambda items: sum(i.get("estimate") or 0 for i in items)
     open_bugs = [i for i in data["items"] if i["type"] == "bug" and i["status"] not in ("done", "cancelled")]
 
     tests = run_tests()
@@ -117,16 +122,28 @@ def main() -> int:
         "",
         "## Delivery",
         "",
-        f"- Committed: {len(committed)} item(s)",
+        f"- Committed: {len(committed)} item(s), {points(committed)} point(s)",
         f"- Completed: {len(done)}",
         f"- Carried over: {len(committed) - len(done)}",
         f"- Open bugs: {len(open_bugs)}",
+    ]
+    if unplanned:
+        lines += [
+            f"- Authorised unplanned: {len(unplanned)} item(s), {points(unplanned)} point(s)",
+            f"- **Revised total: {points(committed) + points(unplanned)} point(s)** "
+            f"against a {points(committed)}-point commitment",
+        ]
+    lines += [
         "",
-        "| Item | Type | Priority | Status | Title |",
-        "|------|------|----------|--------|-------|",
+        "| Item | Type | Priority | Status | Scope | Title |",
+        "|------|------|----------|--------|-------|-------|",
     ]
     for item in committed:
-        lines.append(f"| {item['id']} | {item['type']} | {item['priority']} | {item['status']} | {item['title']} |")
+        lines.append(
+            f"| {item['id']} | {item['type']} | {item['priority']} | {item['status']} | committed | {item['title']} |")
+    for item in unplanned:
+        lines.append(
+            f"| {item['id']} | {item['type']} | {item['priority']} | {item['status']} | unplanned | {item['title']} |")
 
     lines += ["", "## Tests", ""]
     verdict = test_verdict(tests)

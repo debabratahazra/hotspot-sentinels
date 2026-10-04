@@ -1689,14 +1689,14 @@
       ],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [
         "setup_gcp.sh"
       ],
       "source": "retro",
       "created": "2026-10-02T10:46:11+00:00",
-      "updated": "2026-10-03T04:54:24+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "TEST-001",
@@ -1822,12 +1822,12 @@
       ],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "retro",
       "created": "2026-10-02T10:52:55+00:00",
-      "updated": "2026-10-03T04:54:24+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "TASK-020",
@@ -2844,12 +2844,12 @@
       ],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "retro",
       "created": "2026-10-03T11:29:28+00:00",
-      "updated": "2026-10-03T11:30:21+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "TASK-042",
@@ -2864,12 +2864,12 @@
       ],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "retro",
       "created": "2026-10-03T11:29:33+00:00",
-      "updated": "2026-10-03T11:30:21+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "TASK-043",
@@ -3170,7 +3170,7 @@
       ],
       "priority": "P1",
       "estimate": 1,
-      "status": "new",
+      "status": "done",
       "sprint": null,
       "files": [
         ".github/skills/agile-sdlc-loop/references/phases.md",
@@ -3178,7 +3178,7 @@
       ],
       "source": "retro",
       "created": "2026-10-04T11:19:44+00:00",
-      "updated": "2026-10-04T11:19:44+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "TASK-053",
@@ -3193,7 +3193,7 @@
       ],
       "priority": "P2",
       "estimate": 1,
-      "status": "new",
+      "status": "done",
       "sprint": null,
       "files": [
         "tests/test_sprint3_acceptance.py",
@@ -3201,7 +3201,7 @@
       ],
       "source": "retro",
       "created": "2026-10-04T11:19:45+00:00",
-      "updated": "2026-10-04T11:19:45+00:00"
+      "updated": "2026-10-04T18:19:37+00:00"
     },
     {
       "id": "EPIC-011",

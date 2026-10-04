@@ -11,8 +11,10 @@ echo " Starting HotSpot Sentinels GCP Setup"
 echo "=========================================="
 
 # 1. Target Configurations
-export REGION="asia-southeast1" # Singapore region (Hackathon finale host)
-export PUBSUB_TOPIC="heat-resilience-alerts"
+export REGION="${GOOGLE_CLOUD_REGION:-asia-southeast1}" # Singapore region (Hackathon finale host)
+# Provision whatever topic the caller configured, so the created topic and the
+# generated .env cannot disagree.
+export PUBSUB_TOPIC="${PUBSUB_TOPIC_ID:-heat-resilience-alerts}"
 
 # 2. Authenticate CLI & Application Default Credentials (ADC)
 echo "\n[Step 1/5] Checking Authentication..."

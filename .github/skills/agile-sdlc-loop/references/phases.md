@@ -99,6 +99,7 @@ Rules:
    grep -rln "<changed field, route, label or form name>" tests/
    ```
    Record the list in the item's description. An item whose behaviour change is unbudgeted is not ready to commit. Stale-test churn was mistaken for regression in four consecutive sprints (3–6), and deleting two scripts in sprint 7 invalidated three further assertions.
+6. **Scope added mid-sprint gets the same treatment.** Authorised unplanned work is still work: before it starts, name the tests it invalidates and add that cost to its estimate, then rebaseline the sprint total out loud. Sprint 7 ran 27 points against a 15-point commitment; that was acceptable because it was declared, not absorbed.
 
 **Exit:** a sprint exists with committed items; every committed item is `in_sprint`, and every behaviour-changing item names the tests it will invalidate.
 
@@ -111,8 +112,24 @@ Rules:
 For each committed item in priority order:
 
 1. `BL update <id> --status in_progress`
-2. Delegate with the story title, acceptance criteria, and `files`.
-3. On success `BL update <id> --status in_review`. If blocked, `--status blocked` with the reason in the description, and move on.
+2. **Check the agent can do the job before dispatching it.** Confirm the chosen agent is write-capable when the item produces files, and that every path the item needs is in its permitted set. `product-owner` and `contract-auditor` cannot edit application files; routing file-writing work to them wastes a round trip and forces the orchestrator to redo it.
+3. Delegate with the story title, acceptance criteria, and `files`. Record the dispatch: item ID, exact instructions, permitted files, and evidence already gathered — never credentials or tokens.
+4. On success `BL update <id> --status in_review`. If blocked, `--status blocked` with the reason in the description, and move on.
+
+**When a run fails, separate the cause before retrying:**
+
+| Failure | Action |
+| ------------------------------- | ------------------------------------------------------------------- |
+| Transient (auth expiry, timeout) | Redispatch the same item from the recorded dispatch state; do not repeat completed exploration |
+| Task failure (agent did the work and it is wrong) | Treat as a finding, not a retry |
+| Permanent authorization failure | `--status blocked` for a human; never retry in a loop |
+
+**Reviewing an item that accepts caller input:** require schema validation at the
+report boundary for every externally supplied override, including out-of-range
+values, missing fields, and aliasing. Evidence must include a rejected
+out-of-range coordinate and a proof that the returned report does not alias the
+caller's dict — BUG-001 returned caller coordinates by reference and let
+`lat=999.0` through.
 
 **Exit:** every committed item is `in_review`, `blocked`, or `cancelled`.
 
