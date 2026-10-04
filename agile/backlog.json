@@ -1307,14 +1307,14 @@
       ],
       "priority": "P1",
       "estimate": 2,
-      "status": "todo",
+      "status": "in_progress",
       "sprint": null,
       "files": [
         "docs/submission-checklist.md"
       ],
       "source": "requirements",
       "created": "2026-10-01T05:14:36+00:00",
-      "updated": "2026-10-03T08:50:47+00:00"
+      "updated": "2026-10-04T14:09:19+00:00"
     },
     {
       "id": "STORY-029",
