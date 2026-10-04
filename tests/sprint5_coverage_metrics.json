@@ -1,0 +1,1197 @@
+{
+  "sprint": 5,
+  "floor_percent": 70,
+  "baseline_source": "agile/reports/sprint-04.md",
+  "metric": "statement coverage; branch coverage reported separately, not mixed into deltas",
+  "backend_config": "tests/coverage.ini",
+  "excluded_manual_scripts": [
+    "backend/test_analyzer.py",
+    "backend/test_pipeline.py"
+  ],
+  "groups": {
+    "backend": {
+      "statement_percent": 98.7,
+      "baseline_percent": 98.3,
+      "delta_percentage_points": 0.4,
+      "statement_denominator": 542,
+      "historical_statement_denominator": null,
+      "denominator_delta": null,
+      "denominator_note": "Historical artifact lacks the complete backend file set; no like-for-like count claimed.",
+      "files": {
+        "backend/main.py": {
+          "statement_percent": 97.7,
+          "covered_statements": 128,
+          "statement_denominator": 131,
+          "missing_lines": [
+            85,
+            121,
+            289
+          ],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/services/__init__.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 0,
+          "statement_denominator": 0,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/services/alert_dispatcher.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 77,
+          "statement_denominator": 77,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/services/database.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 57,
+          "statement_denominator": 57,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/services/vision_analyzer.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 92,
+          "statement_denominator": 92,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/tools/__init__.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 0,
+          "statement_denominator": 0,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/tools/climate_service.py": {
+          "statement_percent": 95.2,
+          "covered_statements": 59,
+          "statement_denominator": 62,
+          "missing_lines": [
+            140,
+            141,
+            142
+          ],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/tools/seed_samples.py": {
+          "statement_percent": 98.9,
+          "covered_statements": 92,
+          "statement_denominator": 93,
+          "missing_lines": [
+            128
+          ],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        },
+        "backend/verify_setup.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 30,
+          "statement_denominator": 30,
+          "missing_lines": [],
+          "branch_percent": null,
+          "branch_denominator": null,
+          "missing_branches": []
+        }
+      }
+    },
+    "frontend": {
+      "statement_percent": 100.0,
+      "baseline_percent": 83.3,
+      "delta_percentage_points": 16.7,
+      "statement_denominator": 240,
+      "historical_statement_denominator": 240,
+      "denominator_delta": 0,
+      "denominator_note": "Statement count compared with tests/sprint4_coverage.json.",
+      "files": {
+        "frontend/app.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 240,
+          "statement_denominator": 240,
+          "missing_lines": [],
+          "branch_percent": 100.0,
+          "branch_denominator": 88,
+          "missing_branches": []
+        }
+      }
+    },
+    "validator": {
+      "statement_percent": 100.0,
+      "baseline_percent": 78.7,
+      "delta_percentage_points": 21.3,
+      "statement_denominator": 94,
+      "historical_statement_denominator": 94,
+      "denominator_delta": 0,
+      "denominator_note": "Statement count compared with tests/sprint4_coverage.json.",
+      "files": {
+        ".github/skills/heat-report-validation/scripts/validate_report.py": {
+          "statement_percent": 100.0,
+          "covered_statements": 94,
+          "statement_denominator": 94,
+          "missing_lines": [],
+          "branch_percent": 100.0,
+          "branch_denominator": 64,
+          "missing_branches": []
+        }
+      }
+    }
+  },
+  "followups_for_orchestrator": [],
+  "executed_regressions": {
+    "available": true,
+    "modules": {
+      "tests.test_api": [
+        {
+          "name": "test_scans_preserves_broken_era_rows_missing_canonical_fields",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_preserves_rows_written_before_application_envelope",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_preserves_legacy_surface_percentages_not_totalling_100",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_preserves_legacy_risk_band_contradicting_hvi",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_serializes_firestore_nanosecond_timestamps",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_preserves_unknown_fields_from_retired_schema",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_one_bad_historical_row_cannot_fail_or_drop_current_rows",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_strict_response_rejects_malformed_fresh_reports[zone_id-None-error_location0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_strict_response_rejects_malformed_fresh_reports[coordinates-None-error_location1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_strict_response_rejects_malformed_fresh_reports[hvi_score-8.0-error_location2]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_strict_response_rejects_malformed_fresh_reports[surface_breakdown-value3-error_location3]",
+          "status": "passed"
+        },
+        {
+          "name": "test_old_strict_history_response_rejects_legacy_rows_and_entire_mixed_response[legacy-only]",
+          "status": "passed"
+        },
+        {
+          "name": "test_old_strict_history_response_rejects_legacy_rows_and_entire_mixed_response[mixed-current-and-legacy]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_awaits_analyzer_and_returns_contract_valid_dict[jpeg]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_awaits_analyzer_and_returns_contract_valid_dict[png]",
+          "status": "passed"
+        },
+        {
+          "name": "test_testclient_response_is_dict_not_coroutine",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[all-supplied]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[all-inferred]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[mixed-lat]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[mixed-lng]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[lat-only]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[upper-lat-lower-lng]",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_identity_and_provenance_reach_response_and_firestore[lower-lat-upper-lng]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-above]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-below]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lng-above]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lng-below]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-nonnumeric]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lng-nonnumeric]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-nan]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-infinity]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lng-infinity]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[id-empty]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[id-whitespace]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[name-empty]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[name-whitespace]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lat-blank]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_identity_returns_standard_422_before_any_cloud_calls[lng-blank]",
+          "status": "passed"
+        },
+        {
+          "name": "test_legacy_analysis_response_does_not_invent_identity_provenance",
+          "status": "passed"
+        },
+        {
+          "name": "test_synchronous_climate_database_and_dispatch_use_to_thread",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_report_triggers_dispatch_at_eight_boundary",
+          "status": "passed"
+        },
+        {
+          "name": "test_high_and_noncritical_reports_never_dispatch_or_preserve_untrusted_true[4.0-MODERATE]",
+          "status": "passed"
+        },
+        {
+          "name": "test_high_and_noncritical_reports_never_dispatch_or_preserve_untrusted_true[6.0-HIGH]",
+          "status": "passed"
+        },
+        {
+          "name": "test_high_and_noncritical_reports_never_dispatch_or_preserve_untrusted_true[7.9-HIGH]",
+          "status": "passed"
+        },
+        {
+          "name": "test_alert_dispatched_is_stored_true_only_after_successful_publish[published-message-id-True]",
+          "status": "passed"
+        },
+        {
+          "name": "test_alert_dispatched_is_stored_true_only_after_successful_publish[-False]",
+          "status": "passed"
+        },
+        {
+          "name": "test_climate_source_round_trips_to_response_and_firestore[bigquery]",
+          "status": "passed"
+        },
+        {
+          "name": "test_climate_source_round_trips_to_response_and_firestore[fallback]",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_clamps_limits_through_real_database_helper[0-1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_clamps_limits_through_real_database_helper[-5-1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_clamps_limits_through_real_database_helper[10000-100]",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_rejects_noninteger_limits_before_firestore[ten]",
+          "status": "passed"
+        },
+        {
+          "name": "test_scans_rejects_noninteger_limits_before_firestore[1.5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_service_errors_map_status_without_secrets_in_response_or_logs[vision-502]",
+          "status": "passed"
+        },
+        {
+          "name": "test_service_errors_map_status_without_secrets_in_response_or_logs[write-503]",
+          "status": "passed"
+        },
+        {
+          "name": "test_service_errors_map_status_without_secrets_in_response_or_logs[read-503]",
+          "status": "passed"
+        },
+        {
+          "name": "test_cors_origins_come_from_environment_with_empty_entries_removed[https://one.example,https://two.example]",
+          "status": "passed"
+        },
+        {
+          "name": "test_cors_origins_come_from_environment_with_empty_entries_removed[ https://one.example, ,https://two.example, ]",
+          "status": "passed"
+        },
+        {
+          "name": "test_cors_default_is_localhost_8501",
+          "status": "passed"
+        },
+        {
+          "name": "test_cors_has_no_wildcards_and_does_not_echo_disallowed_origin",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_probes_dependencies_and_returns_200_with_readiness_states[None]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_probes_dependencies_and_returns_200_with_readiness_states[gemini]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_probes_dependencies_and_returns_200_with_readiness_states[firestore]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_probes_dependencies_and_returns_200_with_readiness_states[pubsub]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_probes_dependencies_and_returns_200_with_readiness_states[bigquery]",
+          "status": "passed"
+        },
+        {
+          "name": "test_live_returns_200_without_cloud_calls",
+          "status": "passed"
+        },
+        {
+          "name": "test_pubsub_client_failure_keeps_analysis_successful_and_stored_false",
+          "status": "passed"
+        },
+        {
+          "name": "test_pubsub_publish_failure_stores_false_without_raw_cloud_logging",
+          "status": "passed"
+        },
+        {
+          "name": "test_unsafe_uploads_are_rejected_before_cloud_calls[wrong-content-type]",
+          "status": "passed"
+        },
+        {
+          "name": "test_unsafe_uploads_are_rejected_before_cloud_calls[oversized]",
+          "status": "passed"
+        },
+        {
+          "name": "test_upload_limit_uses_decimal_ten_megabyte_boundary[9999999-200]",
+          "status": "passed"
+        },
+        {
+          "name": "test_upload_limit_uses_decimal_ten_megabyte_boundary[10000000-200]",
+          "status": "passed"
+        },
+        {
+          "name": "test_upload_limit_uses_decimal_ten_megabyte_boundary[10000001-413]",
+          "status": "passed"
+        }
+      ],
+      "tests.test_contract": [
+        {
+          "name": "test_validator_rejects_naive_and_non_utc_timestamps[2026-10-03T12:00:00]",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_rejects_naive_and_non_utc_timestamps[2026-10-03T12:00:00+08:00]",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_rejects_naive_and_non_utc_timestamps[2026-10-03T12:00:00-05:00]",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_accepts_both_utc_timestamp_spellings[2026-10-03T12:00:00Z]",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_accepts_both_utc_timestamp_spellings[2026-10-03T12:00:00+00:00]",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_normalizes_z_for_python_310_parser",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_still_rejects_malformed_timestamps",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_accepts_every_hvi_boundary[3.9-LOW]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_accepts_every_hvi_boundary[4.0-MODERATE]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_accepts_every_hvi_boundary[6.0-HIGH]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_accepts_every_hvi_boundary[8.0-CRITICAL]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[empty-identity]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[boolean-number]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[below-minimum]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[above-maximum]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[invalid-enum]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[unknown-nested-key]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[missing-coordinate]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[surface-total]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[empty-interventions]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[wrong-array-item]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_malformed_payload_fields[risk-mismatch]",
+          "status": "passed"
+        },
+        {
+          "name": "test_canonical_validator_rejects_alert_dispatched_below_threshold",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_cli_rejects_invalid_json",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_cli_requires_exactly_one_input_argument",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_script_entry_point_validates_real_stdin",
+          "status": "passed"
+        },
+        {
+          "name": "test_validator_handles_array_schema_without_item_constraints",
+          "status": "passed"
+        },
+        {
+          "name": "test_business_rules_defer_absent_or_wrong_typed_fields_to_schema",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_serialization_preserves_all_four_distinctions[all-supplied]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_serialization_preserves_all_four_distinctions[all-inferred]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_serialization_preserves_all_four_distinctions[mixed-lat]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_serialization_preserves_all_four_distinctions[mixed-lng]",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_response_model_rejects_malformed_identity_provenance[invalid-origin]",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_response_model_rejects_malformed_identity_provenance[wrong-type]",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_response_model_rejects_malformed_identity_provenance[missing-longitude-origin]",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_response_model_rejects_malformed_identity_provenance[extra-coordinate-origin]",
+          "status": "passed"
+        },
+        {
+          "name": "test_real_analyzer_generated_payload_passes_utc_validator",
+          "status": "passed"
+        },
+        {
+          "name": "test_real_database_serialized_timestamp_passes_utc_validator[stored_timestamp0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_real_database_serialized_timestamp_passes_utc_validator[stored_timestamp1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_real_database_serialized_timestamp_passes_utc_validator[stored_timestamp2]",
+          "status": "passed"
+        },
+        {
+          "name": "test_main_awaits_every_coroutine_function_it_calls",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_rejects_bare_calls_and_import_aliases",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_accepts_consumed_wrappers_and_scheduled_tasks[await aio.gather(alias())]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_accepts_consumed_wrappers_and_scheduled_tasks[await aio.wait_for(alias(), timeout=1)]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_accepts_consumed_wrappers_and_scheduled_tasks[await aio.wait_for(aio.gather(alias()), timeout=1)]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_accepts_consumed_wrappers_and_scheduled_tasks[aio.create_task(alias())]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_rejects_unconsumed_wrappers[aio.gather(alias())]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_rejects_unconsumed_wrappers[aio.wait_for(alias(), timeout=1)]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_rejects_unconsumed_wrappers[aio.wait_for(aio.gather(alias()), timeout=1)]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coroutine_regression_guard_rejects_unconsumed_wrappers[await aio.to_thread(alias)]",
+          "status": "passed"
+        },
+        {
+          "name": "test_no_production_module_references_fields_absent_from_report_schema",
+          "status": "passed"
+        },
+        {
+          "name": "test_schema_regression_guard_rejects_deleted_nested_and_aliased_fields",
+          "status": "passed"
+        }
+      ],
+      "tests.test_dashboard_coverage": [
+        {
+          "name": "test_health_check_renders_each_readiness_state_and_dependency[operational-Backend operational-success]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_renders_each_readiness_state_and_dependency[degraded-Backend degraded-warning]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_renders_each_readiness_state_and_dependency[unknown-Backend readiness unavailable-info]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_failures_are_sanitized_without_analysis_calls[connection]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_failures_are_sanitized_without_analysis_calls[timeout]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_failures_are_sanitized_without_analysis_calls[http]",
+          "status": "passed"
+        },
+        {
+          "name": "test_health_check_failures_are_sanitized_without_analysis_calls[invalid-json]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_error_envelope_uses_generic_message[list]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_error_envelope_uses_generic_message[wrong-code-type]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_error_envelope_uses_generic_message[invalid-json]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_preview_blocks_analysis_before_http_request[oversized]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_preview_blocks_analysis_before_http_request[unsupported]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_preview_blocks_analysis_before_http_request[wrong-signature]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_preview_blocks_analysis_before_http_request[corrupt-image]",
+          "status": "passed"
+        },
+        {
+          "name": "test_non_object_analysis_result_is_rejected_without_render_crash",
+          "status": "passed"
+        },
+        {
+          "name": "test_missing_image_renders_prompt_without_network",
+          "status": "passed"
+        },
+        {
+          "name": "test_selected_preset_loads_or_renders_safe_file_error[loaded]",
+          "status": "passed"
+        },
+        {
+          "name": "test_selected_preset_loads_or_renders_safe_file_error[unavailable]",
+          "status": "passed"
+        },
+        {
+          "name": "test_preset_discovery_failure_leaves_custom_upload_available",
+          "status": "passed"
+        },
+        {
+          "name": "test_unknown_risk_and_null_interventions_render_without_inventing_values",
+          "status": "passed"
+        },
+        {
+          "name": "test_legacy_history_missing_dispatch_flag_renders_unknown_not_confirmation",
+          "status": "passed"
+        }
+      ],
+      "tests.test_frontend": [
+        {
+          "name": "test_no_deleted_schema_field_is_referenced_in_frontend",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[CRITICAL-True-True-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[CRITICAL-True-True-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[CRITICAL-False-False-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[CRITICAL-False-False-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[HIGH-True-False-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts[HIGH-True-False-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_no_metric_or_history_value_renders_none[False-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_no_metric_or_history_value_renders_none[False-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_no_metric_or_history_value_renders_none[True-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_no_metric_or_history_value_renders_none[True-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_empty_scans_render_without_exception",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_unreachable_renders_gracefully[Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_api_unreachable_renders_gracefully[Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[exception-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[exception-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[timeout-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[timeout-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[unexpected-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[unexpected-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[response-Run HotSpot Analysis]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_errors_do_not_disclose_raw_cloud_payloads[response-Refresh Recent Audits]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_requests_use_environment_url_and_explicit_timeouts[None-Run HotSpot Analysis-/api/analyze]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_requests_use_environment_url_and_explicit_timeouts[None-Refresh Recent Audits-/api/scans?limit=5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_requests_use_environment_url_and_explicit_timeouts[https://qa.example/-Run HotSpot Analysis-/api/analyze]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_requests_use_environment_url_and_explicit_timeouts[https://qa.example/-Refresh Recent Audits-/api/scans?limit=5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dark_theme_is_applied_from_script_level_config",
+          "status": "passed"
+        },
+        {
+          "name": "test_city_image_and_default_off_what_if_temperature_controls_are_present",
+          "status": "passed"
+        },
+        {
+          "name": "test_enabling_what_if_temperature_exposes_bounded_input_with_default_and_step",
+          "status": "passed"
+        },
+        {
+          "name": "test_enabled_what_if_temperature_sends_chosen_value_and_inclusive_boundaries[-50.0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_enabled_what_if_temperature_sends_chosen_value_and_inclusive_boundaries[35.5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_enabled_what_if_temperature_sends_chosen_value_and_inclusive_boundaries[60.0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_disabling_what_if_temperature_omits_previously_chosen_value",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_what_if_temperature_is_refused_before_http_request[-50.5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_what_if_temperature_is_refused_before_http_request[60.5]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_what_if_temperature_is_refused_before_http_request[nan]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_what_if_temperature_is_refused_before_http_request[inf]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_what_if_temperature_is_refused_before_http_request[-inf]",
+          "status": "passed"
+        },
+        {
+          "name": "test_climate_source_renders_distinct_measured_fallback_and_what_if_treatments[bigquery-success-MEASURED TELEMETRY \\xb7 BigQuery / NOAA GSOD]",
+          "status": "passed"
+        },
+        {
+          "name": "test_climate_source_renders_distinct_measured_fallback_and_what_if_treatments[fallback-info-Live climate telemetry unavailable. This report uses the backend's fallback temperature.]",
+          "status": "passed"
+        },
+        {
+          "name": "test_climate_source_renders_distinct_measured_fallback_and_what_if_treatments[caller-warning-WHAT-IF \\xb7 Analyst-supplied temperature. Not measured telemetry.]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[3.9-LOW-green]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[4.0-MODERATE-green]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[5.9-MODERATE-green]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[6.0-HIGH-orange]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[7.9-HIGH-orange]",
+          "status": "passed"
+        },
+        {
+          "name": "test_badge_colour_matches_every_hvi_band_exactly[8.0-CRITICAL-red]",
+          "status": "passed"
+        },
+        {
+          "name": "test_image_and_score_are_rendered_in_adjacent_columns",
+          "status": "passed"
+        },
+        {
+          "name": "test_temperature_is_shown_in_celsius_with_provenance[bigquery-BigQuery / NOAA GSOD]",
+          "status": "passed"
+        },
+        {
+          "name": "test_temperature_is_shown_in_celsius_with_provenance[fallback-Offline fallback]",
+          "status": "passed"
+        },
+        {
+          "name": "test_surface_breakdown_is_charted_with_fixed_material_colours",
+          "status": "passed"
+        },
+        {
+          "name": "test_corridor_orientation_is_shown",
+          "status": "passed"
+        },
+        {
+          "name": "test_coating_area_and_projected_drop_use_metric_units",
+          "status": "passed"
+        },
+        {
+          "name": "test_micro_canopy_interventions_are_listed",
+          "status": "passed"
+        },
+        {
+          "name": "test_alert_banner_distinguishes_not_attempted_failed_and_published[False-False-Publication not attempted]",
+          "status": "passed"
+        },
+        {
+          "name": "test_alert_banner_distinguishes_not_attempted_failed_and_published[True-False-Publication attempted and failed]",
+          "status": "passed"
+        },
+        {
+          "name": "test_alert_banner_distinguishes_not_attempted_failed_and_published[True-True-Published successfully]",
+          "status": "passed"
+        },
+        {
+          "name": "test_spinner_is_active_during_analysis_request",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_multipart_preserves_real_jpeg_and_png_types[JPEG-image/jpeg]",
+          "status": "passed"
+        },
+        {
+          "name": "test_dashboard_multipart_preserves_real_jpeg_and_png_types[PNG-image/png]",
+          "status": "passed"
+        }
+      ],
+      "tests.test_sprint_report": [
+        {
+          "name": "test_coverage_excludes_only_manual_smoke_scripts_and_keeps_70_percent_floor",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_runs_pytest_with_visible_application_coverage_config",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_describes_unavailable_test_run[No module named pytest-1-pytest is not installed]",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_describes_unavailable_test_run[unrecognized arguments: --cov-4-pytest-cov is not installed]",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_describes_unavailable_test_run[-5-pytest collected no tests]",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_handles_test_timeout",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_handles_missing_tests_directory",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_reads_actual_coverage_totals_and_per_file_values",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_no_write_preserves_markdown_and_propagates_suite_verdict[0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_report_no_write_preserves_markdown_and_propagates_suite_verdict[1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_application_backend_coverage_meets_recorded_70_percent_floor",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_report_separate_statement_deltas_and_missing_branches",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_explain_changed_and_unknown_historical_denominators",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_reject_manual_smoke_or_frontend_in_backend_denominator[backend/test_analyzer.py]",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_reject_manual_smoke_or_frontend_in_backend_denominator[backend/test_pipeline.py]",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_reject_manual_smoke_or_frontend_in_backend_denominator[frontend/app.py]",
+          "status": "passed"
+        },
+        {
+          "name": "test_below_floor_metrics_route_reproducible_test_followups_without_backlog_writes[propose-test-task]",
+          "status": "passed"
+        },
+        {
+          "name": "test_below_floor_metrics_route_reproducible_test_followups_without_backlog_writes[reuse-test-task]",
+          "status": "passed"
+        },
+        {
+          "name": "test_coverage_floor_cannot_be_evaded_by_rounding_up_to_70_percent",
+          "status": "passed"
+        },
+        {
+          "name": "test_existing_report_lists_per_file_coverage_and_flags_below_floor",
+          "status": "passed"
+        },
+        {
+          "name": "test_regression_evidence_records_pass_failure_and_skip_from_junit",
+          "status": "passed"
+        },
+        {
+          "name": "test_sprint_metrics_cli_writes_only_json_evidence_and_preserves_backlog",
+          "status": "passed"
+        }
+      ],
+      "tests.test_vision_analyzer": [
+        {
+          "name": "test_analyze_urban_hotspot_is_async",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[3.9-LOW]",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[4.0-MODERATE]",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[5.9-MODERATE]",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[6.0-HIGH]",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[7.9-HIGH]",
+          "status": "passed"
+        },
+        {
+          "name": "test_risk_level_is_derived_at_every_band_boundary[8.0-CRITICAL]",
+          "status": "passed"
+        },
+        {
+          "name": "test_returned_coordinates_are_independent_of_caller_mutation",
+          "status": "passed"
+        },
+        {
+          "name": "test_analyze_returns_schema_valid_report",
+          "status": "passed"
+        },
+        {
+          "name": "test_surface_breakdown_is_integer_and_totals_exactly_100[values0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_surface_breakdown_is_integer_and_totals_exactly_100[values1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_surface_breakdown_is_integer_and_totals_exactly_100[values2]",
+          "status": "passed"
+        },
+        {
+          "name": "test_caller_zone_metadata_passes_through_verbatim",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_tracks_each_field_and_preserves_caller_over_model[all-supplied]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_tracks_each_field_and_preserves_caller_over_model[all-inferred]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_tracks_each_field_and_preserves_caller_over_model[mixed-lat]",
+          "status": "passed"
+        },
+        {
+          "name": "test_identity_source_tracks_each_field_and_preserves_caller_over_model[mixed-lng]",
+          "status": "passed"
+        },
+        {
+          "name": "test_supplied_invalid_coordinate_still_raises_vision_analysis_error",
+          "status": "passed"
+        },
+        {
+          "name": "test_model_project_and_region_are_environment_driven[False]",
+          "status": "passed"
+        },
+        {
+          "name": "test_model_project_and_region_are_environment_driven[True]",
+          "status": "passed"
+        },
+        {
+          "name": "test_sdk_and_parse_failures_raise_sanitized_vision_analysis_error[sdk]",
+          "status": "passed"
+        },
+        {
+          "name": "test_sdk_and_parse_failures_raise_sanitized_vision_analysis_error[json]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_model_fields_raise_vision_analysis_error[zero_surfaces]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_model_fields_raise_vision_analysis_error[fractional_surface]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_model_fields_raise_vision_analysis_error[empty_intervention]",
+          "status": "passed"
+        },
+        {
+          "name": "test_invalid_model_fields_raise_vision_analysis_error[hvi_range]",
+          "status": "passed"
+        },
+        {
+          "name": "test_missing_project_raises_sanitized_configuration_error",
+          "status": "passed"
+        },
+        {
+          "name": "test_import_does_not_construct_genai_client",
+          "status": "passed"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Heat Analysis Result",
+    "description": "Canonical contract from COPILOT_GUIDE.md section 3. Gemini response_schema, the FastAPI response model, and the Streamlit renderer must all agree with this.",
+    "type": "object",
+    "additionalProperties": true,
+    "required": [
+        "zone_id",
+        "zone_name",
+        "coordinates",
+        "ambient_temp_c",
+        "hvi_score",
+        "risk_level",
+        "surface_breakdown",
+        "passive_cooling_plan",
+        "alert_dispatched",
+        "timestamp"
+    ],
+    "properties": {
+        "zone_id": {
+            "type": "string",
+            "minLength": 1
+        },
+        "zone_name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "coordinates": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "lat",
+                "lng"
+            ],
+            "properties": {
+                "lat": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                },
+                "lng": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                }
+            }
+        },
+        "ambient_temp_c": {
+            "type": "number",
+            "minimum": -50,
+            "maximum": 60
+        },
+        "hvi_score": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+        },
+        "risk_level": {
+            "enum": [
+                "LOW",
+                "MODERATE",
+                "HIGH",
+                "CRITICAL"
+            ]
+        },
+        "surface_breakdown": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "asphalt_pct",
+                "dark_roof_pct",
+                "concrete_pct",
+                "green_canopy_pct"
+            ],
+            "properties": {
+                "asphalt_pct": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "dark_roof_pct": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "concrete_pct": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "green_canopy_pct": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                }
+            }
+        },
+        "passive_cooling_plan": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "corridor_orientation",
+                "retroreflective_coating_sqm",
+                "micro_canopy_interventions",
+                "projected_surface_temp_drop_c"
+            ],
+            "properties": {
+                "corridor_orientation": {
+                    "type": "string",
+                    "minLength": 3
+                },
+                "retroreflective_coating_sqm": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "micro_canopy_interventions": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "projected_surface_temp_drop_c": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 20
+                }
+            }
+        },
+        "alert_dispatched": {
+            "type": "boolean"
+        },
+        "timestamp": {
+            "type": "string",
+            "minLength": 10
+        }
+    }
+}

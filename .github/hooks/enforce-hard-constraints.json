@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "python3 .github/hooks/scripts/enforce_hard_constraints.py",
+        "windows": "python .github/hooks/scripts/enforce_hard_constraints.py",
+        "timeout": 15
+      }
+    ]
+  }
+}

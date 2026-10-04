@@ -1,0 +1,34 @@
+{
+    "zone_id": "qa-zone",
+    "zone_name": "QA District",
+    "coordinates": {
+        "lat": 1.3521,
+        "lng": 103.8198
+    },
+    "ambient_temp_c": 38.5,
+    "hvi_score": 8.0,
+    "risk_level": "CRITICAL",
+    "surface_breakdown": {
+        "asphalt_pct": 55,
+        "dark_roof_pct": 30,
+        "concrete_pct": 10,
+        "green_canopy_pct": 5
+    },
+    "passive_cooling_plan": {
+        "corridor_orientation": "NE-SW",
+        "retroreflective_coating_sqm": 4200,
+        "micro_canopy_interventions": [
+            "Plant shade corridors"
+        ],
+        "projected_surface_temp_drop_c": 6.8
+    },
+    "alert_dispatched": false,
+    "timestamp": "2026-10-02T12:00:00Z",
+    "identity_source": {
+        "zone_id": "fabricated",
+        "zone_name": 123,
+        "coordinates": {
+            "lat": "supplied"
+        }
+    }
+}

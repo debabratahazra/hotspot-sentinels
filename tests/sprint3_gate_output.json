@@ -1,0 +1,41 @@
+{
+    "sprint": 3,
+    "goal": "An analyst can upload an aerial image in the dashboard, receive a rubric-consistent heat report with labelled climate data, persisted history and truthful alert status, and use the repaired service deployed from a hardened image.",
+    "committed": 23,
+    "done": 17,
+    "passed": false,
+    "checks": [
+        {
+            "check": "committed_items_done",
+            "ok": false,
+            "detail": [
+                "STORY-011",
+                "STORY-017",
+                "TASK-013",
+                "TASK-025",
+                "TASK-026",
+                "TASK-027"
+            ]
+        },
+        {
+            "check": "nothing_blocked",
+            "ok": true,
+            "detail": []
+        },
+        {
+            "check": "no_open_p0",
+            "ok": false,
+            "detail": [
+                "BUG-020",
+                "BUG-021",
+                "BUG-022",
+                "BUG-023"
+            ]
+        },
+        {
+            "check": "sprint_report_written",
+            "ok": true,
+            "detail": "sprint-03.md"
+        }
+    ]
+}

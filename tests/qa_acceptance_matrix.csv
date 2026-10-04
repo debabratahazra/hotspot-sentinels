@@ -1,0 +1,48 @@
+file,test,criterion,verdict
+tests/test_climate_service.py,test_latest_valid_gsod_row_has_complete_bigquery_reading,STORY-004 AC1 complete latest valid GSOD 2024 reading,PASS
+tests/test_climate_service.py,test_maximum_and_average_convert_to_celsius_and_exclude_sentinels,STORY-004 AC2 Celsius conversion and invalid row guards,PASS
+tests/test_climate_service.py,test_station_input_cannot_alter_sql_meaning,STORY-004 AC3 malicious station literal absent from SQL,PASS
+tests/test_climate_service.py,test_telemetry_clients_are_lazy_environment_configured_without_shellout,STORY-004 AC4 lazy env client and US data location without shellout,PASS
+tests/test_climate_service.py,test_station_id_is_bound_as_scalar_query_parameter,BUG-010 AC1 bound parameter carries malicious station value,PASS
+tests/test_climate_service.py,test_9999_9_sentinel_is_filtered_in_sql_and_in_code,BUG-010 AC2 sentinel excluded in SQL and row guard,PASS
+tests/test_climate_service.py,test_fallback_reading_is_labelled_and_logs_no_raw_payload,BUG-010 AC3 complete labelled fallback and safe cloud error logging,PASS
+tests/test_climate_service.py,test_no_blanket_exception_hides_programming_errors,BUG-010 AC4 no blanket exception and programming errors propagate,PASS
+tests/test_database.py,test_complete_reports_save_generated_ids_and_unchanged_analysis_timestamps,STORY-006 AC1 generated ID and round trip preserve timestamp and caller dict,PASS
+tests/test_database.py,test_history_is_newest_first_with_limits_clamped,STORY-006 AC2 descending history and 0 -5 10000 clamping,PASS
+tests/test_database.py,test_history_rejects_non_integer_limits_without_client_calls,Additional check 5 noninteger helper limit rejection,PASS
+tests/test_database.py,test_returned_timestamps_are_recursive_utc_iso8601_and_json_safe,STORY-006 AC3 recursive UTC ISO8601 JSON-safe timestamps,PASS
+tests/test_database.py,test_firestore_client_write_and_read_failures_raise_safe_database_error,STORY-006 AC4 safe client write and read DatabaseError and logs,PASS
+tests/test_database.py,test_reports_missing_timestamps_receive_server_generated_created_at,STORY-006 AC5 server-generated created_at when timestamp absent,PASS
+tests/test_database.py,test_firestore_client_is_lazy_environment_configured_and_cached,STORY-006 lazy environment-configured client regression,PASS
+tests/test_api.py,test_analyze_awaits_analyzer_and_returns_contract_valid_dict,BUG-007 AC1 awaited analyzer and temp-file subprocess contract validation,PASS
+tests/test_api.py,test_testclient_response_is_dict_not_coroutine,BUG-007 AC2 TestClient returns dict not coroutine,PASS
+tests/test_api.py,test_synchronous_climate_database_and_dispatch_use_to_thread,BUG-007 AC3 synchronous helpers execute through asyncio.to_thread,PASS
+tests/test_api.py,test_critical_report_triggers_dispatch_at_eight_boundary,BUG-008 AC1 CRITICAL HVI 8.0 dispatch and actual Firestore stored flag,PASS
+tests/test_api.py,test_high_and_noncritical_reports_never_dispatch_or_preserve_untrusted_true,BUG-008 AC2 HIGH 7.9 and bands 4.0 6.0 never dispatch or retain untrusted true,PASS
+tests/test_api.py,test_alert_dispatched_is_stored_true_only_after_successful_publish,BUG-008 AC3 one Firestore write after message-ID resolution and failure stays HTTP 200,PASS
+tests/test_api.py,test_climate_source_round_trips_to_response_and_firestore,Additional check 9 bigquery and fallback provenance round-trip,PASS
+tests/test_api.py,test_scans_clamps_limits_through_real_database_helper,Additional check 5 GET scans clamps 0 -5 10000 through helper,PASS
+tests/test_api.py,test_scans_rejects_noninteger_limits_before_firestore,Additional check 5 GET scans rejects invalid integers with 422,PASS
+tests/test_api.py,test_service_errors_map_status_without_secrets_in_response_or_logs,Additional check 6 vision 502 and database read write 503 without secrets,PASS
+tests/test_api.py,test_cors_origins_come_from_environment_with_empty_entries_removed,BUG-009 AC1 import-time multi-origin and trailing-comma parsing,PASS
+tests/test_api.py,test_cors_default_is_localhost_8501,BUG-009 AC2 unset environment defaults to localhost 8501,PASS
+tests/test_api.py,test_cors_has_no_wildcards_and_does_not_echo_disallowed_origin,BUG-009 AC3 restricted methods headers and no disallowed-origin echo,PASS
+tests/test_api.py,test_health_returns_200_without_cloud_calls,QA route requirement health HTTP 200 without cloud calls,PASS
+tests/test_api.py,test_pubsub_client_failure_keeps_analysis_successful_and_stored_false,Additional error-path probe existing BUG-014 constructor raises HTTP 500,FAIL
+tests/test_api.py,test_pubsub_publish_failure_stores_false_without_raw_cloud_logging,Additional error-path probe BUG-017 raw publish payload printed to stdout,FAIL
+tests/test_api.py,test_unsafe_uploads_are_rejected_before_cloud_calls,QA route requirements BUG-015 wrong content type 415 and BUG-016 oversize 413 before cloud calls,FAIL
+tests/test_frontend.py,test_no_deleted_schema_field_is_referenced_in_frontend,BUG-012 AC1 deleted fields absent from frontend AST,PASS
+tests/test_frontend.py,test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts,BUG-012 AC2 confirmation requires CRITICAL and successful dispatch in analysis and history,PASS
+tests/test_frontend.py,test_no_metric_or_history_value_renders_none,BUG-012 AC3 missing values render dash and cooling metric uses schema field,PASS
+tests/test_frontend.py,test_empty_scans_render_without_exception,QA mandatory empty history boundary,PASS
+tests/test_frontend.py,test_api_unreachable_renders_gracefully,QA frontend unreachable API renders without uncaught exception,PASS
+tests/test_frontend.py,test_dashboard_errors_do_not_disclose_raw_cloud_payloads,Security probe existing BUG-013 analysis and history render raw payloads,FAIL
+tests/test_contract.py,test_main_awaits_every_coroutine_function_it_calls,Requested static regression guard for awaited coroutine calls,PASS
+tests/test_contract.py,test_coroutine_regression_guard_rejects_bare_calls_and_import_aliases,Regression guard self-test rejects bare aliased async call,PASS
+tests/test_contract.py,test_no_production_module_references_fields_absent_from_report_schema,Requested schema drift guard checks root nested and explicit additive fields,PASS
+tests/test_contract.py,test_schema_regression_guard_rejects_deleted_nested_and_aliased_fields,Regression guard self-test catches deleted root and nested fields through aliases,PASS
+tests/test_sprint_packaging.py,test_dockerignore_exists_and_excludes_secrets_environments_and_keys,BUG-011 AC1 backend build-context ignore protects env git venv and keys,PASS
+tests/test_sprint_packaging.py,test_fresh_image_history_and_every_layer_exclude_credentials,BUG-011 AC2 fresh offline COPY build history and layer filename audit,PASS
+tests/test_sprint_packaging.py,test_fresh_image_starts_and_serves_health,BUG-011 AC3 fresh image uvicorn config startup and TestClient health HTTP 200,PASS
+tests/test_sprint_packaging.py,test_only_one_hand_maintained_manifest_and_backend_is_locked_export,TASK-024 AC1 generated backend manifest equals locked offline runtime export,PASS
+tests/test_sprint_packaging.py,test_image_runtime_versions_match_uv_lock,TASK-024 AC2 cached runtime versions match locked export and pytest tooling absent,PASS

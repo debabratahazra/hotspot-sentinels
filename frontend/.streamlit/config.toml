@@ -1,0 +1,13 @@
+[theme]
+base = "dark"
+primaryColor = "#e2aa41"
+backgroundColor = "#101413"
+secondaryBackgroundColor = "#1c2421"
+textColor = "#f0f3f1"
+font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+headingFontSizes = ["32px", "24px", "20px", "18px", "16px", "14px"]
+baseRadius = "6px"
+greenColor = "#43b879"
+orangeColor = "#e2aa41"
+redColor = "#f26767"
+showSidebarBorder = true

@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 .github/hooks/scripts/inject_build_context.py",
+        "windows": "python .github/hooks/scripts/inject_build_context.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

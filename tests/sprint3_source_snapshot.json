@@ -1,0 +1,63 @@
+{
+    "sprint": 3,
+    "git_revision": null,
+    "revision_note": "git rev-parse --verify HEAD fails: repository has no HEAD; evidence identifies uncommitted canonical workspace content instead.",
+    "working_directory": "/Users/hazra/Documents/Google_Hackathon/hotspot-sentinels",
+    "canonical_lock_path": "/Users/hazra/Documents/Google_Hackathon/hotspot-sentinels/uv.lock",
+    "commands": [
+        "uv lock --check --offline",
+        "python3 -m pytest -o addopts='' -q tests/test_cross_layer_contract.py -s",
+        "python3 -m pytest -o addopts='' -q",
+        "python3 -m pytest -o addopts='' -q --cov=backend --cov=frontend --cov=tests --cov-report=json:tests/sprint3_full_coverage.json --cov-report=term-missing",
+        "python3 .github/skills/agile-sdlc-loop/scripts/sprint_report.py"
+    ],
+    "full_suite": {
+        "passed": 356,
+        "failed": 5,
+        "warnings": 3
+    },
+    "standing_gate": {
+        "passed": 29,
+        "failed": 0
+    },
+    "sha256": {
+        "backend/main.py": "507fd03be1668b900ae80badb7c7293a2fffde3b6cced4d82bb94390e595fd9d",
+        "backend/services/vision_analyzer.py": "c441664b7f5aa7f6d5de0729adda416c9953b17e62b0c5fece9d975592e30e3a",
+        "backend/services/alert_dispatcher.py": "e6d3949ccd2c4e364c5359d3bc8c14de24d3263c76c15c77ca9aec1c83a8c84a",
+        "backend/services/database.py": "df4cf409e1c57913946b5ddadcad52a899d925cdc350a78d1ad38a70e5fc04b4",
+        "backend/tools/climate_service.py": "04cef0385102c21e1bc3b5b5f04b147b0d76ad22207b270224fe6ef4384471d4",
+        "backend/tools/seed_samples.py": "19a7d0012cce4f785046307bf89808cbb89c3a6ba6e7a065b52e673298ce626e",
+        "frontend/app.py": "5e37522079b851e8f6af3177b7910cfc9954244ee3a81ff68ad4c0baf1eb84e0",
+        "tests/test_cross_layer_contract.py": "925a7106bd6af01548effaf8ba9e3481e113901b07fd649193b815a23de61760"
+    },
+    "exception_review": {
+        "old_operational_bases": [
+            "GoogleAPIError",
+            "GoogleAuthError",
+            "RequestException"
+        ],
+        "not_subclasses_of_old_bases": [
+            "DataCorruption",
+            "RpcError",
+            "TimeoutError",
+            "MessageTooLargeError",
+            "OSError"
+        ],
+        "current_storage_operation_extra": [
+            "DataCorruption"
+        ],
+        "current_pubsub_operation_extras": [
+            "RpcError",
+            "TimeoutError",
+            "MessageTooLargeError"
+        ],
+        "current_configuration_handling": "OSError/EnvironmentError translated at BigQuery/Firestore/GCS client construction only",
+        "programming_errors": "TypeError/KeyError propagate from construction and operations",
+        "focused_result": "58 passed for tests/test_database.py plus tests/test_sprint3_cloud.py before final supplementary tests"
+    },
+    "limitations": [
+        "No real Google Cloud calls were made; HVI rubric configuration and reference scoring use mocked generation, not live model perception.",
+        "Cached hotspot-hardened:latest certifies UID/no-uv/PORT mechanics but fails current-source identity and is not serving-revision evidence.",
+        "TASK-013 serving revision, digest, live scenarios and rollback remain Phase 7 work."
+    ]
+}

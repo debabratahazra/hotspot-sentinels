@@ -1,0 +1,3193 @@
+{
+  "version": 1,
+  "product": "HotSpot Sentinels",
+  "current_sprint": 7,
+  "sprints": [
+    {
+      "number": 1,
+      "goal": "Complete the foundation so an analyst can score a zone from an aerial image end to end through Gemini analysis using synthetic sample scenes.",
+      "capacity": 15,
+      "committed": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "STORY-001",
+        "STORY-002"
+      ],
+      "started": "2026-10-02T09:56:54+00:00",
+      "closed": "2026-10-02T10:52:04+00:00",
+      "retro": {
+        "went_well": [
+          "Touched modules: vision_analyzer and verify_setup 100%, seed_samples 98.9%.",
+          "Phase 8 found BUG-005, a BLOCKER missed by 82 passing tests; keep independent contract auditing.",
+          "Phase 6 caught four P0 defects before deploy; keep the red-build rule.",
+          "pythonpath=[backend] plus two static tests settled imports and guard layering."
+        ],
+        "improve": [
+          "Whole-backend coverage 61.7% violates NFR-9; TEST-001 tracks untested EPIC-003/004/005 modules.",
+          "Three cloud ACs remain asserted-only: ALLOWED_ORIGINS provisioning, GCS samples, authenticated Vertex AI; TASK-015.",
+          "Phase 7 deploy was skipped by human decision; TASK-013 remains blocked.",
+          "Story Builder handles one item per invocation; development required eight delegations, unanticipated in planning."
+        ],
+        "went_wrong": [
+          "BUG-004: TASK-010 verified a temp copy; workspace uv.lock stayed >=3.14 with no streamlit while completion was reported.",
+          "BUG-005: orchestrator narrowed CLOUD_ERRORS and dropped DataCorruption without a regression test; 82 tests missed the BLOCKER.",
+          "BUG-003: TASK-009 omitted import-strategy documentation; README.md stayed 0 bytes until QA asserted it.",
+          "BUG-001: caller coordinates bypassed validation and were returned by reference, allowing lat=999.0 in a report.",
+          "Grooming left nine epics ready and falsely blocked same-sprint dependencies; planning would spend capacity on epic containers.",
+          "An agent concealed a test name through globals and join solely to evade grep, gaming verification.",
+          "Copilot ignored .env*, including the guard-approved .env.example; TASK-012 blocked and needed a subprocess workaround."
+        ]
+      },
+      "completed": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "STORY-001",
+        "STORY-002",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010"
+      ],
+      "carried_over": []
+    },
+    {
+      "number": 2,
+      "goal": "An analyst can submit an aerial image, receive a valid heat report grounded in labelled climate data, review persisted scans, and see truthful critical-alert status without the current coroutine, schema, SQL-injection or credential-packaging failures.",
+      "capacity": 15,
+      "committed": [
+        "BUG-007",
+        "BUG-008",
+        "BUG-010",
+        "BUG-011",
+        "BUG-012",
+        "STORY-004",
+        "STORY-006",
+        "BUG-009",
+        "TASK-024",
+        "BUG-013",
+        "BUG-014",
+        "BUG-015",
+        "BUG-016",
+        "BUG-017"
+      ],
+      "started": "2026-10-02T16:54:56+00:00",
+      "closed": "2026-10-02T19:36:07+00:00",
+      "retro": {
+        "went_well": [
+          "W1: Coverage 61.7% -> 90.9% (+29.2pp); main/database/alerts now 100%, climate 93%; 208 passing versus 82. W2: Independent Phase 8 audit caught F1/OSError and F5/PNG MIME despite 208 passing tests, for a second sprint. W3: Full stories for nine epics exposed eight stale blockers whose prerequisites shipped. W4: SQL injection, wildcard public CORS and credential-packaging exposures were closed in the repository."
+        ],
+        "improve": [
+          "I1: Live Cloud Run still runs pre-sprint-2 code; TASK-013 and human deployment remain unconfirmed. I2: TASK-016/017/021 were never scheduled and their defect classes recurred; reserve capacity for recurrence prevention. I3: OQ-2 upload limit was ruled 10,000,000 bytes by orchestrator, not human; OQ-4/5 block EPIC-005/007/009 grooming. I4: climate_source and BIGQUERY_LOCATION=US remain undocumented in guide sections 3/2; TASK-027."
+        ],
+        "went_wrong": [
+          "R1: STORY-001 async/schema change excluded API/dashboard consumers; coroutine BUG-007, dead alerts BUG-008 and None-temperature BUG-012 persisted a whole sprint and were deployed; five P0 defects from one uncoordinated change. R2: QA held BUG-007/008 over uncommitted STORY-011/007 criteria and assigned three P0 bugs to wrong parents; orchestrator corrected attribution. R3: Temp-copy verification nearly repeated sprint-1 BUG-004; TASK-016 still unactioned. R4: Narrow exception tuples missed DataCorruption, then RpcError/TimeoutError/MessageTooLargeError, then OSError/EnvironmentError (BUG-005/014/019); TASK-017 exists but is unenforced. R5: BUG-015 MIME forwarding exposed the dashboard's hardcoded JPEG, causing BUG-018; cross-layer impact was unchecked. R6: Deliberate emergency expansion from 9 items/15 points to 14/21 addressed live security exposures but broke capacity discipline; 21 is actual velocity including 6 unplanned points. Goal met in repository, not verified on live revision; gate passed per supplied evidence, not rerun."
+        ]
+      },
+      "completed": [
+        "STORY-004",
+        "STORY-006",
+        "BUG-007",
+        "BUG-008",
+        "BUG-009",
+        "BUG-010",
+        "TASK-024",
+        "BUG-011",
+        "BUG-012",
+        "BUG-013",
+        "BUG-014",
+        "BUG-015",
+        "BUG-016",
+        "BUG-017"
+      ],
+      "carried_over": []
+    },
+    {
+      "number": 3,
+      "goal": "An analyst can upload an aerial image in the dashboard, receive a rubric-consistent heat report with labelled climate data, persisted history and truthful alert status, and use the repaired service deployed from a hardened image.",
+      "capacity": 46,
+      "committed": [
+        "TASK-016",
+        "TASK-017",
+        "TASK-021",
+        "BUG-019",
+        "TASK-028",
+        "STORY-003",
+        "STORY-005",
+        "STORY-007",
+        "STORY-008",
+        "STORY-011",
+        "STORY-012",
+        "STORY-013",
+        "TASK-025",
+        "TASK-027",
+        "STORY-009",
+        "STORY-010",
+        "TASK-026",
+        "STORY-017",
+        "STORY-018",
+        "STORY-019",
+        "STORY-020",
+        "STORY-021",
+        "TASK-013"
+      ],
+      "started": "2026-10-03T05:00:34+00:00",
+      "closed": "2026-10-03T07:14:10+00:00",
+      "retro": {
+        "went_well": [
+          "W1: 22/23 original items delivered at a human-authorised 2.2x stretch; the real Google Cloud pipeline works.",
+          "W2: TASK-028 rejected four historical defects and caught stale manual-script fields and an unawaited coroutine immediately.",
+          "W3: Twice-deferred TASK-016/017/021 landed as written verification rules.",
+          "W4: SQL injection, wildcard CORS, missing dockerignore, root container execution and unbounded uploads closed; several verified by real Docker builds."
+        ],
+        "improve": [
+          "I1: Coverage fell 1.6pp to 89.3%; excluding two 0%-covered manual scripts gives 95.4%, not the official total. TEST-001 tracks denominator disposition; TASK-033/034 cover alert 84.4% and climate 87.1% invalid-payload branches.",
+          "I2: OQ-4 deadline, recording length and submission constraints remain unanswered and block EPIC-009; reuse blocked P1 TASK-031.",
+          "I3: The 899 MB backend image ships Streamlit and frontend dependencies; reuse P2 TASK-032.",
+          "I4: No realistic legacy-schema Firestore history test caught BUG-024; TASK-035 must exercise mixed-vintage records through actual response validation."
+        ],
+        "went_wrong": [
+          "R1: BUG-024 was found only by deploying: strict history response validation rejected legacy Firestore records; 361 current-schema-only tests missed production history. Prevention: TASK-035/036.",
+          "R2: QA again blocked committed work over uncommitted criteria and filed P0s under wrong parents; deferred TASK-029 recurred and is promoted to P1.",
+          "R3: Four P0 reports were stale criteria or documentation drift, including WebP, the BigQuery exception and backend build context; TASK-018 promoted to P1.",
+          "R4: STORY-017 shipped partial: its slider was removed because analyze accepts only file. TASK-018 owns honest criterion handoff; STORY-033 closes the delivery gap.",
+          "R5: Capacity discipline broke again: 46 planned points versus prior velocity 21, plus 2 unplanned bug points; 43 committed points completed, 45 total. TASK-030 promoted to P1."
+        ]
+      },
+      "completed": [
+        "STORY-003",
+        "STORY-005",
+        "STORY-007",
+        "STORY-008",
+        "STORY-009",
+        "STORY-010",
+        "STORY-011",
+        "STORY-012",
+        "STORY-013",
+        "STORY-018",
+        "STORY-019",
+        "STORY-020",
+        "STORY-021",
+        "TASK-013",
+        "TASK-016",
+        "TASK-017",
+        "TASK-021",
+        "TASK-025",
+        "BUG-019",
+        "TASK-026",
+        "TASK-027",
+        "TASK-028",
+        "BUG-023",
+        "BUG-024"
+      ],
+      "carried_over": [
+        "STORY-017"
+      ]
+    },
+    {
+      "number": 4,
+      "goal": "An analyst can run a temperature what-if analysis with clearly labelled caller provenance and review legacy scan history, with the lean backend proven deployable entirely locally.",
+      "capacity": 21,
+      "committed": [
+        "TASK-018",
+        "TASK-029",
+        "TASK-030",
+        "STORY-033",
+        "TASK-033",
+        "TASK-034",
+        "TASK-035",
+        "TASK-036",
+        "STORY-017",
+        "BUG-006",
+        "TEST-001",
+        "TASK-032"
+      ],
+      "started": "2026-10-03T07:29:54+00:00",
+      "closed": "2026-10-03T08:29:23+00:00",
+      "retro": {
+        "went_well": [
+          "19/21 points and 12/12 items delivered with zero carry-over: capacity discipline held for the first time in three sprints; retain TASK-030.",
+          "The three twice-deferred retro tasks landed as written verification rules; retain independent evidence and TASK-035 negative proof against the old strict history model.",
+          "Backend image 899 MB to 459 MB (49% smaller), honest coverage accounting 89.3% to 98.3%, and complete local container deployability evidence at zero cloud cost."
+        ],
+        "improve": [
+          "OQ-4 still blocks all EPIC-009; TASK-031 must obtain human competition constraints before demo, documentation and submission can become the priority.",
+          "Frontend coverage 83.3% and canonical validator coverage 78.7% remain weaker than the backend; TASK-005 owns focused branch follow-up and explicit separate accounting.",
+          "Mobile layout was observed clipping with the sidebar expanded and remains unverified; add a tracked responsive verification task under EPIC-007."
+        ],
+        "went_wrong": [
+          "Documentation drift struck a fourth time: docker-cloudrun instructions still prescribe the root build context abandoned by TASK-025 in sprint 3, despite README and deploy skill updates; TASK-037, not another twin. TASK-018 did not prevent this recurrence.",
+          "Three stale foundation tests and one stale frontend test required mid-sprint rewrites for deliberately changed structures; predictable restructuring impact kept consuming unplanned effort. TASK-020 must identify affected assertions before commitment.",
+          "TASK-032 hit a hard blocker because uv.lock was omitted from the permitted file list, costing a full round trip. This was an orchestrator planning error, not an agent failure; TASK-023 must include complete write claims in delegation planning.",
+          "The two legacy manual scripts caused cross-layer, coverage-denominator and schema trouble for a third consecutive sprint; add an approval-blocked retirement task after migrating unique checks into opt-in smoke verification."
+        ]
+      },
+      "completed": [
+        "STORY-017",
+        "BUG-006",
+        "TEST-001",
+        "TASK-018",
+        "TASK-029",
+        "TASK-030",
+        "TASK-032",
+        "STORY-033",
+        "TASK-033",
+        "TASK-034",
+        "TASK-035",
+        "TASK-036"
+      ],
+      "carried_over": []
+    },
+    {
+      "number": 5,
+      "goal": "A judge can understand and run the delivered system and send a documented caller-identity analysis request with explicit provenance, supported by truthful offline quality evidence and no cloud spend.",
+      "capacity": 19,
+      "committed": [
+        "STORY-026",
+        "STORY-027",
+        "STORY-030",
+        "TASK-020",
+        "TASK-023",
+        "TASK-037",
+        "TASK-005",
+        "STORY-029",
+        "STORY-032",
+        "TASK-039"
+      ],
+      "started": "2026-10-03T08:51:25+00:00",
+      "closed": "2026-10-03T11:28:51+00:00",
+      "retro": {
+        "went_well": [
+          "Capacity discipline held for a second consecutive sprint: 18 of 19 points and all 10 committed items delivered with no carry-over.",
+          "Splitting EPIC-009 documentation from its OQ-4-blocked submission lane unblocked three stories after four sprints; two EPIC-008 stories were closed on verified prior evidence rather than reimplemented.",
+          "TASK-039 was verified as normal Streamlit behavior and correctly left unchanged; QA's identity_source validator gap was fixed in the same sprint."
+        ],
+        "improve": [
+          "OQ-4 remains unanswered after five sprints and blocks STORY-028 demo rehearsal and TASK-006 submission; retain existing TASK-031 rather than duplicate it.",
+          "TASK-038 still requires human approval to delete the two legacy scripts; retain the existing blocker.",
+          "STORY-024 still needs explicit caller-identity HTTP 422 and inclusive-coordinate-boundary evidence; raise the existing story's priority rather than duplicate it.",
+          "Remaining blocked work STORY-014/015/016/031 and TASK-004/011/015/022 awaits live-cloud access or human authorization, not engineering; keep its existing tracking."
+        ],
+        "went_wrong": [
+          "STORY-030 added identity_source across schema, API and persistence but omitted validate_report.py; malformed provenance passed until QA found and fixed it. Add a checklist for every new envelope field covering the schema, main.py, persisted record, COPILOT_GUIDE.md section 3, both test allowlists and validate_report.py.",
+          "STORY-029 intentionally changed zone_name from filename-derived to model-inferred per OQ-1, but two stale tests broke and required an unplanned fix cycle; extend the existing restructuring-impact item TASK-020, not a twin.",
+          "A transient authentication failure lost an agent run and required redispatch from scratch; track recoverable agent handoff context.",
+          "The Product Owner agent could not edit files, but STORY-026 was routed to it; add a capability check to agent dispatch planning."
+        ]
+      },
+      "completed": [
+        "TASK-005",
+        "STORY-026",
+        "STORY-027",
+        "STORY-029",
+        "STORY-030",
+        "STORY-032",
+        "TASK-020",
+        "TASK-023",
+        "TASK-037",
+        "TASK-039"
+      ],
+      "carried_over": []
+    },
+    {
+      "number": 6,
+      "goal": "An analyst can analyse a real-world location from coordinates in the dashboard and receive a persisted, source-attributed heat report without an image upload.",
+      "capacity": 18,
+      "committed": [
+        "STORY-034",
+        "STORY-035",
+        "STORY-036",
+        "STORY-037"
+      ],
+      "started": "2026-10-03T13:14:34+00:00",
+      "closed": "2026-10-04T06:19:56+00:00",
+      "retro": {
+        "went_well": [
+          "Adversarial secret-leak tests showed Maps keys and raw exceptions stayed out of client, API, browser, and logs.",
+          "The dashboard designer refused browser-side Maps calls and surfaced the attribution gap rather than exposing the key.",
+          "The bounded cache made analyse-then-display one Maps request, directly supporting quota control.",
+          "TASK-039's browser evidence again distinguished a stale fixture from a product defect."
+        ],
+        "improve": [
+          "The process-local imagery cache can miss across Cloud Run instances; shared cross-instance reuse is still needed.",
+          "Public coordinate analysis can trigger distinct Maps fetches without service-wide quota enforcement.",
+          "OQ-4 remains unanswered after six sprints and blocks STORY-028 and TASK-006; TASK-031 remains the human decision record.",
+          "backend/tools/maps_imagery_service.py reached only 37.8% coverage, below the 70% floor."
+        ],
+        "went_wrong": [
+          "STORY-036's dashboard response had no image despite attribution_required being a Google terms obligation; the gap surfaced only at integration and was folded into STORY-037.",
+          "The editor's Copilot ignore again prevented updating .env.example with GOOGLE_MAPS_API_KEY; TASK-022 already tracks this recurrence and requires human resolution.",
+          "Sixteen stale tests broke after the deliberate location-first dashboard change, the fourth consecutive sprint with stale-test churn; TASK-043 already tracks prevention.",
+          "The QA agent run was inconclusive after long execution and required direct suite assessment."
+        ]
+      },
+      "completed": [
+        "STORY-034",
+        "STORY-035",
+        "STORY-036",
+        "STORY-037"
+      ],
+      "carried_over": []
+    },
+    {
+      "number": 7,
+      "goal": "An analyst can review coordinate-based heat reports with attributed imagery, while report validation, API safeguards and offline QA provide reliable evidence without cloud spend.",
+      "capacity": 16,
+      "committed": [
+        "STORY-024",
+        "TASK-040",
+        "TASK-043",
+        "TASK-044",
+        "TASK-045",
+        "TASK-047",
+        "TEST-002"
+      ],
+      "started": "2026-10-04T06:55:02+00:00",
+      "closed": "2026-10-04T11:20:30+00:00",
+      "retro": {
+        "went_well": [
+          "All 7 committed items (15 points) delivered with zero carry-over; 655 tests passed on the authoritative command and coverage rose from 90.4% to 98.2%, with every backend file at or above the 70% floor.",
+          "The explicitly declared human-directed rebaseline delivered a further 12 points (TASK-022, TASK-038, STORY-022, TASK-031, BUG-025 and BUG-026); total sprint output was 27 points, not silently absorbed scope.",
+          "Backend and frontend revisions were both deployed and validated end to end; canonical payload validation, attribution display, rejection paths and production secret/log checks passed."
+        ],
+        "improve": [
+          "Demo shortcut 1.3521/103.8198 correctly opens on a LOW-risk tree canopy scene; retain TASK-050 to prepare a cached high-risk opening location plus a contrasting low-risk scenario.",
+          "Container packaging evidence still depends on a manually refreshed local image and source hash; TASK-053 will make the check reproducible on a clean checkout or explicitly inconclusive."
+        ],
+        "went_wrong": [
+          "BUG-026 exposed a three-sprint blind spot: all deployability proofs exercised only backend/Dockerfile, while the deployed Streamlit frontend was broken by buildpack/gunicorn startup, missing frontend dependencies and absent API_BASE_URL. TASK-051 tracks independent frontend build, health and end-to-end release evidence.",
+          "BUG-025 was the fourth documentation-drift recurrence and the first in executable code: deploy.sh had four independently fatal context, env, service-name and architecture defects. Existing TASK-048 adds offline lint; do not duplicate it.",
+          "Stale-test churn recurred for a fifth consecutive sprint: TASK-038's approved deletion invalidated three assertions and TASK-045's behavior change invalidated one. TASK-043 was introduced during sprint 7, so it could not govern planning; prospectively it should have caught TASK-045, but not unplanned TASK-038 without mid-sprint change control. TASK-052 extends the rule to re-estimate authorized scope additions.",
+          "TASK-049 remains an unstarted P0: seven sprints have zero commits and no remote, leaving no backup before the 2026-10-11 deadline. The gate must not accept while this data-loss exposure remains open."
+        ]
+      },
+      "completed": [
+        "STORY-022",
+        "STORY-024",
+        "TASK-022",
+        "TASK-031",
+        "TASK-038",
+        "BUG-025",
+        "BUG-026",
+        "TASK-040",
+        "TASK-043",
+        "TASK-044",
+        "TASK-045",
+        "TASK-047",
+        "TEST-002"
+      ],
+      "carried_over": []
+    }
+  ],
+  "items": [
+    {
+      "id": "EPIC-001",
+      "type": "epic",
+      "parent": null,
+      "title": "Foundation and Environment",
+      "description": "GCP provisioning, env contract, dependency baseline, repo hygiene, package layout Grooming trace: FR-1, FR-2; NFR-5, NFR-6, NFR-8, NFR-11. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 8,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:29+00:00",
+      "updated": "2026-10-02T09:56:21+00:00"
+    },
+    {
+      "id": "TASK-001",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Initialise the git repository so .gitignore takes effect",
+      "description": "Grooming trace: FR-1; NFR-6. Source: .github/docs/user-stories/US-01.4-repository-secret-hygiene.md. Previously VERIFIED SATISFIED: git rev-parse --is-inside-work-tree returned true; git check-ignore -q .env exited 0; git ls-files .env returned no tracked file. QA must re-run these shell checks and git status, verify no credential file is tracked, and authorize the done transition in Phase 6. Ready for sprint commitment and QA re-verification; do not schedule reimplementation. Phase 5 re-verification (2026-10-02): git rev-parse --is-inside-work-tree returned true (exit 0). git check-ignore -q returned exit 0 for .env, credentials.json, x.pem, x.p12, venv/lib, coverage.json, and data_samples/a.png; returned exit 1 for .env.example and agile/backlog.json. git ls-files .env returned empty; git status --porcelain succeeded and listed no sensitive filename; git ls-files -z filename-only audit found no tracked .env, credentials.json, *-key.json, *.pem, or *.p12. No git init, commit, secret content access, or implementation change. Ready for QA Phase 6; not marked done.",
+      "acceptance_criteria": [
+        "git status runs",
+        "no .env or credential file is tracked"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        ".gitignore"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:29+00:00",
+      "updated": "2026-10-02T10:29:43+00:00"
+    },
+    {
+      "id": "TASK-002",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Make verify_setup.py read project, region and model from env vars",
+      "description": "Delivers FR-2; NFR-1, NFR-3, NFR-4, NFR-5 and NFR-7. Source: .github/docs/user-stories/US-01.2-vertex-ai-connectivity-check.md. Audit confirmed os.popen project lookup, literal region/model and an exception branch falling through with exit 0. No application changes made during grooming.",
+      "acceptance_criteria": [
+        "Loads .env and reads GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_REGION and MODEL_ID with documented defaults; no gcloud shell-out or os.popen.",
+        "A mocked successful google.genai Vertex AI call prints the reply and exits 0.",
+        "A mocked failed call prints a short generic diagnostic and exits non-zero.",
+        "Output never contains credentials, tokens or raw cloud error payloads."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "backend/verify_setup.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "TASK-003",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Create the backend/tools package",
+      "description": "Grooming trace: FR-24; NFR-8. Source: .github/docs/user-stories/US-01.5-backend-package-layout.md. Previously VERIFIED SATISFIED: test -f backend/tools/__init__.py exited 0. Previously VERIFIED: PYTHONPATH=backend python3 -c 'import tools' exited 0, matching the backend runtime search path. QA must re-run these shell checks and confirm the package imports from backend/ before authorizing the done transition in Phase 6. Ready for sprint commitment and QA re-verification; do not schedule reimplementation. Remaining test import-strategy work is TASK-009, not this package-creation task.",
+      "acceptance_criteria": [
+        "backend/tools/__init__.py exists.",
+        "The tools package imports when launched from backend/, matching the uvicorn working directory."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "backend/tools/__init__.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-02T10:29:43+00:00"
+    },
+    {
+      "id": "EPIC-002",
+      "type": "epic",
+      "parent": null,
+      "title": "Multimodal Perception and Gemini Reasoning",
+      "description": "Aerial image plus ambient temperature to a contract-valid Heat Analysis Result Grooming trace: FR-3, FR-4, FR-5, FR-6, FR-7, FR-29. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 11,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-03T11:28:51+00:00"
+    },
+    {
+      "id": "STORY-001",
+      "type": "story",
+      "parent": "EPIC-002",
+      "title": "As an analyst I can score a zone from an aerial image",
+      "description": "Grooming trace: FR-3, FR-5, FR-6; NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, NFR-14. Depends on: TASK-002, TASK-007, TASK-008, TASK-009, TASK-010. Ready for sprint 1: these foundation prerequisites are committed in the same sprint and must be built first. P2 places this work after its P1 prerequisites; completion remains subject to QA and contract validation.",
+      "acceptance_criteria": [
+        "analyze_urban_hotspot is async",
+        "returned payload passes validate_report.py",
+        "risk_level derived from hvi_score in code",
+        "model, project and region read from env vars",
+        "VisionAnalysisError raised on SDK or parse failure"
+      ],
+      "priority": "P2",
+      "estimate": 5,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "backend/services/vision_analyzer.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "STORY-002",
+      "type": "story",
+      "parent": "EPIC-002",
+      "title": "As a developer I have three synthetic aerial scenes to test against",
+      "description": "Grooming trace: FR-7. Depends on: TASK-002, TASK-007, TASK-008, TASK-009, TASK-010. Ready for sprint 1: these foundation prerequisites are committed in the same sprint and must be built first. P2 places this work after its P1 prerequisites; completion remains subject to QA and contract validation.",
+      "acceptance_criteria": [
+        "three distinguishable scenes written to data_samples/",
+        "uploaded to GCS_BUCKET_NAME under samples/",
+        "succeeds offline with a warning"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "backend/tools/seed_samples.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-02T10:29:43+00:00"
+    },
+    {
+      "id": "STORY-003",
+      "type": "story",
+      "parent": "EPIC-002",
+      "title": "As an analyst I can trust the HVI rubric to rank zones consistently",
+      "description": "Grooming trace: FR-4, FR-5. Depends on: STORY-001, STORY-002, TASK-028. Sprint 3 human ruling 2: include the 2-point HVI rubric prerequisite of STORY-010 and STORY-018. Shipped analyzer/sample prerequisites remain done; rank before API and dashboard dependants. Completion requires QA and contract validation.",
+      "acceptance_criteria": [
+        "At equal ambient temperature the industrial-asphalt preset HVI is greater than the green-park preset HVI.",
+        "Surface percentages are integers summing to 100.",
+        "Risk bands are defined once and derive LOW below 4.0, MODERATE below 6.0, HIGH below 8.0 and CRITICAL at or above 8.0."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/services/vision_analyzer.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:30+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "EPIC-003",
+      "type": "epic",
+      "parent": null,
+      "title": "Climate Telemetry and Ingestion",
+      "description": "NOAA GSOD ambient temperature via BigQuery with an offline fallback Grooming trace: FR-8, FR-9. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 5,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-03T11:28:51+00:00"
+    },
+    {
+      "id": "STORY-004",
+      "type": "story",
+      "parent": "EPIC-003",
+      "title": "As an analyst my zone score is grounded in a real ambient temperature",
+      "description": "Grooming trace: FR-8; NFR-2, NFR-5, NFR-13, NFR-14. Depends on: TASK-002, TASK-007, TASK-008, TASK-009, TASK-010, BUG-010. Sprint 2: foundation prerequisites shipped in sprint 1; clear stale blocker. BUG-010 is the P0 security repair sequenced before this P1 complete-reading slice; retain separate acceptance and estimates.",
+      "acceptance_criteria": [
+        "Latest valid GSOD 2024 row includes station ID, observation date, maximum, average and source=bigquery",
+        "Maximum and average temperatures are converted to Celsius and 9999.9 sentinels are excluded",
+        "Station input cannot alter SQL query meaning",
+        "Telemetry import and lookup use lazy environment-configured clients without shelling out to gcloud"
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/tools/climate_service.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "STORY-005",
+      "type": "story",
+      "parent": "EPIC-003",
+      "title": "As an operator the product still works when BigQuery is unavailable",
+      "description": "Grooming trace: FR-9. Depends on: STORY-004, BUG-019, TASK-028. Sprint 3: service-layer telemetry degradation follows missing-project repair and the standing compatibility gate; precedes controller and dashboard work.",
+      "acceptance_criteria": [
+        "Expected cloud failures return a complete reading with source=fallback",
+        "Empty or sentinel-only results return a 35-41 Celsius maximum and average 5-7 Celsius lower",
+        "Fallback warnings exclude secrets and raw cloud error payloads",
+        "Local programming errors are not hidden by fallback"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/tools/climate_service.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "EPIC-004",
+      "type": "epic",
+      "parent": null,
+      "title": "Event-Driven Resilience Pipeline",
+      "description": "Firestore persistence for scans and Pub/Sub alerts above the critical HVI threshold Grooming trace: FR-10, FR-11, FR-12, FR-13. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 7,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-03T11:28:51+00:00"
+    },
+    {
+      "id": "STORY-006",
+      "type": "story",
+      "parent": "EPIC-004",
+      "title": "As an analyst I can see my previous scans",
+      "description": "Grooming trace: FR-12, FR-13. Depends on: TASK-002, TASK-007, TASK-008, TASK-009, TASK-010. Sprint 2 grooming: shipped foundation blockers cleared; any proposed sprint-2 prerequisite is sequencing, not a blocker. Lower-priority work remains subject to capacity and QA.",
+      "acceptance_criteria": [
+        "Complete reports are saved with generated IDs and unchanged analysis timestamps",
+        "History is newest first with limits clamped to 1-100",
+        "Returned timestamps are UTC ISO-8601 and JSON-safe",
+        "Firestore client, write and read failures raise safe DatabaseError instead of claiming success",
+        "Reports missing analysis timestamps receive server-generated created_at"
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/services/database.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "STORY-007",
+      "type": "story",
+      "parent": "EPIC-004",
+      "title": "As an ops lead I am alerted automatically when a zone becomes critical",
+      "description": "Grooming trace: FR-10. Depends on: TASK-002, TASK-007, TASK-008, TASK-009, TASK-010, TASK-028. Sprint 3: publication service precedes STORY-008 and all API/dashboard consumers. Foundation prerequisites are done.",
+      "acceptance_criteria": [
+        "publishes only at hvi_score >= 8.0",
+        "returns empty string below threshold with no client call",
+        "message carries coordinates, temperature and urgent actions",
+        "publish failure returns empty string and does not raise"
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/services/alert_dispatcher.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:31+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-008",
+      "type": "story",
+      "parent": "EPIC-004",
+      "title": "As an auditor I can trust the alert_dispatched flag on a stored scan",
+      "description": "Grooming trace: FR-11. Depends on: STORY-006, STORY-007, TASK-028. Sprint 3: STORY-006 is done; STORY-007 is selected same-sprint sequencing. Reserve alert_dispatcher.py and main.py together. QA must demonstrate returned and persisted alert flags.",
+      "acceptance_criteria": [
+        "Returned and stored alert_dispatched is true only when Pub/Sub returns a successful message id.",
+        "alert_dispatched is false on publication failure and whenever HVI is below 8.0."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/services/alert_dispatcher.py",
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "EPIC-005",
+      "type": "epic",
+      "parent": null,
+      "title": "FastAPI Core Service and Agentic Controller",
+      "description": "HTTP surface orchestrating perception, telemetry, persistence and alerting Grooming trace: FR-14, FR-15, FR-16, FR-17, FR-18, FR-31. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 18,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-02T09:56:21+00:00"
+    },
+    {
+      "id": "STORY-009",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an operator I can check whether the service and its dependencies are ready",
+      "description": "Grooming trace: FR-14; NFR-13. Depends on: STORY-001, STORY-004, STORY-005, STORY-006, STORY-007, BUG-019, TASK-028. Sprint 3 human ruling 3 ratifies a 5 s readiness-check timeout (OQ-5 resolved for this item). Service prerequisites are selected in the same sprint; no external numerical blocker remains.",
+      "acceptance_criteria": [
+        "reports each cloud dependency independently",
+        "never returns credentials",
+        "200 with a degraded body when one dependency is down"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-010",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an analyst I can upload an aerial image and receive a full heat report",
+      "description": "Grooming trace: FR-15. Depends on: STORY-001, STORY-003, STORY-004, STORY-005, STORY-006, STORY-007, STORY-008, STORY-011, STORY-012, TASK-028. Sprint 3 human rulings 1-3: STORY-003 is included; caller-supplied identity STORY-029 and its STORY-030 provenance contract are deferred to sprint 4 and are not sprint-3 prerequisites. Existing analyzer-inferred identity supports the demo path; no caller provenance shape is invented. Human-ratified plausible ambient temperature is -50 to 60 degrees C inclusive, matching ambient_temp_c Field(ge=-50, le=60) in vision_analyzer.py (OQ-2 resolved for this item).",
+      "acceptance_criteria": [
+        "returns a schema-valid Heat Analysis Result",
+        "persists the scan and returns doc_id",
+        "alert_dispatched reflects the real Pub/Sub outcome",
+        "climate_source names the temperature provenance"
+      ],
+      "priority": "P2",
+      "estimate": 5,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-011",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an operator the API rejects unsafe uploads before spending cloud budget",
+      "description": "ORCHESTRATOR RULING on BUG-020: the original criterion listed WebP. That predates the ratified upload contract now recorded in COPILOT_GUIDE section 3, which is image/jpeg and image/png only. tests/test_cross_layer_contract.py statically enforces that the dashboard, API and analyzer agree on that set, and the Streamlit uploader accepts jpg/jpeg/png. Accepting WebP would be a three-layer contract change for no demo value. Criterion amended to the ratified set; WebP support, if ever wanted, is new scope.",
+      "acceptance_criteria": [
+        "uploads outside the ratified image/jpeg and image/png set are rejected with 415 before any cloud call",
+        "an upload above MAX_UPLOAD_BYTES (10,000,000 decimal) is rejected with 413 before any cloud call",
+        "bytes whose signature is not a real JPEG or PNG are rejected with 415 even when the declared content type is allowed"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "STORY-012",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As a frontend developer I get usable errors without leaked internals",
+      "description": "Grooming trace: FR-17; NFR-7, NFR-13. Depends on: STORY-001, STORY-006, TASK-007, BUG-019, TASK-028. Sprint 3: construction failures are translated before controller error-mapping acceptance; service and gate prerequisites precede this work.",
+      "acceptance_criteria": [
+        "VisionAnalysisError maps to 502",
+        "DatabaseError maps to 503",
+        "no stack traces or resource paths in responses",
+        "CORS origins from ALLOWED_ORIGINS"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:32+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-013",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an analyst I can list recent scans",
+      "description": "Grooming trace: FR-18. Depends on: STORY-006, BUG-019, TASK-028. Sprint 3: Firestore persistence is shipped; missing-project repair and standing checks precede history-route acceptance.",
+      "acceptance_criteria": [
+        "returns newest first",
+        "empty collection returns an empty list with 200"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "EPIC-006",
+      "type": "epic",
+      "parent": null,
+      "title": "Containerization and Cloud Run Deployment",
+      "description": "Reproducible credential-free container serving on Cloud Run in asia-southeast1 Grooming trace: FR-19, FR-20, FR-21. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 10,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-02T09:56:21+00:00"
+    },
+    {
+      "id": "STORY-014",
+      "type": "story",
+      "parent": "EPIC-006",
+      "title": "As an operator I can build a reproducible backend image",
+      "description": "FR-19; NFR-6/10/12. Depends on: STORY-010, STORY-013, TASK-010, BUG-011, TASK-024, TASK-025. All are done; obsolete shipped-prerequisite blockers cleared in sprint 4. Current backend/Dockerfile already has multi-stage/non-root/PORT handling; criteria still need owning QA evidence, so do not mark done or infer duplicate completion. Ratified context is backend/, not repository root. Deferred outside sprint 4 to avoid overlapping TASK-032 image work and TASK-036 local deployability acceptance. No cloud deployment authorized.",
+      "acceptance_criteria": [
+        "Multi-stage python:3.11-slim build.",
+        "Runs as a non-root user.",
+        "Builds from repository root using docker build -f backend/Dockerfile backend, with backend/ as the build context.",
+        "No credentials in any layer."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "groomed",
+      "sprint": null,
+      "files": [
+        "backend/Dockerfile",
+        ".dockerignore"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T07:29:09+00:00"
+    },
+    {
+      "id": "STORY-015",
+      "type": "story",
+      "parent": "EPIC-006",
+      "title": "As an operator I can deploy the backend to Cloud Run",
+      "description": "FR-20. Depends on: STORY-014, TASK-004. BLOCKED: STORY-014 is uncommitted and TASK-004 needs live IAM evidence; sprint 4 forbids Cloud Run deployment or any cloud-resource spend. No source deploy or Artifact Registry push authorized.",
+      "acceptance_criteria": [
+        "image tagged with the git SHA",
+        "config injected as env vars at deploy time",
+        "deployed to asia-southeast1 on port 8080"
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "blocked",
+      "sprint": null,
+      "files": [
+        "scripts/deploy_cloudrun.sh"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T07:29:09+00:00"
+    },
+    {
+      "id": "TASK-004",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Grant the runtime service account its five narrow roles",
+      "description": "FR-20; NFR-6/12. Depends on: TASK-007, which is done. Sprint 4 BLOCKED: actual runtime IAM role verification needs live cloud evidence and human authorization; quota constraint prohibits this work and all deployment. Do not run configure_runtime_iam.sh or gcloud. Deferred outside sprint 4.",
+      "acceptance_criteria": [
+        "dedicated service account",
+        "no owner or editor binding",
+        "no key file created"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "blocked",
+      "sprint": null,
+      "files": [
+        "scripts/configure_runtime_iam.sh"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T07:29:09+00:00"
+    },
+    {
+      "id": "STORY-016",
+      "type": "story",
+      "parent": "EPIC-006",
+      "title": "As an operator I can verify a deploy and roll it back",
+      "description": "FR-21. Depends on: STORY-015, STORY-010. STORY-010 is done; its stale blocker cleared. BLOCKED: STORY-015 uncommitted; live revision/rollback evidence and traffic changes prohibited in sprint 4. TASK-036 local-container smoke is the sprint 4 alternative, not completion of this cloud rollback story.",
+      "acceptance_criteria": [
+        "health returns 200 on the deployed URL",
+        "analyze returns a contract-valid payload",
+        "rollback performed as a traffic shift to a previous revision"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "blocked",
+      "sprint": null,
+      "files": [
+        "scripts/verify_deployment.sh"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T07:29:09+00:00"
+    },
+    {
+      "id": "EPIC-007",
+      "type": "epic",
+      "parent": null,
+      "title": "Interactive Dashboard and Heat Visualizer",
+      "description": "Dark-themed Streamlit dashboard: HVI badge, cooling blueprint, alert banner Grooming trace: FR-22, FR-23. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 12,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T11:28:51+00:00"
+    },
+    {
+      "id": "STORY-017",
+      "type": "story",
+      "parent": "EPIC-007",
+      "title": "As an analyst I can choose a city, temperature and image and run an analysis",
+      "description": "PARTIAL sprint 3 carry-over: city/image controls and analysis are delivered; the ambient slider was removed and remains unmet. FR-22. Depends on: STORY-033, STORY-018, STORY-019, STORY-020, STORY-021. The four display/error prerequisites are done; STORY-033 is selected earlier in sprint 4, so it is sequencing, not a blocker. Restore the 30-45 C slider and send ambient_temp_c through multipart to the accepted API; render climate_source=caller truthfully. This story owns the original STORY-033 dashboard-integration criterion. No backend write ownership. All evidence offline/mocked; no cloud calls or deployment.",
+      "acceptance_criteria": [
+        "Dark theme remains applied.",
+        "City, 30-45 C temperature slider and image controls are present.",
+        "Posts selected image and slider ambient_temp_c to API_BASE_URL/api/analyze with existing MIME and timeout rules.",
+        "Offline dashboard/API integration evidence proves the slider value reaches the analyzer and caller provenance is visible; no silent ineffective control."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "frontend/app.py",
+        "frontend/.streamlit/config.toml",
+        "tests/test_frontend.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "STORY-018",
+      "type": "story",
+      "parent": "EPIC-007",
+      "title": "As an analyst I can see the HVI score and risk level at a glance",
+      "description": "Grooming trace: FR-22; NFR-2. Depends on: STORY-017, STORY-003, TASK-028. Sprint 3 human ruling 2 includes the HVI rubric. Serialize on frontend/app.py after controls; both prerequisites are selected.",
+      "acceptance_criteria": [
+        "badge colour matches the HVI band exactly",
+        "image and score side by side",
+        "temperature shown in Celsius with provenance"
+      ],
+      "priority": "P3",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:33+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-019",
+      "type": "story",
+      "parent": "EPIC-007",
+      "title": "As a city planner I can read the passive cooling blueprint",
+      "description": "Grooming trace: FR-22; NFR-2. Depends on: STORY-017, STORY-001, TASK-028. Sprint 3: analyzer is shipped, controls are selected; serialize blueprint presentation on frontend/app.py.",
+      "acceptance_criteria": [
+        "surface breakdown charted with fixed material colours",
+        "corridor orientation shown",
+        "coating area in m2 and temperature drop in C",
+        "interventions listed"
+      ],
+      "priority": "P3",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-020",
+      "type": "story",
+      "parent": "EPIC-007",
+      "title": "As an ops lead I see confirmation that a critical alert was dispatched",
+      "description": "Grooming trace: FR-22, FR-11. Depends on: STORY-017, STORY-008, TASK-028. Sprint 3: controls and truthful publish/persistence state are selected predecessors; serialize on frontend/app.py.",
+      "acceptance_criteria": [
+        "banner shown only at hvi >= 8.0",
+        "banner reflects the real alert_dispatched value"
+      ],
+      "priority": "P3",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "STORY-021",
+      "type": "story",
+      "parent": "EPIC-007",
+      "title": "As a user the dashboard stays readable when something goes wrong",
+      "description": "Grooming trace: FR-23; NFR-13. Depends on: STORY-017, TASK-028. Sprint 3 human ruling 3 ratifies dashboard HTTP timeout of 5 s connect and 60 s read, matching REQUEST_TIMEOUT_SECONDS in frontend/app.py. OQ-5 timeout blocker is resolved; serialize error states after other app.py items.",
+      "acceptance_criteria": [
+        "friendly error when the API is unreachable",
+        "no tracebacks rendered",
+        "spinner during analysis"
+      ],
+      "priority": "P3",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-03T06:46:35+00:00"
+    },
+    {
+      "id": "EPIC-008",
+      "type": "epic",
+      "parent": null,
+      "title": "Quality Assurance and Test Coverage",
+      "description": "Credential-free pytest suite proving every acceptance criterion, plus coverage reporting Grooming trace: FR-24, FR-25. Container estimate is the sum of all non-cancelled direct children, including verified pre-existing work; not independently executable sprint scope. No epic acceptance criteria are required.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 15,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-04T11:20:30+00:00"
+    },
+    {
+      "id": "STORY-022",
+      "type": "story",
+      "parent": "EPIC-008",
+      "title": "As a developer I can run the whole suite offline with one command",
+      "description": "FR-24. TASK-009 and TASK-010 done. Root pytest collection, shared mocked clients/image fixtures and network-denial enforcement were demonstrated in sprint 5. Final criterion closed in sprint 7: human approved deletion, TASK-038 removed backend/test_analyzer.py and backend/test_pipeline.py, and tests/test_foundation.py::test_no_cloud_calling_scripts_live_under_backend now fails the build if either returns. Suite green at 607 passing.",
+      "acceptance_criteria": [
+        "pytest tests runs from the repo root",
+        "passes with credentials unset and no network",
+        "shared fixtures for genai, Firestore, Pub/Sub and image bytes",
+        "backend/test_analyzer.py retired"
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "tests/conftest.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-03T08:50:46+00:00"
+    },
+    {
+      "id": "STORY-023",
+      "type": "story",
+      "parent": "EPIC-008",
+      "title": "As a developer every service module is covered by mocked unit tests",
+      "description": "CLOSED ON EVIDENCE, not reimplemented. QA verified each recorded criterion in sprint 5: every service module asserts both success and failure (analyzer schema-valid result vs SDK failure; climate valid GSOD reading vs labelled fallback; dispatcher successful publish vs publish failure; database round-trip vs read/write failure); HVI boundaries 4.0/6.0/8.0 covered by test_risk_level_is_derived_at_every_band_boundary; no real cloud calls - tests/conftest.py offline_only blocks network access and real client construction across the whole suite.",
+      "acceptance_criteria": [
+        "each module asserts its success and failure paths",
+        "HVI boundaries 4.0, 6.0 and 8.0 tested",
+        "no test calls a real cloud service"
+      ],
+      "priority": "P2",
+      "estimate": 5,
+      "status": "done",
+      "sprint": null,
+      "files": [
+        "tests/test_vision_analyzer.py",
+        "tests/test_climate_service.py",
+        "tests/test_alert_dispatcher.py",
+        "tests/test_database.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-01T05:14:34+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "STORY-024",
+      "type": "story",
+      "parent": "EPIC-008",
+      "title": "As a developer every API status code is covered",
+      "description": "Sprint 7 QA follow-up. The former evidence blocker is stale: tests/test_api.py now covers successful analysis, 415/413 upload rejection, 502/503 service failures with secret-safe responses, invalid identity/coordinate 422s, and inclusive coordinate boundaries. Re-run and map these tests to every acceptance criterion; do not duplicate tests or mark complete without QA evidence.",
+      "acceptance_criteria": [
+        "API success and failure tests assert HTTP 200, 415, 413, 502 and 503.",
+        "Invalid supplied identity or coordinates return HTTP 422, including inclusive coordinate boundary cases.",
+        "Error responses contain no internal stack traces, resource paths or raw cloud payloads."
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "tests/test_api.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-04T09:27:20+00:00"
+    },
+    {
+      "id": "STORY-025",
+      "type": "story",
+      "parent": "EPIC-008",
+      "title": "As an auditor the payload contract is enforced by tests",
+      "description": "CLOSED ON EVIDENCE, not reimplemented. QA verified each recorded criterion in sprint 5: the canonical validator validates real payloads (test_real_analyzer_generated_payload_passes_utc_validator, test_real_database_serialized_timestamp_passes_utc_validator) and rejects malformed ones (test_validator_rejects_naive_and_non_utc_timestamps). The identity_source gap QA found during this check was closed by extending validate_report.py, which now rejects an invalid origin, a numeric origin and a missing coordinate origin.",
+      "acceptance_criteria": [
+        "payloads validated against the canonical schema",
+        "a malformed payload is asserted to fail"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": null,
+      "files": [
+        "tests/test_contract.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "TASK-005",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Produce a per-sprint coverage report with a 70% floor",
+      "description": "FR-25; NFR-9. Sprint 5: report generation and 70% flags already exist, so full closure of STORY-023/024/025 is not a functional prerequisite of reporting. Remaining work is explicit delta/denominator accounting, separate frontend and canonical-validator metrics, targeted uncovered-branch checks, and demonstrated below-floor follow-up routing. Baseline backend 98.3%, frontend 83.3%, validator 78.7%; none below floor. Use existing offline tests/evidence; no rerun of cloud/container checks and no marking other items done. Serialize shared test files after identity and mobile changes; preserve separate denominators.",
+      "acceptance_criteria": [
+        "sprint report includes per-file coverage and the delta",
+        "files below 70% generate test tasks",
+        "Frontend and canonical report-validator coverage are reported separately from backend application coverage, with their uncovered branches identified and targeted regression checks exercised.",
+        "Coverage comparison explicitly states denominator changes; manual smoke scripts are not silently counted as application code."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        ".github/skills/agile-sdlc-loop/scripts/sprint_report.py",
+        ".github/skills/heat-report-validation/scripts/validate_report.py",
+        "tests/test_sprint_report.py",
+        "tests/test_frontend.py",
+        "tests/test_contract.py",
+        "tests/coverage.ini",
+        "agile/reports/sprint-05.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "EPIC-009",
+      "type": "epic",
+      "parent": null,
+      "title": "Demo, Documentation and Submission",
+      "description": "FR-26/27/28/30. Sprint 5 split within the existing epic: independent documentation lane STORY-026/027 plus STORY-032 after same-sprint identity API work; these require no OQ-4 answer or cloud spend. Competition rehearsal/submission lane STORY-028 and TASK-006 remains blocked on TASK-031/OQ-4 and its genuine prerequisites. Keep this epic container groomed, never executable sprint scope; do not create a duplicate epic.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 11,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T08:50:47+00:00"
+    },
+    {
+      "id": "STORY-026",
+      "type": "story",
+      "parent": "EPIC-009",
+      "title": "As a judge I can understand and run the project from the README alone",
+      "description": "FR-26. Depends on: TASK-007, TASK-008, TASK-009, TASK-010 (all done). Sprint 5: pure setup/project documentation does not depend on OQ-4 or a new STORY-015 deployment. Use existing sprint-3 deployed evidence and sprint-4 local-container evidence truthfully; no live verification, cloud spend or protected docs edits. Reconcile obsolete TASK-025/root-context warning and fix quick-start cwd/uv execution ambiguity. Link the client guide after STORY-032, without claiming deferred features are delivered.",
+      "acceptance_criteria": [
+        "problem, approach and theme fit stated up front",
+        "copy-pasteable setup commands",
+        "no secrets or project IDs"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "README.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "STORY-027",
+      "type": "story",
+      "parent": "EPIC-009",
+      "title": "As a judge I can see how the system fits together",
+      "description": "FR-26. Depends on: STORY-010, STORY-008 (done). Sprint 5: document the delivered flow, not planned STORY-031 GCS retention; STORY-031 and OQ-4 are not prerequisites. Serialize README edits after STORY-026. Show caller override/telemetry fallback, awaited analysis, persistence and conditional alert publication with truthful failure behavior. No cloud calls or protected docs edits.",
+      "acceptance_criteria": [
+        "mermaid diagram of the real call flow",
+        "critical alert path visually distinct"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "README.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "STORY-028",
+      "type": "story",
+      "parent": "EPIC-009",
+      "title": "As a presenter I can run the demo reliably end to end",
+      "description": "FR-27. STORY-017/020/021 and STORY-026 are done. OQ-4 answered 2026-10-04: the recording is capped at 3 minutes, which makes the script a single coordinate-to-report path rather than a feature tour. Cloud work is now authorised and the backend is live at revision hotspot-backend-00004-9vq, so the demo rehearses against the deployed stack rather than a local mock. Remaining constraint: .github/docs/demo-runbook.md is protected, so the runbook needs human authorisation or an approved unprotected location before an agent writes it (TASK-011).",
+      "acceptance_criteria": [
+        "pre-flight checklist",
+        "scripted low and critical scenarios",
+        "reset procedure",
+        "fallback for each likely failure",
+        "rehearsed at least once",
+        "rehearsed run fits within the 3-minute recording cap"
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "todo",
+      "sprint": null,
+      "files": [
+        ".github/docs/demo-runbook.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:35+00:00",
+      "updated": "2026-10-03T08:50:47+00:00"
+    },
+    {
+      "id": "TASK-006",
+      "type": "task",
+      "parent": "EPIC-009",
+      "title": "Assemble and submit the competition package",
+      "description": "FR-28. OQ-4 answered 2026-10-04: deadline 2026-10-11, 3-minute recording cap, and sharing satisfied by GitHub or any Google-provided repository so no hosting migration is needed. Depends on STORY-028 for the recording. The deployed URL criterion is already met by the live backend revision and must be re-verified immediately before submission rather than assumed from this sprint's check. Secret-scan the full git history before sharing; the repository has never been pushed, so this is the first exposure of .env handling to a public remote.",
+      "acceptance_criteria": [
+        "repository shared with no secrets in history",
+        "deployed URL reachable",
+        "recording uploaded",
+        "contract audit clean"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "todo",
+      "sprint": null,
+      "files": [
+        "docs/submission-checklist.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-01T05:14:36+00:00",
+      "updated": "2026-10-03T08:50:47+00:00"
+    },
+    {
+      "id": "STORY-029",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an API client I can supply the zone identity with my upload and have it validated",
+      "description": "FR-15, FR-3, FR-29. Depends on: STORY-001 (done), STORY-030 (selected earlier in sprint 5). P2 provides CLI sequencing after P1 STORY-030; additive caller identity refines the already functioning pipeline. Validate every supplied field before cloud calls, preserve verbatim caller values, infer each omitted field, and return the agreed per-field provenance. Include finite coordinate checks, inclusive bounds, empty-string rejection, mixed supplied/inferred cases, mutation isolation and legacy response compatibility. All verification offline; no cloud calls or protected docs edits.",
+      "acceptance_criteria": [
+        "Valid multipart zone_id, zone_name, lat and lng values appear verbatim in the report, with lat and lng in coordinates, and are never overridden by model output.",
+        "Supplied empty zone_id or zone_name, latitude outside the inclusive -90..90 range, or longitude outside the inclusive -180..180 range returns HTTP 422.",
+        "Each omitted identity field falls back to best-effort Gemini inference, including requests supplying only some identity fields.",
+        "The response visibly identifies each of zone_id, zone_name, lat and lng as caller-supplied or model-inferred."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "backend/main.py",
+        "tests/test_api.py",
+        "tests/test_contract.py",
+        "tests/test_cross_layer_contract.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:48:40+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "STORY-030",
+      "type": "story",
+      "parent": "EPIC-002",
+      "title": "As an analyst I can tell a supplied zone identity apart from an inferred one",
+      "description": "FR-29, FR-3. Depends on: STORY-001 (done). Sprint 5 user authorizes reassessment using climate_source: caller as the additive provenance precedent. Groomable offline: product-owner and contract-auditor must agree and record the exact additive per-field representation as the first handoff check, before implementation; this plan ratifies no field names. Preserve separate zone_id, zone_name, lat and lng caller-versus-inferred distinctions, partial-coordinate merging, caller validation and legacy history compatibility. Update canonical schema/validator and consumers together without protected .github/docs edits. STORY-029 follows this item; agreement failure blocks dependent dispatch rather than inventing a schema.",
+      "acceptance_criteria": [
+        "Each identity field exposes its supplied or inferred provenance",
+        "Validated supplied identity remains verbatim despite model conflicts",
+        "A supplied coordinate component is retained while the omitted component is inferred",
+        "Agreed serialized report contract preserves all four provenance distinctions"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "backend/services/vision_analyzer.py",
+        "backend/main.py",
+        "frontend/app.py",
+        "COPILOT_GUIDE.md",
+        ".github/skills/heat-report-validation/assets/heat_analysis_result.schema.json",
+        ".github/skills/heat-report-validation/scripts/validate_report.py",
+        "tests/conftest.py",
+        "tests/test_vision_analyzer.py",
+        "tests/test_contract.py",
+        "tests/test_cross_layer_contract.py",
+        "tests/test_api.py",
+        "tests/test_frontend.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:48:40+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "STORY-031",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an operator I can retrieve the aerial image a scan was based on",
+      "description": "FR-31. Depends on: STORY-010, STORY-006 (done). Sprint 5 BLOCKED by standing cloud-quota prohibition: acceptance requires actual GCS storage/retrieval evidence and cannot be satisfied by mocks. No live GCS or other cloud calls authorized. This unbuilt retained-imagery feature does not block a diagram of the delivered system. Do not claim live acceptance or invent a heatmap workflow.",
+      "acceptance_criteria": [
+        "An uploaded aerial image is stored in GCS_BUCKET_NAME under a deterministic object prefix.",
+        "The persisted scan record contains the stored aerial image object URI, which retrieves the image used for that scan.",
+        "Each generated heatmap is also retained in GCS_BUCKET_NAME under a deterministic object prefix with its stored object URI on the persisted scan record.",
+        "A GCS storage failure produces a safe server log entry and analysis continues without a storage-caused failure or a scan record claiming the failed object was stored."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "blocked",
+      "sprint": null,
+      "files": [
+        "backend/services/storage.py",
+        "backend/services/database.py",
+        "backend/main.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:48:40+00:00",
+      "updated": "2026-10-03T08:50:47+00:00"
+    },
+    {
+      "id": "STORY-032",
+      "type": "story",
+      "parent": "EPIC-009",
+      "title": "As an API client I can read one document that tells me exactly what to send",
+      "description": "FR-30; resolved OQ-1. Depends on: STORY-029 (selected earlier in sprint 5), STORY-011 (done). OQ-4 is not a documentation dependency. Publish the guide only after demonstrated caller-identity API behavior and agreed provenance. Reconcile stale WebP wording with the ratified JPEG/PNG-only contract and exact 10,000,000-byte limit. Cover metric units, identity/map sourcing, partial inputs, HTTP 422, caller precedence, inference and ambient_temp_c/climate_source: caller. Link from README after its two documentation stories. Validate examples offline without sending a real request.",
+      "acceptance_criteria": [
+        "One external-client guide explains how to choose zone_id, source zone_name and read lat and lng from a map source corresponding to the uploaded imagery.",
+        "The guide states accepted JPEG and PNG image formats only and the exact 10,000,000-byte upload limit.",
+        "The guide states metric-unit expectations for temperatures and areas, including the optional finite -50 to 60 degrees C ambient_temp_c override and climate_source: caller.",
+        "The guide provides a worked multipart curl example for POST /api/analyze containing the image and caller-supplied zone_id, zone_name, lat and lng.",
+        "The guide explains optional identity fields, HTTP 422 and inclusive coordinate ranges, caller values taking precedence verbatim, best-effort inference for omitted fields and the agreed per-field provenance."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "docs/api-input-guide.md",
+        "README.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:48:41+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "TASK-007",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Complete setup configuration and correct the provisioning command",
+      "description": "Delivers FR-1; NFR-5. Source: .github/docs/user-stories/US-01.1-gcp-provisioning-script.md. Audit confirmed ALLOWED_ORIGINS is absent from setup_gcp.sh and Epics_Stories.md references nonexistent setup_gcp.zsh.",
+      "acceptance_criteria": [
+        "The setup script writes non-empty ALLOWED_ORIGINS to .env with default http://localhost:8501.",
+        "Epics_Stories.md uses the existing setup_gcp.sh command and contains no setup_gcp.zsh reference."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "setup_gcp.sh",
+        "Epics_Stories.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:52:28+00:00",
+      "updated": "2026-10-02T10:29:43+00:00"
+    },
+    {
+      "id": "TASK-008",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Provide a secret-free environment template for new developers",
+      "description": "Delivers FR-1; NFR-5, NFR-6. Source: .github/docs/user-stories/US-01.4-repository-secret-hygiene.md. Audit confirmed .env.example is absent and .gitignore already exempts it.",
+      "acceptance_criteria": [
+        ".env.example lists GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_REGION, GCS_BUCKET_NAME, PUBSUB_TOPIC_ID, MODEL_ID and ALLOWED_ORIGINS with empty values and no secrets or real resource identifiers.",
+        "git check-ignore -q .env.example exits 1 while git check-ignore -q .env exits 0."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        ".env.example"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:52:28+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "TASK-009",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Settle and document the backend test import strategy",
+      "description": "Delivers FR-24; NFR-8. Source: .github/docs/user-stories/US-01.5-backend-package-layout.md. Audit confirmed no tests directory or pytest pythonpath configuration. This task owns import configuration only; STORY-022 owns shared mocks and the offline test suite.",
+      "acceptance_criteria": [
+        "A documented pytest import strategy configured in pyproject.toml resolves services and tools when pytest is launched from the repository root.",
+        "The same package imports resolve when uvicorn main:app is launched from backend/, without per-test sys.path edits or sys.path manipulation in backend source.",
+        "The documented strategy preserves the rule that services and tools import neither main nor the sibling package."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "pyproject.toml",
+        "README.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:52:29+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "TASK-010",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Align Python support and dependencies using pyproject.toml and uv",
+      "description": "Delivers FR-1, FR-24; NFR-11. Source: .github/docs/user-stories/US-01.3-dependency-baseline.md. Human decision: pyproject.toml plus uv is authoritative; requirements.txt is generated, not independently maintained. Audit confirmed requires-python >=3.14 and missing frontend/test dependencies.",
+      "acceptance_criteria": [
+        "pyproject.toml declares requires-python = \">=3.10\" and uv resolves dependencies compatible with that supported range.",
+        "pyproject.toml includes streamlit, requests, pytest, pytest-cov and httpx alongside all existing backend dependencies.",
+        "requirements.txt is regenerated from the authoritative project with uv export --format requirements-txt --no-hashes --no-emit-project; repeating that export produces no dependency-content difference.",
+        "A clean environment installed from the uv project or its generated requirements.txt can import the backend dependencies, streamlit, requests, pytest, pytest_cov and httpx."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 1,
+      "files": [
+        "pyproject.toml",
+        "requirements.txt"
+      ],
+      "source": "requirements",
+      "created": "2026-10-02T09:52:29+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "BUG-001",
+      "type": "bug",
+      "parent": "STORY-001",
+      "title": "Copy caller coordinates before returning a validated heat report",
+      "description": "Owner: story-builder. Reproduce: python3 -m pytest tests/test_vision_analyzer.py::test_returned_coordinates_are_independent_of_caller_mutation -q. Analyze with coordinates lat=1.3,lng=103.8 using mocked Gemini; mutate caller latitude to 999.0 after return. Expected: completed report retains lat=1.3 and remains contract-valid. Actual: report latitude becomes 999.0 because result.update(metadata) returns the original dict by reference. Report integrity and validated latitude bounds can be invalidated after validation. Keep STORY-001 in_review; production fix required in Phase 5.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:22:34+00:00",
+      "updated": "2026-10-02T10:40:07+00:00"
+    },
+    {
+      "id": "BUG-002",
+      "type": "bug",
+      "parent": "TASK-002",
+      "title": "verify_setup prints the model reply verbatim, unbounded",
+      "description": "ORCHESTRATOR RULING: downgraded P0->P2. US-01.2 AC1 REQUIRES printing the model reply, so echoing it is specified behaviour, not a leak. AC5 targets our own credentials and raw cloud error payloads; the error branch is already sanitized and the prompt is a fixed literal, so there is no path by which response.text carries a project secret. Remaining real concern is only that the success print is unbounded. Fix: bound the printed excerpt. QA to narrow the assertion to the error path plus an output-length bound.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:25:37+00:00",
+      "updated": "2026-10-02T10:40:08+00:00"
+    },
+    {
+      "id": "BUG-003",
+      "type": "bug",
+      "parent": "TASK-009",
+      "title": "Document pytest import strategy and service-tool layering in README",
+      "description": "Owner: story-builder. Reproduce: python3 -m pytest tests/test_foundation.py -k \"import_strategy\" -q. Expected per TASK-009 criteria 1 and 3: README documents pytest pythonpath=[backend], root imports and services/tools importing neither main nor sibling package. Actual: README is empty; both documentation acceptance tests fail. Configured root imports, backend-working-directory imports, and the four existing package tests pass. Keep TASK-009 in_review; restore missing documentation in Phase 5.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:27:30+00:00",
+      "updated": "2026-10-02T10:40:08+00:00"
+    },
+    {
+      "id": "BUG-004",
+      "type": "bug",
+      "parent": "TASK-010",
+      "title": "Regenerate stale uv lock and reconcile the dependency export and clean install",
+      "description": "FIXED by orchestrator: TASK-010 ran 'uv lock' in a temp dir so the workspace uv.lock was never updated. Re-ran 'uv lock' + 'uv export --group dev --no-hashes --no-emit-project' + 'uv sync --group dev' at the repo root. uv.lock now declares requires-python >=3.10 and contains streamlit; requirements.txt re-exported; streamlit/httpx/pytest/requests all importable in .venv.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:29:43+00:00",
+      "updated": "2026-10-02T10:33:08+00:00"
+    },
+    {
+      "id": "TASK-011",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Human update of protected foundation specs to remove obsolete provisioning command references",
+      "description": "Owner: human documentation maintainer; protected .github/docs files must not be edited by agents. Reproduce: rg -n setup_gcp\\\\.zsh .github/docs/user-stories/US-01.1-gcp-provisioning-script.md .github/docs/epics/EPIC-01-foundation-environment.md. Expected: docs reflect completed setup_gcp.sh fix and ALLOWED_ORIGINS emission. Actual: obsolete setup_gcp.zsh references remain at US-01.1 lines 51 and 60 and EPIC-01 line 55. Active Epics_Stories.md execution command passes QA. Update protected docs by a human; no agent edits performed. Sprint 2 grooming trace: FR-1, FR-26; NFR-5. BLOCKED: human documentation maintainer must edit protected .github/docs; no agent editing is authorized.",
+      "acceptance_criteria": [
+        "Protected foundation documents no longer reference setup_gcp.zsh and use setup_gcp.sh",
+        "Protected foundation documents reflect ALLOWED_ORIGINS emission from the delivered script"
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "blocked",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:29:43+00:00",
+      "updated": "2026-10-02T16:53:59+00:00"
+    },
+    {
+      "id": "TASK-012",
+      "type": "task",
+      "parent": "TASK-008",
+      "title": "Enable or perform human verification of the protected environment template",
+      "description": "Resolved by QA: tests/test_foundation.py::test_env_example_contains_seven_empty_contract_variables_without_secrets reads only .env.example assignment lines through a captured grep subprocess. Passing assertions prove exactly seven distinct contract names, empty GOOGLE_CLOUD_PROJECT and GCS_BUCKET_NAME, GOOGLE_CLOUD_REGION=asia-southeast1, and no token, Bearer, private-key header or long base64-like value. Full suite: 79 passed, no skips. No .env read or template values printed.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-02T10:29:43+00:00",
+      "updated": "2026-10-02T10:40:08+00:00"
+    },
+    {
+      "id": "TASK-013",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Deploy and verify the repaired sprint 2 build on Cloud Run",
+      "description": "Grooming trace: FR-20, FR-21; NFR-6. Depends on: BUG-007, BUG-008, BUG-019, TASK-025, STORY-009, STORY-010, STORY-013, TASK-026, TASK-028, STORY-017, STORY-018, STORY-019, STORY-020, STORY-021. Sprint 3 human ruling 4 authorizes deployment at the end of sprint 3; TASK-025 is a hard predecessor, so never deploy an unhardened image. Successful deployment plus passing live /api/health is the live provisioning evidence needed by this item; TASK-015 is not a predecessor and remains deferred for setup_gcp.sh ALLOWED_ORIGINS, GCS samples and live Vertex evidence. Authorization is not execution or proof of completion: retain serving revision/source/image digest, live health/analysis/history/low-critical alert evidence and rollback target. Required QA, coverage and contract checks must pass before the later cloud-deployer invocation.",
+      "acceptance_criteria": [
+        "Human authorizes deployment of the repaired build and the serving asia-southeast1 revision, source version and image digest are recorded.",
+        "Against the serving URL, health returns 200 and analysis returns a contract-valid dictionary rather than a coroutine.",
+        "Live low/critical scenarios, persisted history and truthful publish status are evidenced; rollback target is recorded; local or mocked evidence cannot substitute."
+      ],
+      "priority": "P3",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:41:23+00:00",
+      "updated": "2026-10-03T07:08:17+00:00"
+    },
+    {
+      "id": "BUG-005",
+      "type": "bug",
+      "parent": "STORY-002",
+      "title": "GCS checksum failures escaped the seeder's exception tuple",
+      "description": "BLOCKER confirmed by contract-auditor and reproduced: google.cloud.storage.exceptions.DataCorruption subclasses only Exception - issubclass() against GoogleAPIError, GoogleAuthError and RequestException all returned False - so a resumable-upload checksum failure terminated the seeder CLI with an SDK traceback instead of warning and continuing, violating US-01.3/EPIC-02 AC3 and the gcp-services graceful-degradation rule. Regression introduced when the orchestrator narrowed CLOUD_ERRORS to drop the undeclared transitive google.resumable_media import. FIXED: imported DataCorruption from google.cloud.storage.exceptions - the declared package's own public API - and added it to CLOUD_ERRORS. Needs a QA regression test.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [
+        "backend/tools/seed_samples.py",
+        "tests/test_seed_samples.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T10:46:11+00:00",
+      "updated": "2026-10-02T10:49:07+00:00"
+    },
+    {
+      "id": "BUG-006",
+      "type": "bug",
+      "parent": "EPIC-008",
+      "title": "Report validator accepts timezone-naive and non-UTC timestamps",
+      "description": "MAJOR from contract-auditor. validate_report.py parses timestamp with datetime.fromisoformat and accepts naive or nonzero-offset values, but COPILOT_GUIDE section 3 specifies ISO-8601 UTC. A report with a local-time timestamp passes validation today. Require tzinfo to be present and the UTC offset to be zero; cover valid UTC, naive, and non-UTC payloads. Sprint 1 retro references this existing open audit bug; original source: validation. No duplicate created. Sprint 2 grooming trace: FR-24; FR-3 UTC contract. Narrow validator audit correction is valuable but does not repair the live pipeline; defer behind P0 repairs and service prerequisites.",
+      "acceptance_criteria": [
+        "a naive timestamp fails validation",
+        "a +08:00 timestamp fails validation",
+        "an aware UTC timestamp passes"
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/skills/heat-report-validation/scripts/validate_report.py",
+        "tests/test_contract.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:46:11+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-014",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Honour PUBSUB_TOPIC_ID in setup_gcp.sh instead of the bare literal",
+      "description": "MINOR from contract-auditor. setup_gcp.sh line 15 exports the literal heat-resilience-alerts unconditionally, so PUBSUB_TOPIC_ID cannot be overridden before provisioning. Use the environment value when set and keep the literal as an overridable default, matching the env-driven config rule (NFR-5). Sprint 1 retro references this existing audit follow-up; original source: validation. Retained without duplication; P2 reflects the valuable, nonblocking configuration correction. Sprint 2 grooming trace: FR-1; NFR-5. Depends on: TASK-007. Environment override fix is independently workable, nonblocking configuration debt.",
+      "acceptance_criteria": [
+        "A supplied PUBSUB_TOPIC_ID is retained by setup_gcp.sh",
+        "Without an override the documented default topic is used consistently for provisioning and environment output"
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [
+        "setup_gcp.sh"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:46:11+00:00",
+      "updated": "2026-10-03T04:54:24+00:00"
+    },
+    {
+      "id": "TEST-001",
+      "type": "test",
+      "parent": "EPIC-008",
+      "title": "Raise whole-backend coverage to the 70 percent NFR-9 floor",
+      "description": "FR-24/25; NFR-9. Official sprint 3 whole-backend coverage is 89.3%, versus 90.9% sprint 2; 95.4% excluding two legacy scripts is diagnostic only. Own denominator accounting and a documented cover-or-retire disposition for backend/test_analyzer.py and backend/test_pipeline.py; retirement needs explicit product-owner/QA agreement and cannot be a hidden omit. TASK-033/034 own focused service branches. Depends on: TASK-033, TASK-034. Sequence final accounting after these selected items; dependencies are not blockers. Existing broad EPIC-008 stories are linked accounting context, not hard prerequisites. No cloud execution of manual scripts. Preserve original and comparable totals and delta when source scope changes.",
+      "acceptance_criteria": [
+        "Whole-backend coverage reported by sprint_report.py is at least 70 percent, and its denominator and sprint delta are explicitly reported.",
+        "QA documents the disposition of backend/test_analyzer.py and backend/test_pipeline.py at 0 percent; excluding them cannot be presented as official total coverage.",
+        "Whole-backend accounting links TASK-033/034 branch work and existing EPIC-008 QA work rather than duplicating them."
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/skills/agile-sdlc-loop/scripts/sprint_report.py",
+        "pyproject.toml",
+        "backend/test_analyzer.py",
+        "backend/test_pipeline.py",
+        "README.md",
+        "tests/test_sprint_packaging.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:46:11+00:00",
+      "updated": "2026-10-03T08:25:10+00:00"
+    },
+    {
+      "id": "TASK-015",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Confirm live provisioning and sample upload after the human runs setup_gcp.sh",
+      "description": "Phase 8 found three acceptance criteria that are ASSERTED-ONLY, not demonstrated, because they need live Google Cloud and the human owns running ./setup_gcp.sh: (1) TASK-007 AC - .env actually contains ALLOWED_ORIGINS after a clean run, verified so far only by inspecting the heredoc; (2) STORY-002 AC2 - the three scenes actually land in GCS_BUCKET_NAME under samples/, verified so far only with a mocked storage client; (3) US-01.2 AC1 - a real authenticated Vertex AI round trip, verified so far only with a mocked client. Run doctor.py, then verify_setup.py, then seed_samples.py against the real project and record the output. Sprint 1 retro improvement: all three criteria remain asserted-only, not demonstrated; live acceptance is P1. Original source: validation; human owns setup_gcp.sh execution. Sprint 2 grooming trace: FR-1, FR-2, FR-7. BLOCKED: human-run setup_gcp.sh, approved ADC/live checks and actual bucket upload evidence remain unverified; a source-deploy exit does not prove these criteria.\nSprint 2 retrospective: I1: live provisioning, ADC/Gemini and sample uploads remain human-unconfirmed; retain blocked status. Sprint 3 human ruling 4: this item is deferred and is not a prerequisite of TASK-013. A successful deploy plus passing live /api/health supplies only the provisioning evidence TASK-013 needs; it does not prove setup_gcp.sh writes ALLOWED_ORIGINS, samples reach gs://BUCKET/samples/, or the real Vertex round trip.",
+      "acceptance_criteria": [
+        ".env written by setup_gcp.sh contains a non-empty ALLOWED_ORIGINS",
+        "gs://BUCKET/samples/ lists three objects",
+        "verify_setup.py exits 0 against the real project"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "blocked",
+      "sprint": null,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:46:12+00:00",
+      "updated": "2026-10-03T05:00:07+00:00"
+    },
+    {
+      "id": "TASK-016",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Verify generated artefacts in the actual workspace before handoff",
+      "description": "Sprint 1 BUG-004: TASK-010 ran uv lock in a temp directory and reported completion although workspace uv.lock still required >=3.14 and omitted streamlit. Process prevention under foundation dependency governance: require producer and QA to inspect the canonical artefact in place, not a copy. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline.\nSprint 2 retrospective: R3/I2 recurrence: temp-copy verification nearly repeated BUG-004 because this task was never scheduled. Canonical workspace path and working-directory evidence must be a blocking producer/QA handoff check; reserve sprint-3 capacity for implementation.\nSprint 3 human ruling 5: committed recurrence prevention. Establish canonical-workspace evidence before implementation handoffs. No file claims are declared; dispatch alone until ownership is recorded.",
+      "acceptance_criteria": [
+        "Handoff records the generating command working directory and canonical output path.",
+        "Acceptance checks parse the workspace uv.lock and verify its Python constraint and declared dependencies; temp-copy evidence cannot satisfy completion."
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:52:54+00:00",
+      "updated": "2026-10-03T06:46:33+00:00"
+    },
+    {
+      "id": "TASK-017",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Require regression tests when exception or validation coverage narrows",
+      "description": "Sprint 1 BUG-005: the orchestrator removed DataCorruption from seed_samples.CLOUD_ERRORS without a test; 82 passing tests missed a contract BLOCKER. Process prevention for NFR-9 and offline-fallback correctness, not a reopening of the fixed defect. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline.\nSprint 2 retrospective: R4/I2 recurrence for the third time: BUG-005 DataCorruption, BUG-014 RpcError/TimeoutError/MessageTooLargeError, F1/BUG-019 OSError/EnvironmentError. A written rule without enforcement failed; reserve sprint-3 capacity for a blocking exception-boundary review and regression matrix.\nSprint 3 human ruling 5: committed recurrence prevention for the narrowed-exception-tuple class behind BUG-005, BUG-014 and BUG-019. Establish the construction/operation regression requirement before BUG-019. No file claims are declared; dispatch alone until ownership is recorded.",
+      "acceptance_criteria": [
+        "Any narrowed exception tuple or validation surface has same-change regressions for removed cases and actual SDK client-construction failure types.",
+        "QA checks construction and operation failures, including DataCorruption, RpcError, TimeoutError, MessageTooLargeError and OSError/EnvironmentError where applicable; TypeError and KeyError still propagate.",
+        "Missing failure-case evidence blocks handoff and deployment; the review records the old/new covered cases and the focused test results."
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T06:46:33+00:00"
+    },
+    {
+      "id": "TASK-018",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Verify every acceptance criterion including documentation before handoff",
+      "description": "Sprint 1 BUG-003: TASK-009 implemented imports but omitted documentation, leaving README.md at 0 bytes until QA asserted it. Process prevention for NFR-8: completion evidence must address each criterion individually, including prose artefacts. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline. Sprint 3 R3/R4 RECURRENCE of criterion-evidence drift: four P0 reports were stale criteria or documentation, including STORY-011 WebP versus ratified JPEG/PNG, NFR-1 missing the BigQuery exception, and deploy instructions using root instead of backend/. STORY-017 slider criterion was unmet and remains partial, with delivery tracked by STORY-033. Promote P2 to P1. Product-owner reconciles authoritative decisions and criteria before QA severity assignment; do not erase unmet criteria, mark partial work done, or edit protected .github/docs/.",
+      "acceptance_criteria": [
+        "Each acceptance criterion has a named workspace artefact or command result in the handoff.",
+        "Documentation criteria require non-empty content stating the strategy; empty documentation fails before in_review.",
+        "Before QA triage, product-owner records the ratified source and reconciles JPEG/PNG, the BigQuery data-location exception and backend/ build context with affected criteria and procedures, without editing .github/docs/.",
+        "A committed unmet criterion remains explicitly partial with a linked delivery item: STORY-017 depends on STORY-033, not a retrospective rewrite that declares the slider delivered."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/agents/product-owner.agent.md",
+        ".github/agents/story-builder.agent.md",
+        "agile/requirements.md",
+        "tests/test_sprint4_process.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-019",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Require input-validation and ownership checks for caller overrides",
+      "description": "Sprint 1 BUG-001: caller coordinates bypassed Coordinates validation and were returned by reference, allowing lat=999.0 in reports. Process prevention for FR-3/FR-6: QA and builder check every externally supplied override at the report boundary, including aliasing. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline.",
+      "acceptance_criteria": [
+        "Review checklist requires schema validation for caller-supplied overrides, including invalid coordinate bounds and missing fields.",
+        "Acceptance evidence includes a rejected lat=999.0 case and a mutation-isolation check proving report coordinates do not alias the caller dict."
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T04:54:24+00:00"
+    },
+    {
+      "id": "TASK-020",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Check epic containers and dependency sequencing before sprint planning",
+      "description": "DELIVERED in sprint 5 wave 0: the pre-plan check that epics stay groomed and that dependency sequencing is settled before planning is now a written rule. The retro reopened this item to carry NEW scope - budgeting for tests that break when a sprint deliberately changes behaviour. That is a different concern and a delivered item should not be reopened to carry it, so it is filed as TASK-043.",
+      "acceptance_criteria": [
+        "Pre-plan check fails if any epic container is ready or independently committed as executable scope.",
+        "Dependencies are classified as done, selected earlier in the same sprint, or genuinely uncommitted; only the last case blocks a candidate.",
+        "Proposed executable items fit capacity and every non-done prerequisite is in the proposed commitment.",
+        "Restructuring items identify affected foundation/frontend structural assertions, reconcile expectations with the intended contract, and budget updates before commitment.",
+        "Before any intentional behavior or contract change is dispatched, identify affected tests, reconcile their expected behavior against the approved decision, and budget any necessary updates within the item's estimate; stale expectations are fixed as tests, not by restoring known-wrong behavior."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        ".github/skills/agile-sdlc-loop/references/phases.md",
+        "agile/reports/sprint-05-planning.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T11:33:15+00:00"
+    },
+    {
+      "id": "TASK-021",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Reject verification evasion and require discoverable test names",
+      "description": "Sprint 1 an agent assembled test_no_sys_path_manipulation via globals and join solely to evade grep. Process integrity fix for NFR-8/NFR-9: satisfying the underlying layering rule is required; hiding identifiers from checks is unacceptable. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline.\nSprint 2 retrospective: I2: supplied sprint evidence says the verification-integrity defect class recurred while this sprint-1 retro item remained unscheduled. Promote the existing item, not a duplicate; require collected-test and actual-invariant evidence rather than identifier-evasion checks. No additional evasion incident is inferred.\nSprint 3 human ruling 5: committed recurrence prevention. Establish literal-test discovery and invariant-evidence checks before product changes. No file claims are declared; dispatch alone until ownership is recorded.",
+      "acceptance_criteria": [
+        "Test handoffs use literal discoverable test definitions rather than generated globals names intended to evade verification.",
+        "QA verifies collected test names and the underlying no-sys-path invariant; textual-check evasion is recorded as a failed handoff, not success."
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "TASK-022",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Align safe environment-template access with editor and secret guard policy",
+      "description": "RECURRED in sprint 6. The editor's Copilot file-ignore blocks .env.example even though .github/hooks/scripts/guard_secrets.py line 14 explicitly excepts .env.(example|sample|template). It blocked TASK-008 in sprint 1 and then blocked STORY-034 from adding GOOGLE_MAPS_API_KEY to the template. Resolved in sprint 7 by human handoff: the human added GOOGLE_MAPS_API_KEY to .env.example directly. Verified secret-free \u2014 the template now declares all eight contract variables and the key is present with an empty value. Two regression guards were added so the committable template can never carry a credential: tests/test_foundation.py asserts every SECRET_VARIABLES entry is empty in .env.example and that setup_gcp.sh emits it empty rather than provisioning a value.",
+      "acceptance_criteria": [
+        "Human-approved editor configuration or an explicit approved human handoff permits creation and verification of only the secret-free .env.example template.",
+        "Real .env files and credentials remain inaccessible; no broad ignore bypass or subprocess workaround is required for routine template acceptance."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 7,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T13:23:53+00:00"
+    },
+    {
+      "id": "TASK-023",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Budget one Story Builder invocation per executable item",
+      "description": "Sprint 1 Story Builder executes exactly one item per invocation; eight separate delegations were required and not anticipated. Process improvement: plan development routing and orchestration effort honestly without expanding capacity or changing the agent execution contract. Sprint 2 grooming trace: FR-24; NFR-8, NFR-9. Sprint-1 retrospective process prevention is valid but lower priority than a repaired pipeline. Sprint 4 retrospective: TASK-032 was blocked for a full round trip because uv.lock was omitted from its permitted files. This was an orchestrator planning error, not an agent failure. Delegation budgeting must verify complete write claims, including generated lockfiles, dependency exports and affected tests, before dispatch.",
+      "acceptance_criteria": [
+        "Development plan explicitly lists one Story Builder invocation per executable assigned item.",
+        "Sprint planning records delegation count and orchestration overhead separately from points, with each handoff checked before routing the next item.",
+        "Before dispatch, each item has a complete permitted file list including required generated lockfiles, dependency exports, evidence outputs and affected tests; conflicts are serialized.",
+        "A dependency-group change cannot be dispatched without an explicit uv.lock write claim and an actual workspace lock/export verification step."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        ".github/skills/agile-sdlc-loop/references/phases.md",
+        "agile/reports/sprint-05-planning.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T10:52:55+00:00",
+      "updated": "2026-10-03T08:54:59+00:00"
+    },
+    {
+      "id": "BUG-007",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "/api/analyze never awaits the async analyzer, returning a coroutine",
+      "description": "DONE. ORCHESTRATOR TRIAGE CORRECTION: QA held this in_review over tests/test_api.py::test_unsafe_uploads_are_rejected_before_cloud_calls, but upload size and content-type validation are STORY-011's acceptance criteria and STORY-011 was never committed to sprint 2 - the story builder was explicitly instructed not to implement it here. Every recorded criterion of BUG-007 passes: /api/analyze awaits the analyzer and returns a dict not a coroutine, the sync climate/database/dispatch calls run via asyncio.to_thread, and VisionAnalysisError maps to 502 / DatabaseError to 503 with no raw payload. The upload failures are re-pointed to STORY-011.",
+      "acceptance_criteria": [
+        "POST /api/analyze awaits the analyzer and returns a contract-valid dict",
+        "a TestClient route test asserts the response is a dict, not a coroutine",
+        "the synchronous climate, database and dispatch calls run via asyncio.to_thread"
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:35:53+00:00",
+      "updated": "2026-10-02T18:02:35+00:00"
+    },
+    {
+      "id": "BUG-008",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "Critical alerts never fire because main.py reads a deleted schema field",
+      "description": "DONE. ORCHESTRATOR TRIAGE CORRECTION: QA held this in_review over two Pub/Sub failure tests, but those exercise backend/services/alert_dispatcher.py, which STORY-007 owns and which was not committed to sprint 2. Every recorded criterion of BUG-008 passes: a CRITICAL report dispatches, a HIGH report does not, the 8.0 boundary dispatches, and alert_dispatched is persisted true only after a non-empty publish id - asserted against the mocked Firestore write, not the in-memory dict. The dispatcher failures are tracked as BUG-014 and BUG-017.",
+      "acceptance_criteria": [
+        "a CRITICAL report triggers dispatch_heat_alert",
+        "a HIGH report does not",
+        "alert_dispatched is True only after a successful publish"
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:35:53+00:00",
+      "updated": "2026-10-02T18:02:35+00:00"
+    },
+    {
+      "id": "BUG-009",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "CORS allows every origin instead of reading ALLOWED_ORIGINS",
+      "description": "backend/main.py sets allow_origins=['*'] with allow_methods=['*'] and allow_headers=['*']. TASK-007 added ALLOWED_ORIGINS to the .env heredoc precisely so this could be configured; nothing reads it. A wildcard CORS policy on a public Cloud Run service is an unnecessary exposure (OWASP A05 security misconfiguration). Read ALLOWED_ORIGINS as a comma-separated list, default http://localhost:8501. Sprint 2 grooming trace: NFR-5, NFR-13; FR-17. Depends on: TASK-007. Configure CORS while the orchestrator file is open; broader STORY-012 error mapping remains separate.",
+      "acceptance_criteria": [
+        "allow_origins comes from ALLOWED_ORIGINS",
+        "the default is http://localhost:8501",
+        "no wildcard remains"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:35:53+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "BUG-010",
+      "type": "bug",
+      "parent": "EPIC-003",
+      "title": "BigQuery climate query interpolates station_id into SQL",
+      "description": "SECURITY. backend/tools/climate_service.py builds its query with an f-string: WHERE stn = '{station_id}'. station_id is a caller-supplied default argument reachable from the API layer, so this is SQL injection into BigQuery (OWASP A03). .github/instructions/gcp-services.instructions.md explicitly requires bigquery.ScalarQueryParameter binding and names this exact pattern. Also hardcodes the gsod2024 table, never filters the NOAA 9999.9 missing sentinel, blanket-catches Exception, and prints instead of logging. Sprint 2 grooming trace: FR-8, FR-9; NFR-13, NFR-14. Depends on: TASK-002, TASK-009. Security and sentinel/fallback repairs precede full STORY-004/005 telemetry acceptance; estimates remain separate.",
+      "acceptance_criteria": [
+        "station_id is bound as a ScalarQueryParameter",
+        "the 9999.9 sentinel is filtered",
+        "the fallback reading is marked source=fallback",
+        "no blanket except Exception"
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/tools/climate_service.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:35:53+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "TASK-024",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Remove the duplicate backend/requirements.txt manifest",
+      "description": "Restore single authoritative dependency source; regenerate transitional backend export if needed rather than breaking its current build.",
+      "acceptance_criteria": [
+        "only one hand-maintained manifest exists",
+        "the deployed image resolves the same versions as uv.lock"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/requirements.txt"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:35:53+00:00",
+      "updated": "2026-10-04T06:54:56+00:00"
+    },
+    {
+      "id": "BUG-011",
+      "type": "bug",
+      "parent": "EPIC-006",
+      "title": "No .dockerignore, so COPY . . can bake .env and .venv into the image",
+      "description": "SECURITY (OWASP A05). There is no .dockerignore anywhere in the repository and backend/Dockerfile line 11 runs 'COPY . .'. Any image built from a context containing .env, .venv/, .git/ or service-account files embeds them in a layer, where they survive even if a later layer deletes them. .github/instructions/docker-cloudrun.instructions.md requires credentials be kept out of the image. Add a .dockerignore excluding .env, .env.*, .venv/, venv/, .git/, __pycache__/, data_samples/, tests/, agile/, *.pem, *.p12 and key json, then rebuild. Sprint 2 grooming trace: FR-19; NFR-6. Depends on: TASK-010. Prove exclusions apply to the actual Dockerfile build context, including the currently used backend source context; use an effective Dockerfile-specific ignore if needed. Full root-context hardening belongs to TASK-025; no dependency on the uncommitted full image story.",
+      "acceptance_criteria": [
+        ".dockerignore exists and excludes .env, .venv, .git and key files",
+        "docker history on a fresh build shows no credential file",
+        "the image still starts and serves /api/health"
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        ".dockerignore"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:49:19+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "BUG-012",
+      "type": "bug",
+      "parent": "EPIC-007",
+      "title": "Dashboard reads schema fields that no longer exist",
+      "description": "REPRODUCED 2026-10-02. frontend/app.py reads two fields STORY-001 deleted. Line 69 'if data.get(\"requires_emergency_alert\")' is always None, so the critical-alert confirmation never renders; line 76 renders 'Est. Surface Temp' as 'None C' from the deleted surface_temp_estimate_c; lines 122-123 repeat both in the scan history. Current schema is zone_id, zone_name, coordinates, ambient_temp_c, hvi_score, risk_level, surface_breakdown, passive_cooling_plan, alert_dispatched, timestamp. Use risk_level == 'CRITICAL' plus alert_dispatched for the banner and drop the surface-temp metric or replace it with a field that exists. This is demo-visible. Sprint 2 grooming trace: FR-22, FR-23; FR-11. Depends on: BUG-007, BUG-008. Render the existing report contract and actual dispatch state; no dependency on full dashboard stories.",
+      "acceptance_criteria": [
+        "no deleted field is referenced in frontend/app.py",
+        "a CRITICAL report renders the alert confirmation from alert_dispatched",
+        "no metric renders the string None"
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:49:19+00:00",
+      "updated": "2026-10-02T17:57:22+00:00"
+    },
+    {
+      "id": "BUG-013",
+      "type": "bug",
+      "parent": "EPIC-007",
+      "title": "Dashboard hardcodes the deployed Cloud Run URL with no timeout",
+      "description": "frontend/app.py lines 62 and 115 hardcode https://hotspot-backend-153692178986.asia-southeast1.run.app, with the localhost alternatives commented out just above. Three problems: the project number is embedded in source; the app cannot run against a local backend without editing code, breaking the offline demo path; and neither requests.post nor requests.get passes a timeout, so the UI hangs indefinitely if the backend stalls. Read the base URL from an env var defaulting to http://localhost:8080 and pass an explicit timeout. Raw response bodies and exception text are also surfaced to the user - show a generic message instead, per the copilot-instructions logging rule. Sprint 2 grooming trace: FR-22, FR-23; NFR-5, NFR-7, NFR-13. Explicit configurable request timeout is testable without choosing a product SLO; numeric acceptance limits for full STORY-021 remain OQ-5. Defer behind pipeline prerequisites.",
+      "acceptance_criteria": [
+        "the API base URL comes from an env var defaulting to http://localhost:8080",
+        "every request passes an explicit timeout",
+        "no raw exception or response body is shown to the user"
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T16:49:19+00:00",
+      "updated": "2026-10-02T19:23:50+00:00"
+    },
+    {
+      "id": "TASK-025",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Harden the Dockerfile to the multi-stage non-root contract",
+      "description": "backend/Dockerfile does not meet .github/instructions/docker-cloudrun.instructions.md. It is single stage; it runs as root; it pulls ghcr.io/astral-sh/uv:latest, a mutable tag that makes builds unreproducible; it keeps build tooling in the runtime layer; it hardcodes --port 8080 instead of honouring PORT, which Cloud Run injects; and it sets no PYTHONDONTWRITEBYTECODE or PYTHONUNBUFFERED. There is also a build-context contradiction: COPY requirements.txt . plus CMD uvicorn main:app only resolves when the context is backend/, but the cloudrun-deploy skill prescribes building from the repository root with -f backend/Dockerfile. Settle the context and make the Dockerfile match it. Sprint 2 grooming trace: FR-19; NFR-6, NFR-10, NFR-12. Depends on: BUG-011, TASK-024. Docker hardening follows credential exclusion and manifest consistency; full STORY-014 verification remains distinct. Deferred after working-pipeline service scope.\nSprint 2 retrospective: I1: reproducible root-context non-root packaging is a prerequisite for the repaired deployment TASK-013; BUG-011 and TASK-024 are already done. Promote before deployment rather than claiming their narrow fixes delivered full image hardening.\nSprint 3 human ruling 4: hard predecessor of TASK-013. A passing hardened root-context image is mandatory before deployment; reserve backend/Dockerfile, .dockerignore and backend/.dockerignore together.",
+      "acceptance_criteria": [
+        "multi-stage with no build tooling in the runtime layer",
+        "runs as a non-root user",
+        "uv image pinned to a digest or version tag",
+        "honours the PORT env var",
+        "the documented build command works from the stated context"
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/Dockerfile",
+        ".dockerignore",
+        "backend/.dockerignore"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T16:49:19+00:00",
+      "updated": "2026-10-03T06:59:23+00:00"
+    },
+    {
+      "id": "BUG-014",
+      "type": "bug",
+      "parent": "EPIC-004",
+      "title": "Pub/Sub client construction sits outside the dispatcher's failure handler",
+      "description": "Found during BUG-008. backend/services/alert_dispatcher.py builds PublisherClient() and calls publisher.topic_path(PROJECT_ID, TOPIC_ID) BEFORE its try block, so an auth or configuration failure raises out of dispatch_heat_alert instead of returning ''. BUG-008 moved dispatch from a BackgroundTask into the request path so alert_dispatched is truthful before the Firestore write - which means such an exception now fails the whole /api/analyze request with a 500. That violates the gcp-services rule that a failed alert must never fail the analysis response. Also still carries the eager os.popen default at import and a blanket except Exception. STORY-007 owns the full rewrite of this module; this entry records the specific robustness gap BUG-008 exposed.",
+      "acceptance_criteria": [
+        "a PublisherClient construction failure returns empty string, not an exception",
+        "/api/analyze still returns 200 when Pub/Sub is unreachable",
+        "no os.popen call at import"
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/services/alert_dispatcher.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-02T17:42:13+00:00",
+      "updated": "2026-10-02T19:23:50+00:00"
+    },
+    {
+      "id": "BUG-015",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "API accepts a non-image upload and spends Gemini budget on it",
+      "description": "POST /api/analyze with content-type text/plain returns 200 and runs a full Gemini analysis. Reproduce: pytest -o addopts='' -q tests/test_api.py -k 'unsafe_uploads and wrong-content-type'. Expected 415 before any cloud call. Originally filed by QA against BUG-007; re-pointed because this is STORY-011 scope. Escalated to P0 rather than deferred because the Cloud Run service is deployed with --allow-unauthenticated, so this is unauthenticated cloud-spend amplification on a live endpoint.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/main.py",
+        "tests/test_api.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-02T17:57:07+00:00",
+      "updated": "2026-10-02T19:23:50+00:00"
+    },
+    {
+      "id": "BUG-016",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "API accepts an unbounded upload with no size limit",
+      "description": "POST /api/analyze with a 10,485,761 byte body returns 200. Reproduce: pytest -o addopts='' -q tests/test_api.py -k 'unsafe_uploads and oversized'. Expected 413 before any cloud call. Originally filed by QA against BUG-007; re-pointed because this is STORY-011 scope. Escalated to P0 rather than deferred because the service is live and unauthenticated, making this a trivial denial-of-service and cost-amplification vector. OQ-2 left the exact limit undecided; use 10 MB decimal (10,000,000 bytes) and record the assumption.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/main.py",
+        "tests/test_api.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-02T17:57:07+00:00",
+      "updated": "2026-10-02T19:23:50+00:00"
+    },
+    {
+      "id": "BUG-017",
+      "type": "bug",
+      "parent": "EPIC-004",
+      "title": "Pub/Sub publish failures disclose raw cloud payloads in stdout logs",
+      "description": "backend/services/alert_dispatcher.py prints the raw exception on publish failure, so a sensitive cloud payload reaches stdout and the Cloud Run log. Reproduce: pytest -o addopts='' -q tests/test_api.py -k pubsub_publish_failure. Expected a generic type-only log line. Violates the copilot-instructions rule that raw cloud error payloads are never logged.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 2,
+      "files": [
+        "backend/services/alert_dispatcher.py",
+        "tests/test_api.py"
+      ],
+      "source": "qa",
+      "created": "2026-10-02T17:57:07+00:00",
+      "updated": "2026-10-02T19:23:50+00:00"
+    },
+    {
+      "id": "BUG-018",
+      "type": "bug",
+      "parent": "EPIC-007",
+      "title": "Dashboard labelled every upload image/jpeg, mislabelling PNGs to Gemini",
+      "description": "Phase 8 finding F5, REPRODUCED and FIXED by the orchestrator. frontend/app.py line 78 hardcoded the multipart content type as image/jpeg for every upload, while the uploader accepts jpg, jpeg and png. Harmless until BUG-015 made the backend forward the declared content type to the analyzer as mime_type - after which a PNG reached Gemini declared as JPEG. Fixed by sending uploaded_file.type with image/jpeg only as a fallback. Recorded as done in sprint 2 because the defect was created and closed inside it.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "validation",
+      "created": "2026-10-02T19:32:05+00:00",
+      "updated": "2026-10-02T19:32:05+00:00"
+    },
+    {
+      "id": "BUG-019",
+      "type": "bug",
+      "parent": "EPIC-003",
+      "title": "Missing-project SDK failure bypasses every degradation policy",
+      "description": "Phase 8 finding F1, CONFIRMED by probe: EnvironmentError is OSError is True, and issubclass(OSError, GoogleAPIError/GoogleAuthError/RequestException) is False for all three. google.cloud.client raises EnvironmentError when project discovery returns None, so with GOOGLE_CLOUD_PROJECT unset the client constructor raises straight through the narrowed tuples in climate_service, database and seed_samples. Consequences: the BigQuery lookup propagates instead of returning source=fallback; Firestore raises OSError instead of DatabaseError so the API returns 500 not 503; the seeder aborts instead of warning and keeping local files. This is the same class of defect as sprint 1 BUG-005 and this sprint BUG-014 - a narrowed tuple missing a type that subclasses none of the expected bases. Handle the configuration failure at construction in each module; do not reintroduce a blanket except.\nSprint 2 retrospective: R4: link the existing F1 missing-project failure to TASK-017 recurrence prevention. Original source was validation; reused as retro corrective work, not a new duplicate; no completion claim.\nSprint 3 sequencing. Depends on: TASK-017. Reserve climate_service.py, database.py and seed_samples.py together; retain TypeError/KeyError propagation.",
+      "acceptance_criteria": [
+        "missing project yields source=fallback from the climate lookup",
+        "missing project raises DatabaseError mapped to 503",
+        "missing project leaves the seeder warning and retaining local files",
+        "TypeError and KeyError still propagate"
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/tools/climate_service.py",
+        "backend/services/database.py",
+        "backend/tools/seed_samples.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:32:05+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "TASK-026",
+      "type": "task",
+      "parent": "EPIC-005",
+      "title": "Declare a response model for POST /api/analyze",
+      "description": "Phase 8 finding F2. The route has no response_model, so nothing enforces the Heat Analysis Result shape at the HTTP boundary - analyzer-side Pydantic validation is not the same guarantee, and a malformed report could still be returned with a 200. Declare a response model covering the canonical section 3 fields plus the documented envelope field climate_source. Overlaps STORY-010; fold it in rather than duplicating.\nSprint 2 retrospective: R1/R5: existing response-model boundary strengthening complements the standing cross-layer gate; preserve distinct scope and coordinate with STORY-010. Original source was validation; reused as retro follow-up.\nSprint 3 sequencing. Depends on: STORY-010, TASK-027, TASK-028. Keep the response-model slice separate from STORY-010, serialize both on main.py, and accept the documented envelope before dashboard dispatch.",
+      "acceptance_criteria": [
+        "POST /api/analyze declares a response model covering canonical guide section 3 fields and agreed climate_source/doc_id envelope fields.",
+        "Malformed reports cannot return HTTP 200; valid reports preserve schema fields and provenance.",
+        "Contract-auditor verifies the HTTP model and canonical report schema agree; dependency TASK-027 must be completed before model acceptance."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:32:05+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "TASK-027",
+      "type": "task",
+      "parent": "EPIC-002",
+      "title": "Document climate_source and the BigQuery location exception in the contract",
+      "description": "Phase 8 findings F3 and MINOR. Two undocumented but correct deviations need ratifying so a future audit does not flag them as drift: (1) main.py adds climate_source with values bigquery or fallback to the API response and the persisted scan - validate_report.py tolerates extra keys so it passes, and FR-15/FR-9 already imply the provenance, but COPILOT_GUIDE section 3 and the canonical schema do not define it; (2) climate_service uses BIGQUERY_LOCATION defaulting to US rather than asia-southeast1, because a BigQuery job must run in its dataset's location and bigquery-public-data.noaa_gsod is US multi-region - pinning Singapore fails every lookup into the fallback. The auditor ruled both correct. Record the narrow exception in section 2 and NFR-1.\nSprint 2 retrospective: I4: document correct deviations before accepting the response model TASK-026, so this prerequisite does not rank below its dependent. Original source was validation; reused, not duplicated.\nSprint 3: selected contract-documentation predecessor of TASK-026. Touch only COPILOT_GUIDE.md and agile/requirements.md; do not edit .github/docs/.",
+      "acceptance_criteria": [
+        "COPILOT_GUIDE section 3 defines climate_source values bigquery/fallback and its API/persisted-report placement.",
+        "COPILOT_GUIDE section 2 and NFR-1 document BIGQUERY_LOCATION default US only for the US NOAA dataset; other service regions remain asia-southeast1.",
+        "Contract-auditor confirms documented schema/location exceptions match delivered behavior without changing runtime policy."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "COPILOT_GUIDE.md",
+        "agile/requirements.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:32:06+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "TASK-028",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Enforce a standing cross-layer compatibility gate for contract changes",
+      "description": "R1/R5; FR-3/10/11/15/16/22/24; NFR-8/10. STORY-001 changed analyzer async/schema contracts without API/dashboard consumer updates, producing BUG-007/008/012; BUG-015 later exposed fixed BUG-018. Generalise the existing QA coroutine-await check into an executable pre-merge and pre-deploy gate, not a sprint-later audit. Reuse existing contract/API/frontend checks; response-model work stays TASK-026, MIME fix stays BUG-018 done.\nSprint 3 human ruling 5. Depends on: TASK-016, TASK-017, TASK-021. Establish the standing credential-free compatibility gate before contract-touching stories and rerun it for each affected change and before deployment. No file claims are declared; dispatch alone until ownership is recorded.",
+      "acceptance_criteria": [
+        "Every producer signature, async, schema or MIME change identifies consumers and runs affected producer/API/dashboard checks in the same change before merge and deployment.",
+        "Credential-free integrated checks prove the API awaits async analyzers, returns a canonical report, preserves critical publish/persistence state and renders current fields without None metrics.",
+        "PNG and JPEG travel through dashboard multipart submission and API MIME forwarding with consistent declared types.",
+        "Negative regressions for an un-awaited coroutine, removed field and mismatched MIME fail the standing gate; reports name the source revision and executed checks."
+      ],
+      "priority": "P0",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-02T19:37:14+00:00",
+      "updated": "2026-10-03T06:46:34+00:00"
+    },
+    {
+      "id": "TASK-029",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Attribute QA failures to owning criteria before blocking committed items",
+      "description": "R2; FR-24. QA held BUG-007/008 over uncommitted STORY-011/007 criteria and filed three P0 defects under wrong parents. Those existing defects remain BUG-014/015/016/017; correct the triage procedure rather than duplicating bugs or rewriting story scope. Sprint 3 R2 RECURRENCE: QA again blocked committed items over uncommitted criteria and filed P0s under wrong parents. This exact action was deferred after sprint 2; promote P2 to P1 and schedule prevention before discretionary QA expansion. Existing scope and acceptance criteria retained.",
+      "acceptance_criteria": [
+        "Each failed check records reproduction, owning acceptance criterion, correct parent and whether that parent is committed.",
+        "Out-of-scope failures create or reuse correctly parented defects and do not block an unrelated committed item whose own criteria pass.",
+        "QA reviews the BUG-007/008 versus STORY-011/007 examples; orchestrator verifies attribution before changing review status."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/agents/qa-engineer.agent.md",
+        "tests/test_sprint4_process.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:37:14+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-030",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Control emergency scope and reserve capacity for recurring retro actions",
+      "description": "R6/I2; FR-24/25. Sprint 2 deliberately grew from 9 items/15 points to 14/21 for emergency exposures; TASK-016/017/021 were never scheduled and classes recurred. Track original plan separately from actual delivery, permit only explicit authorized emergency rebaseline or equal-point swaps, and reserve capacity for prevention. Complement existing TASK-020 dependency/epic checks and TASK-023 delegation budgeting; do not duplicate them. Sprint 3 R5 RECURRENCE: human authorised 46 points / 23 items at 2.2 times prior velocity 21; BUG-023/024 added 2 unplanned points. Completed original commitment is 43 points / 22 items, total actual velocity 45 points / 24 items, STORY-017 partial. Promote P2 to P1; emergency intake needs an explicit swap or authorised rebaseline, with prevention capacity reserved. Do not treat stretch authorisation as sustainable capacity.",
+      "acceptance_criteria": [
+        "Planning records reserved recurrence-prevention points before discretionary work; TASK-016/017/021 already shipped and are not recommitted, while sprint 4 reserves 4 points for TASK-018/029/030; no automatic next-sprint or done transitions.",
+        "Emergency intake records defect evidence, human authorization, added points and displaced scope or explicit rebaseline; it never silently exceeds capacity or the local-only cloud constraint.",
+        "Reports preserve original commitment, expanded commitment and actual velocity separately: sprint 2 was 15 planned plus 6 unplanned = 21 delivered; sprint 3 was 46 planned, 43 original completed plus 2 unplanned = 45 delivered, not sustainable baseline.",
+        "Each sprint review names unresolved retro actions, recurrence evidence and explicit rationale for any recurring action left unscheduled."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/agents/scrum-master.agent.md",
+        ".github/skills/agile-sdlc-loop/scripts/sprint_report.py",
+        "tests/test_sprint4_process.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:37:14+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-031",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Obtain human decisions for validation, demo and performance limits",
+      "description": "OQ-2/OQ-5 validation and timeout limits were ratified in sprint 3. OQ-4 answered by the human on 2026-10-04: deadline 2026-10-11, demo recording capped at 3 minutes, and repository sharing satisfied by GitHub or any Google-provided repository. Recorded in agile/requirements.md under Resolved questions and removed from Open questions; the coverage line now lists OQ-1/3/4/6/7 resolved with only OQ-2 and OQ-5 outstanding. STORY-028 and TASK-006 are unblocked as a result.",
+      "acceptance_criteria": [
+        "Human states the OQ-4 competition deadline.",
+        "Human states the OQ-4 recording length and submission/sharing form constraints.",
+        "Product-owner records the OQ-4 answers in agile/requirements.md and updates EPIC-009 blockers; unresolved answers stay blocked and protected .github/docs/ is not edited."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "agile/requirements.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-02T19:37:14+00:00",
+      "updated": "2026-10-03T08:50:47+00:00"
+    },
+    {
+      "id": "TASK-032",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Backend image ships streamlit and the whole frontend dependency tree",
+      "description": "Found verifying TASK-025. The hardened multi-stage image is 899 MB because backend/requirements.txt is exported from [project.dependencies], which contains streamlit and requests for the dashboard. The backend container never imports streamlit, so it carries pandas, pyarrow, altair and the rest of the Streamlit tree for nothing - slower cold starts on Cloud Run and a much larger attack surface. Split the manifest: move streamlit (and any other frontend-only package) into a dependency group, export the backend manifest without it, and keep a separate frontend install path. Must not break pip install -r requirements.txt at the root, which README and copilot-instructions still document. Sprint 3 I3: reuse the existing 899 MB image-size finding, retain P2 and all criteria. Original source validation; no duplicate container task.",
+      "acceptance_criteria": [
+        "the backend image does not contain streamlit",
+        "image size is materially below 899 MB",
+        "root requirements.txt still installs the dashboard"
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "pyproject.toml",
+        "uv.lock",
+        "backend/requirements.txt",
+        "requirements.txt",
+        "README.md",
+        "tests/test_package_layout.py",
+        "tests/test_sprint_packaging.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T05:38:27+00:00",
+      "updated": "2026-10-03T08:25:10+00:00"
+    },
+    {
+      "id": "STORY-033",
+      "type": "story",
+      "parent": "EPIC-005",
+      "title": "As an analyst I can override the ambient temperature for a what-if analysis",
+      "description": "FR-15/22; sprint 3 partial STORY-017 remediation. Backend-only contract slice: add optional multipart ambient_temp_c in the ratified inclusive -50 to 60 C range; supplied values reach the analyzer and persisted/returned ambient_temp_c unchanged with climate_source=caller. Omission retains bigquery/fallback telemetry behaviour. Reject invalid, non-finite or out-of-range input with HTTP 422 and the standard safe envelope before any cloud boundary. Extend AnalysisResponse and cross-layer envelope/contract documentation for caller provenance without weakening strict fresh-report validation. Depends on: STORY-010, TASK-026, TASK-027, TASK-028. These prerequisites are done. The existing dashboard-slider criterion is allocated to STORY-017, which must follow this API contract; it is not deleted or claimed delivered. Sprint 4 is local-only: all Gemini/BigQuery/Firestore/Pub/Sub interactions mocked, no deployment.",
+      "acceptance_criteria": [
+        "POST /api/analyze accepts optional multipart ambient_temp_c; omitted values preserve bigquery/fallback telemetry behaviour.",
+        "Values outside inclusive -50 to 60 C, invalid numbers and non-finite values return HTTP 422 in the standard error envelope before cloud calls.",
+        "AnalysisResponse, persisted records and contract documentation distinguish climate_source=caller from bigquery and fallback.",
+        "Offline API tests prove the supplied value reaches the analyzer unchanged and round-trips through persistence and the strict response model; STORY-017 owns the dashboard slider integration criterion."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "backend/main.py",
+        "tests/test_api.py",
+        "tests/test_cross_layer_contract.py",
+        "COPILOT_GUIDE.md",
+        "agile/requirements.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T06:28:31+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "BUG-020",
+      "type": "bug",
+      "parent": "STORY-011",
+      "title": "STORY-011 WebP acceptance conflicts with delivered JPEG/PNG contract",
+      "description": "CLOSED as superseded, not fixed. STORY-011 AC1 listed WebP; the ratified contract in COPILOT_GUIDE section 3 is image/jpeg and image/png only. The criterion was stale, not the code. STORY-011's acceptance criteria were amended to the ratified set. QA was right to flag the mismatch.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-03T06:39:56+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "BUG-021",
+      "type": "bug",
+      "parent": "TASK-027",
+      "title": "NFR-1 omits ratified US NOAA BigQuery location exception",
+      "description": "FIXED: agile/requirements.md NFR-1 now records the narrow BigQuery data-location exception (bigquery-public-data.noaa_gsod is US multi-region, so climate_service uses BIGQUERY_LOCATION default US for that read only). COPILOT_GUIDE section 2 already carried it; the two now agree.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-03T06:39:58+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "BUG-022",
+      "type": "bug",
+      "parent": "TASK-025",
+      "title": "Hardened Dockerfile cannot build from committed repository-root context",
+      "description": "FIXED by aligning documentation to the chosen context. TASK-025 deliberately standardised on the backend/ build context: the Dockerfile's COPY paths are backend-relative, backend/.dockerignore protects exactly that context, and it is what the user already deploys with. .github/skills/cloudrun-deploy/SKILL.md still prescribed a repository-root build, which is what the failing check asserted. The skill and its troubleshooting row now specify 'docker build -f backend/Dockerfile backend', matching README.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": null,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-03T06:40:17+00:00",
+      "updated": "2026-10-03T06:50:56+00:00"
+    },
+    {
+      "id": "BUG-023",
+      "type": "bug",
+      "parent": "TASK-013",
+      "title": "Cached hardened image is stale and cannot certify current sprint deployment",
+      "description": "FIXED: the hardened image was built before /api/live existed. Rebuilt from backend/ and verified offline inside a fresh container: /api/live returns 200 {\"status\":\"alive\"} and /api/health returns 200 degraded with no credentials, which is the correct readiness answer for an unconfigured container.",
+      "acceptance_criteria": [],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [],
+      "source": "qa",
+      "created": "2026-10-03T06:40:25+00:00",
+      "updated": "2026-10-03T06:59:23+00:00"
+    },
+    {
+      "id": "BUG-024",
+      "type": "bug",
+      "parent": "EPIC-005",
+      "title": "GET /api/scans 500s because the strict response model rejects legacy Firestore records",
+      "description": "FOUND ONLY BY DEPLOYING. The sprint 3 revision returned HTTP 500 {code: internal_error} for GET /api/scans against real Firestore. Cloud Run logs show fastapi.exceptions.ResponseValidationError: 14 validation errors. Cause: TASK-026 declared ScanHistoryResponse.scans as list[AnalysisResponse], requiring all ten canonical fields, but hotspot_scans still holds documents written by the pre-sprint-2 broken revision - the one that persisted an un-awaited coroutine (BUG-007) and reports lacking zone_id, coordinates and alert_dispatched. One malformed historical row failed the entire request. Mocked tests never caught it because every fixture was a well-formed current-schema report. FIXED: scans is now list[dict]; history is data of mixed vintage and must degrade per row, not wholesale. /api/analyze keeps its strict model because that payload is freshly generated.",
+      "acceptance_criteria": [
+        "GET /api/scans returns 200 against a collection containing legacy records",
+        "POST /api/analyze keeps its strict response model",
+        "a regression test covers a legacy record missing required fields"
+      ],
+      "priority": "P0",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 3,
+      "files": [
+        "backend/main.py"
+      ],
+      "source": "validation",
+      "created": "2026-10-03T07:04:15+00:00",
+      "updated": "2026-10-03T07:08:17+00:00"
+    },
+    {
+      "id": "TASK-033",
+      "type": "task",
+      "parent": "EPIC-004",
+      "title": "Cover uncovered alert payload validation branches",
+      "description": "Sprint 3 I1; FR-11/24/25, NFR-9. alert_dispatcher.py is 84.4% covered; invalid-payload validation branches remain uncovered despite 361 passing tests. This is focused branch coverage, not a duplicate of TEST-001 whole-backend accounting or STORY-023 service coverage. Delegate tests to qa-engineer; no live credentials required.",
+      "acceptance_criteria": [
+        "QA identifies the uncovered invalid-payload validation branches from the sprint 3 coverage artifact.",
+        "Focused offline cases execute those branches and prove invalid input does not publish an alert.",
+        "QA records per-file coverage and preserves the official whole-backend denominator."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "tests/test_alert_dispatcher.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T07:12:39+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-034",
+      "type": "task",
+      "parent": "EPIC-003",
+      "title": "Cover uncovered climate payload validation branches",
+      "description": "Sprint 3 I1; FR-8/9/24/25, NFR-9. climate_service.py is 87.1% covered; invalid-payload validation branches remain uncovered. This is focused branch coverage, not a duplicate of TEST-001 denominator accounting or STORY-023. Delegate tests to qa-engineer; preserve the ratified BigQuery location exception and graceful fallback.",
+      "acceptance_criteria": [
+        "QA identifies the uncovered invalid-payload validation branches from the sprint 3 coverage artifact.",
+        "Focused offline cases exercise invalid telemetry payloads and demonstrate the documented fallback without leaking cloud details.",
+        "QA records per-file coverage and preserves the official whole-backend denominator."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "tests/test_climate_service.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T07:12:39+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-035",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Exercise realistic legacy Firestore history through API response boundaries",
+      "description": "Sprint 3 R1/I4; FR-18/24, NFR-9. BUG-024 is already done; prevention is test-only. Exercise sanitized mixed-vintage Firestore history missing zone_id, coordinates or alert_dispatched and malformed old records alongside current reports through real FastAPI response validation. Prove the former strict list[AnalysisResponse] would reject these fixtures and fresh POST /api/analyze remains strict, including the newly accepted caller-temperature provenance. Depends on: STORY-033, BUG-024, TASK-026. STORY-033 is earlier same-sprint sequencing; BUG-024/TASK-026 are done. No production writes, live Firestore or production identifiers.",
+      "acceptance_criteria": [
+        "A credential-free mixed-vintage history fixture contains a valid current report and realistic legacy records missing canonical fields.",
+        "GET /api/scans runs through FastAPI response validation and returns usable history without an entire-request HTTP 500 caused by a legacy row.",
+        "A negative proof against the former strict history response model demonstrates that the legacy fixture would have caught BUG-024 before deployment.",
+        "POST /api/analyze remains strictly schema validated; compatibility does not weaken freshly generated reports."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        "tests/test_api.py",
+        "tests/test_cross_layer_contract.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T07:13:38+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-036",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Require local-container smoke evidence before validation handoff",
+      "description": "Sprint 3 R1; FR-19/21/24, NFR-8/9. Establish the mandatory phase-7-to-8 smoke handoff. Sprint 4 human quota constraint overrides live deployment: prove deployability locally using backend/ build context, build/run the final image and smoke actual HTTP routes against that local container with all cloud client boundaries mocked. Reuse pipeline-smoke-test workflow, but its current live default is prohibited; provide an explicit offline-container mode with fail-closed cloud access, no ADC/.env mounts and isolated credential-free fixtures. This process task establishes the gate before implementation acceptance, not a dependency on STORY-016; final execution waits for all sprint changes and QA. Cloud-deployer owns local image execution, QA owns offline fixtures, contract-auditor owns payload/handoff validation. STORY-016 retains future cloud verification/rollback ownership and remains deferred. No .github/docs edits, gcloud calls, cloud deploys or live cloud service calls.",
+      "acceptance_criteria": [
+        "Phase 7 for sprint 4 requires docker build -f backend/Dockerfile backend, a run of the resulting final image, and recorded source revision, image ID/digest, build/run commands, local URL and smoke artefact paths; no Cloud Run revision or traffic change is required.",
+        "Against the actual local container, credential-free mocked cloud boundaries demonstrate GET /api/live and /api/health, a schema-valid POST /api/analyze with caller temperature, GET /api/scans containing persisted current and legacy-shaped offline fixtures, and unsupported-upload HTTP 415; outbound cloud access fails closed.",
+        "A failed smoke check blocks validation handoff with a correctly parented defect; skipped live-cloud checks are recorded not run/unverified, never passed; local-container evidence satisfies sprint 4 acceptance.",
+        "The existing smoke workflow gains an explicit offline-container path which does not invoke doctor, verify_setup, seed upload or the live smoke default, mount credentials, or call Gemini/BigQuery/Firestore/Pub/Sub; execution is delegated to cloud-deployer, QA and contract-auditor, while STORY-016 rollback remains deferred."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 4,
+      "files": [
+        ".github/skills/agile-sdlc-loop/references/phases.md",
+        ".github/skills/pipeline-smoke-test/SKILL.md",
+        ".github/skills/pipeline-smoke-test/scripts/smoke_test.sh",
+        "tests/test_sprint4_smoke.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T07:13:38+00:00",
+      "updated": "2026-10-03T08:25:09+00:00"
+    },
+    {
+      "id": "TASK-037",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "docker-cloudrun instructions still prescribe a repository-root build context",
+      "description": "Found during TASK-032. .github/instructions/docker-cloudrun.instructions.md still tells agents to build from the repository root, but TASK-025 standardised on the backend/ context: the Dockerfile's COPY paths are backend-relative, backend/.dockerignore protects that context, and README plus .github/skills/cloudrun-deploy were both aligned in sprint 3. This instruction file was missed. An agent following it will produce a failing build. Same class of documentation drift that produced three false P0s in sprint 3. Sprint 4 retrospective: fourth documentation-drift recurrence despite TASK-018; trace FR-19/21 and NFR-6/12. Correct this missed instruction surface, not the already-correct Dockerfile or deploy skill.",
+      "acceptance_criteria": [
+        "Docker Cloud Run instructions consistently prescribe backend/ as the build context and docker build -f backend/Dockerfile backend from the repository root.",
+        "Build-context, COPY and dockerignore guidance matches the current Dockerfile, README and deploy skill; stale root-context guidance is absent from this instruction file.",
+        "Acceptance evidence uses an offline consistency check with no gcloud command or cloud spend."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        ".github/instructions/docker-cloudrun.instructions.md",
+        "tests/test_sprint_packaging.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T08:12:45+00:00",
+      "updated": "2026-10-03T08:54:59+00:00"
+    },
+    {
+      "id": "TASK-038",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Retire legacy manual smoke scripts after migrating unique checks",
+      "description": "Sprint 4 QA retirement recommendation; FR-24/25, NFR-7/9. backend/test_analyzer.py and backend/test_pipeline.py caused cross-layer gate, coverage-denominator and schema drift for three consecutive sprints. Implementation slice for STORY-022's retirement criterion. Human approved deletion in sprint 7. Both scripts only exercised /api/analyze, /api/health and /api/scans, all already covered by the opt-in pipeline-smoke-test skill, so no unique coverage was lost. Deletion surfaced three stale assertions, all reconciled: the .env.example variable count, the retired-scripts existence check, and the setup_gcp.sh non-empty-value invariant that predated having a secret in the contract set. Suite green at 607 passing. tests/coverage.ini omit entries and the tests/test_cross_layer_contract.py filter were deliberately left in place because tests/test_sprint_report.py asserts the exact historical omit list.",
+      "acceptance_criteria": [
+        "Unique checks from both manual scripts are inventoried and mapped to existing automated checks or the opt-in smoke workflow; no unique coverage is lost.",
+        "Human explicitly approves deletion of backend/test_analyzer.py and backend/test_pipeline.py before either file is removed.",
+        "After approval and migration both legacy scripts are removed, references are updated, and offline suite plus cross-layer and coverage-accounting checks pass without cloud calls."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "backend/test_analyzer.py",
+        "backend/test_pipeline.py",
+        ".github/skills/pipeline-smoke-test/scripts/smoke_test.sh",
+        ".github/skills/pipeline-smoke-test/SKILL.md",
+        "tests/test_cross_layer_contract.py",
+        "tests/coverage.ini",
+        "tests/test_foundation.py",
+        "README.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T08:30:08+00:00",
+      "updated": "2026-10-03T08:30:08+00:00"
+    },
+    {
+      "id": "BUG-025",
+      "type": "bug",
+      "parent": "EPIC-007",
+      "severity": "P0",
+      "title": "Cloud Run deploy script could never have produced a working revision",
+      "description": "Found in sprint 7 when the human asked for a redeploy. .github/skills/cloudrun-deploy/scripts/deploy.sh carried four independent defects, each fatal on its own, and none detectable by the offline suite because no test executes the deploy script. (1) Build context was the repository root while the Dockerfile's COPY paths moved to backend/ in sprint 3 \u2014 the documented triage symptom in the skill's own table, contradicted by the script three sections below it. (2) GOOGLE_MAPS_API_KEY and BIGQUERY_LOCATION were never passed to Cloud Run, so every sprint 6 coordinate analysis would have returned 502 in production while passing locally. (3) Default SERVICE_NAME was hotspot-sentinels but the live service is hotspot-backend, so a deploy would have created a second service instead of a new revision. (4) No --platform pin, so an arm64 host would push an image Cloud Run refuses with 'Container manifest type must support amd64/linux'. A latent fifth issue was fixed alongside: --set-env-vars used comma separation, which would have mis-parsed a multi-origin ALLOWED_ORIGINS; it now uses the ^@^ delimiter. This is the fourth recurrence of the documentation-drift class and the first where the drift was in executable code rather than prose.",
+      "acceptance_criteria": [
+        "deploy.sh builds with backend/ as context, pins linux/amd64, defaults to the hotspot-backend service, and injects GOOGLE_MAPS_API_KEY and BIGQUERY_LOCATION.",
+        "The script aborts with a clear message when GOOGLE_MAPS_API_KEY is unset rather than shipping a revision that 502s on coordinate analysis.",
+        "Skill prose and the triage table agree with the script on service name, build context and required runtime variables.",
+        "A real revision is deployed and verified end to end from the deployed URL."
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        ".github/skills/cloudrun-deploy/scripts/deploy.sh",
+        ".github/skills/cloudrun-deploy/SKILL.md"
+      ],
+      "source": "human",
+      "created": "2026-10-04T12:30:00+00:00",
+      "updated": "2026-10-04T12:45:00+00:00"
+    },
+    {
+      "id": "BUG-026",
+      "type": "bug",
+      "parent": "EPIC-006",
+      "severity": "P0",
+      "title": "Deployed frontend has been down since the sprint 4 dependency split",
+      "description": "Found in sprint 7 while verifying the deployed stack for submission. https://hotspot-frontend-...run.app returned HTTP 503 and revision hotspot-frontend-00002-zk9 had NO environment variables set at all. Two independent causes. (1) The service was deployed with buildpacks, which detected a generic Python app and booted it under gunicorn as a WSGI app; Streamlit is not WSGI, so the worker could never start. (2) The revision crashed on 'ModuleNotFoundError: No module named streamlit' because sprint 4's TASK-032 moved streamlit into a frontend dependency group and the default export stopped carrying it. Separately, API_BASE_URL was never set, so even a booting container would have called http://localhost:8080 inside its own sandbox and reached nothing. This was invisible for three sprints because every container proof targeted backend/Dockerfile and no check ever exercised the deployed frontend URL. Fixed by giving the frontend the same hardened multi-stage treatment as the backend: frontend/Dockerfile, frontend/.dockerignore and a frontend/requirements.txt generated by 'uv export --locked --no-hashes --only-group frontend'. Verified locally (non-root uid 10001, injected PORT honoured, /_stcore/health ok) then deployed as hotspot-frontend-00003-h56 with API_BASE_URL set, and exercised end to end in a browser: a coordinate run rendered real Maps imagery and persisted HVI 1.5 LOW for 1.3521/103.8198.",
+      "acceptance_criteria": [
+        "The frontend deploys from a committed Dockerfile rather than buildpack detection, and starts Streamlit rather than gunicorn.",
+        "The frontend image installs the frontend dependency group so streamlit is present.",
+        "The deployed revision sets API_BASE_URL to the live backend and the dashboard completes a coordinate analysis end to end.",
+        "The deployed frontend URL returns HTTP 200 and /_stcore/health reports ok."
+      ],
+      "priority": "P0",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "frontend/Dockerfile",
+        "frontend/.dockerignore",
+        "frontend/requirements.txt"
+      ],
+      "source": "human",
+      "created": "2026-10-04T13:00:00+00:00",
+      "updated": "2026-10-04T13:30:00+00:00"
+    },
+    {
+      "id": "TASK-049",
+      "type": "task",
+      "parent": "EPIC-009",
+      "title": "Put the codebase under version control before the submission deadline",
+      "description": "Found in sprint 7 while checking TASK-006's 'repository shared with no secrets in history' criterion. The repository has ZERO commits and no remote: git rev-list --all --count returns 0. Seven sprints of work exist only as an uncommitted working tree on one machine, with the submission deadline on 2026-10-11. There is no history to secret-scan, no way to roll back a bad edit, and no artefact to share. The good news is that a zero-commit history is the safest possible starting point: .env has never been committed, so an initial commit made with the current .gitignore cannot leak it. Verify .gitignore covers .env, venv/, data_samples/ and __pycache__/ BEFORE the first commit, confirm git status shows no credential files staged, then commit and push. Do not use git add -A without reviewing the staged list.",
+      "acceptance_criteria": [
+        "git check-ignore confirms .env, .venv/ and any key files are ignored before the first commit is created.",
+        "The staged file list is reviewed explicitly; no .env, credential, key or token file is included.",
+        "An initial commit exists and is pushed to a GitHub or Google-provided remote.",
+        "A secret scan of the pushed history finds no credential, and .env.example remains the only committed environment template."
+      ],
+      "priority": "P0",
+      "estimate": 2,
+      "status": "ready",
+      "sprint": null,
+      "files": [
+        ".gitignore"
+      ],
+      "source": "human",
+      "created": "2026-10-04T13:30:00+00:00",
+      "updated": "2026-10-04T11:20:16+00:00"
+    },
+    {
+      "id": "TASK-050",
+      "type": "task",
+      "parent": "EPIC-009",
+      "title": "Choose demo coordinates that show a critical hotspot",
+      "description": "Found in sprint 7 during live demo verification. The default Singapore shortcut 1.3521/103.8198 resolves at zoom 19 to dense tree canopy and correctly scores HVI 1.5 LOW. That is the product working properly, but it is a weak opening shot for a 3-minute recording about urban heat: the judge's first impression would be a forest and a LOW badge. Pick and pin coordinates that land on asphalt and dark roofing so the demo opens on a HIGH or CRITICAL score and the passive cooling blueprint and alert path are both exercised. 1.3343/103.8563 scored HIGH 6.5 and is a candidate. Verify the chosen coordinates are already cached so the demo does not spend Maps quota or wait on a cold fetch.",
+      "acceptance_criteria": [
+        "Demo coordinates are chosen that reliably produce a HIGH or CRITICAL risk level.",
+        "At least one scripted scenario exercises the critical alert path end to end.",
+        "The chosen coordinates are pre-warmed in the imagery cache before recording.",
+        "A contrasting low-risk location remains available to show the score responding to real surface differences."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "todo",
+      "sprint": null,
+      "files": [],
+      "source": "human",
+      "created": "2026-10-04T13:30:00+00:00",
+      "updated": "2026-10-04T13:30:00+00:00"
+    },
+    {
+      "id": "TASK-048",
+      "type": "task",
+      "parent": "EPIC-007",
+      "title": "Cover the deploy script with an offline lint so deploy drift fails the build",
+      "description": "Raised by BUG-025. Four fatal defects sat in deploy.sh undetected because the offline suite never inspects it. A static test can catch every one of them without touching cloud: assert the docker build line uses backend/ as context and pins linux/amd64, assert the --set-env-vars string carries every variable the backend reads via os.getenv at import time, and assert the service name matches the one the verify and rollback sections of the skill document. This is the executable-drift analogue of tests/test_cross_layer_contract.py and should fail the build the same way.",
+      "acceptance_criteria": [
+        "An offline test parses deploy.sh and fails if the build context is not backend/ or the linux/amd64 platform pin is missing.",
+        "The test derives the required runtime variable set from the backend source rather than a hardcoded list, so a new os.getenv in a service fails the build until the deploy script injects it.",
+        "The test asserts the script's service name matches the name used in the skill's verify and rollback commands.",
+        "No cloud credentials or network access are required to run it."
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "todo",
+      "sprint": null,
+      "files": [
+        "tests/test_deploy_script.py",
+        ".github/skills/cloudrun-deploy/scripts/deploy.sh"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T12:45:00+00:00",
+      "updated": "2026-10-04T12:45:00+00:00"
+    },
+    {
+      "id": "TASK-039",
+      "type": "task",
+      "parent": "EPIC-007",
+      "title": "Verify and resolve dashboard clipping with the expanded mobile sidebar",
+      "description": "Sprint 4 validation observed mobile clipping with the sidebar expanded; responsive layout remains unverified. Trace FR-22/23. This is a bounded verification/repair task, not a new dashboard feature or an assumed failing acceptance criterion. Use mocked offline API responses and retain truthful measured, fallback and what-if states.",
+      "acceptance_criteria": [
+        "Expanded and collapsed sidebar states are exercised on mobile and desktop, with screenshots recording viewport sizes and whether clipping reproduces.",
+        "Any reproduced clipping is resolved without overlapping or inaccessible upload, temperature, analysis, history or provenance controls.",
+        "Repeatable offline checks demonstrate readable measured, fallback, what-if and error states at the tested viewports; no live cloud calls are needed."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 5,
+      "files": [
+        "frontend/app.py",
+        "tests/test_frontend.py",
+        "agile/reports/sprint-05-mobile"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T08:30:08+00:00",
+      "updated": "2026-10-03T11:25:19+00:00"
+    },
+    {
+      "id": "TASK-040",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Checklist and validate every new report-envelope field",
+      "description": "Sprint 5 retro: STORY-030 added identity_source across the schema, API and persisted record but omitted the canonical validate_report.py contract validator, allowing malformed provenance through until QA found and fixed it. Establish a mandatory checklist for additive envelope-field changes; this complements, rather than duplicates, the existing cross-layer gate for contract changes.",
+      "acceptance_criteria": [
+        "The additive-field checklist explicitly covers the canonical schema, backend/main.py response model and HTTP response, persisted record, COPILOT_GUIDE.md section 3, the allowlists in tests/test_contract.py and tests/test_cross_layer_contract.py, and .github/skills/heat-report-validation/scripts/validate_report.py.",
+        "A malformed or missing identity_source origin and coordinate origin are rejected by the canonical validator; a valid all-supplied, all-inferred and mixed-provenance report passes.",
+        "A regression check proves a future envelope field cannot be accepted by the application contract while omitted from the canonical validator or either test allowlist."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "COPILOT_GUIDE.md",
+        "backend/main.py",
+        "backend/services/database.py",
+        "tests/test_contract.py",
+        "tests/test_cross_layer_contract.py",
+        ".github/skills/heat-report-validation/scripts/validate_report.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T11:29:22+00:00",
+      "updated": "2026-10-04T09:27:23+00:00"
+    },
+    {
+      "id": "TASK-041",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Resume agent work after transient authentication failures",
+      "description": "Sprint 5 retro: a transient authentication failure discarded an agent run and forced a fresh dispatch. Preserve enough non-secret handoff state to resume or redispatch the same assigned item without repeating completed exploration; this is an orchestration-recovery task, not a cloud authentication change.",
+      "acceptance_criteria": [
+        "The dispatch record preserves the item ID, exact task instructions, permitted file list, completed evidence and last known state without storing credentials or tokens.",
+        "A simulated transient auth failure can be distinguished from a task failure and the same item can be redispatched from its recorded checkpoint without losing prior evidence or silently changing scope.",
+        "Permanent authorization failures are reported as blocked for human resolution and are never retried in a loop."
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-03T11:29:28+00:00",
+      "updated": "2026-10-03T11:30:21+00:00"
+    },
+    {
+      "id": "TASK-042",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Check agent file-write capabilities before dispatch",
+      "description": "Sprint 5 retro: STORY-026 was routed to the Product Owner agent even though that agent cannot edit files, requiring the orchestrator to write the README. Validate agent capabilities against the requested outcome and file permissions before dispatch; route file-writing work to a write-capable agent or the orchestrator.",
+      "acceptance_criteria": [
+        "Before dispatch, the planned agent's read/write capability is checked against every requested file and the task's required operation.",
+        "File-writing documentation work is never assigned to a read-only Product Owner agent; the handoff routes it to a capable agent or is explicitly handled by the orchestrator.",
+        "A capability mismatch is detected before invocation and does not consume a development delegation or silently leave the item incomplete."
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-03T11:29:33+00:00",
+      "updated": "2026-10-03T11:30:21+00:00"
+    },
+    {
+      "id": "TASK-043",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Budget for stale tests when a sprint deliberately changes behaviour",
+      "description": "RECURRENCE in sprint 6: sixteen tests encoded the prior dashboard flow after STORY-036 deliberately changed behavior; this is the fourth consecutive sprint with stale-test churn (sprints 3-6). Preserve the existing P1 task rather than file a duplicate. When a committed item deliberately changes observable behavior, identify the tests that encode the old contract during planning and budget the update as part of that item's estimate.",
+      "acceptance_criteria": [
+        "an item that changes observable behaviour names the tests it will invalidate before work starts",
+        "updating those tests is counted inside that item's estimate"
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        ".github/copilot-instructions.md",
+        ".github/skills/agile-sdlc-loop/references/phases.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-03T11:33:15+00:00",
+      "updated": "2026-10-04T09:37:12+00:00"
+    },
+    {
+      "id": "EPIC-010",
+      "type": "epic",
+      "parent": null,
+      "title": "Coordinate-Based Maps Imagery",
+      "description": "Delivers FR-32 and FR-33; observes NFR-15 and NFR-16.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "groomed",
+      "sprint": null,
+      "files": [],
+      "source": "manual",
+      "created": "2026-10-03T13:08:12+00:00",
+      "updated": "2026-10-04T06:20:51+00:00"
+    },
+    {
+      "id": "STORY-034",
+      "type": "story",
+      "parent": "EPIC-010",
+      "title": "As an analyst I can fetch attributed satellite imagery for a coordinate",
+      "description": "DONE except one line. backend/tools/maps_imagery_service.py created and verified: validates the coordinate before spending a request, checks status AND content type AND the PNG signature and 640x640 dimensions before treating a body as an image, raises MapsImageryError, and provably never leaks the key - a forced exception carrying a fake AIzaSyFAKEKEY123 appeared in neither the log nor the raised message. One live fetch returned 334,378 bytes of 640x640 PNG. README, setup_gcp.sh and the EPIC-01 environment table all carry GOOGLE_MAPS_API_KEY with the restriction guidance. BLOCKED LINE: .env.example could not be updated - the editor's Copilot file-ignore rejects it even though guard_secrets.py explicitly excepts .env.(example|sample|template). Tracked by TASK-022. The missing line is 'GOOGLE_MAPS_API_KEY=' with a comment.",
+      "acceptance_criteria": [
+        "A valid coordinate fetch produces a 640x640 satellite PNG with Google's attribution watermark intact.",
+        "A failed or non-image Maps response is rejected and is never passed to heat analysis.",
+        "The documented environment contract names GOOGLE_MAPS_API_KEY without disclosing its value."
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 6,
+      "files": [
+        "backend/tools/maps_imagery_service.py",
+        "tests/test_maps_imagery_service.py",
+        ".env.example",
+        "setup_gcp.sh",
+        ".github/docs/epics/EPIC-01-foundation-environment.md",
+        "README.md"
+      ],
+      "source": "requirements",
+      "created": "2026-10-03T13:08:59+00:00",
+      "updated": "2026-10-04T06:16:15+00:00"
+    },
+    {
+      "id": "STORY-035",
+      "type": "story",
+      "parent": "EPIC-010",
+      "title": "As an analyst I can analyse a location without uploading an image",
+      "description": "US-10.2; EPIC-010; FR-32 and FR-33; NFR-15. POST /api/analyze accepts one image source and returns its provenance in the saved report.",
+      "acceptance_criteria": [
+        "A valid lat/lng pair without a file returns HTTP 200 with a complete saved report whose image_source is google_maps",
+        "A valid image upload continues to return a complete report whose image_source is caller",
+        "Without an upload the API requires a complete valid coordinate pair; valid uploads retain existing optional coordinate identity fields, and out-of-range coordinates return HTTP 422",
+        "A Maps fetch failure returns a generic HTTP 502 response, and a valid image-upload request remains usable"
+      ],
+      "priority": "P1",
+      "estimate": 5,
+      "status": "done",
+      "sprint": 6,
+      "files": [
+        "backend/main.py",
+        "backend/services/vision_analyzer.py",
+        "backend/tools/maps_imagery_service.py",
+        "tests/test_api.py",
+        "tests/test_cross_layer_contract.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-03T13:09:06+00:00",
+      "updated": "2026-10-04T06:16:15+00:00"
+    },
+    {
+      "id": "STORY-036",
+      "type": "story",
+      "parent": "EPIC-010",
+      "title": "As an analyst I can choose any location in the dashboard",
+      "description": "UI DONE, attribution NOT satisfied. Location-first mode with city shortcuts and editable lat/lng, mutually exclusive with upload mode, both provenances rendered distinctly, no key or Maps URL in the page source. GAP: POST /api/analyze returns no image and no displayable reference, so the dashboard cannot show the Maps imagery it analysed. attribution_required=true is a Google terms obligation, so this is a compliance gap, not just a demo weakness. The designer correctly refused to add a browser-side Maps call, which would have exposed the key. Folded into STORY-037 as an imagery-serving endpoint.",
+      "acceptance_criteria": [
+        "The dashboard accepts latitude from -90 to 90 and longitude from -180 to 180, with existing city presets available as coordinate shortcuts.",
+        "An analyst can submit a coordinate-only analysis without selecting or uploading an image.",
+        "An uploaded image remains selectable and submit-capable in the dashboard.",
+        "The resulting report visibly distinguishes caller-uploaded imagery from Google Maps imagery."
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 6,
+      "files": [
+        "frontend/app.py",
+        "tests/test_frontend.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-03T13:09:13+00:00",
+      "updated": "2026-10-04T06:16:15+00:00"
+    },
+    {
+      "id": "STORY-037",
+      "type": "story",
+      "parent": "EPIC-010",
+      "title": "As an operator I can protect the Maps key and conserve imagery quota",
+      "description": "Expanded during sprint 6 to close the STORY-036 attribution gap. Original scope: protect GOOGLE_MAPS_API_KEY and conserve imagery quota - caching keyed on normalised coordinate plus zoom/size/maptype (never the key), proof the key reaches neither logs nor the browser, and safe failure across client, API and dashboard. ADDED scope: a backend imagery-serving route so the dashboard can display the analysed Maps image with its attribution watermark intact, keeping the key server-side. That route is also the natural place for the cache to pay off, since the analyse call and the display call hit the same coordinate.",
+      "acceptance_criteria": [
+        "Browser requests contain coordinates but never GOOGLE_MAPS_API_KEY.",
+        "A failed Maps request leaves no key or key-bearing request URL in application logs or client-facing error responses.",
+        "Repeated requests with identical normalized imagery parameters reuse the successful image without another Maps API request.",
+        "Different imagery request parameters never receive a cached image for another coordinate or map view."
+      ],
+      "priority": "P1",
+      "estimate": 5,
+      "status": "done",
+      "sprint": 6,
+      "files": [
+        "backend/tools/maps_imagery_service.py",
+        "backend/main.py",
+        "frontend/app.py",
+        "tests/test_maps_imagery_service.py",
+        "tests/test_api.py",
+        "tests/test_frontend.py"
+      ],
+      "source": "requirements",
+      "created": "2026-10-03T13:09:19+00:00",
+      "updated": "2026-10-04T06:16:15+00:00"
+    },
+    {
+      "id": "TASK-044",
+      "type": "task",
+      "parent": "EPIC-010",
+      "title": "Prove attribution-required imagery is displayed by the dashboard",
+      "description": "Sprint 6 integration exposed that coordinate analysis returned attribution_required=true without an image route, leaving the dashboard unable to display the Maps image with its required attribution. STORY-037 closed the delivery gap; this task makes the cross-layer compliance obligation an explicit regression check.",
+      "acceptance_criteria": [
+        "A coordinate analysis marked attribution_required=true can be displayed in the dashboard with the Google attribution watermark intact and uncropped.",
+        "Integration coverage verifies the dashboard consumes the API-served image rather than making a browser-side Maps request or silently omitting the image.",
+        "A missing or unavailable attributed image produces an explicit user-visible error and never presents the report as if attribution were satisfied."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "frontend/app.py",
+        "tests/test_frontend.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T06:20:05+00:00",
+      "updated": "2026-10-04T09:37:12+00:00"
+    },
+    {
+      "id": "TASK-045",
+      "type": "task",
+      "parent": "EPIC-008",
+      "title": "Require conclusive QA outcomes for long-running validation runs",
+      "description": "Sprint 6 QA handoff returned inconclusive after a long run; the authoritative full-suite rerun established the 607-pass result. sprint_report.py already distinguishes pass, fail and timeout, but the report does not record the exact executed command or deterministic rerun instruction. Make both the run handoff and report conclusive without treating a timeout, interruption or missing result as a pass.",
+      "acceptance_criteria": [
+        "A completed QA run records its final PASS or FAIL, exact executed command, and relevant summary from that execution.",
+        "A timeout, interruption, or missing result is explicitly INCONCLUSIVE with the reason and a deterministic rerun command, never PASS.",
+        "The sprint report records only an authoritative completed run, including command, verdict and summary; a timed-out or stale result is not presented as current."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        ".github/skills/agile-sdlc-loop/references/phases.md",
+        ".github/skills/agile-sdlc-loop/scripts/sprint_report.py",
+        "tests/test_sprint_report.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T06:20:09+00:00",
+      "updated": "2026-10-04T09:37:12+00:00"
+    },
+    {
+      "id": "TASK-046",
+      "type": "task",
+      "parent": "EPIC-010",
+      "title": "Share cached Maps imagery across Cloud Run instances",
+      "description": "Cannot be honestly completed offline: cross-instance retrieval requires shared provisioned infrastructure such as Redis/Memorystore, and process-local mocks cannot prove it. No such infrastructure or cloud quota is approved this sprint. The dashboard already handles a cache-miss HTTP 502 explicitly while keeping the valid analysis result, so this is a robustness improvement rather than a correctness defect. Keep blocked pending human approval for shared-cache infrastructure and a permitted verification approach.",
+      "acceptance_criteria": [
+        "An image cached by one service instance can be retrieved by another instance using the existing analysis identifier.",
+        "Cache misses and expired entries return a safe explicit response without serving unrelated or stale image bytes.",
+        "Cross-instance display does not trigger another Maps request and preserves the original Google attribution watermark."
+      ],
+      "priority": "P3",
+      "estimate": 3,
+      "status": "blocked",
+      "sprint": null,
+      "files": [],
+      "source": "retro",
+      "created": "2026-10-04T06:20:21+00:00",
+      "updated": "2026-10-04T06:54:21+00:00"
+    },
+    {
+      "id": "TASK-047",
+      "type": "task",
+      "parent": "EPIC-010",
+      "title": "Bound per-instance Maps request rate",
+      "description": "The original service-wide quota criterion cannot be met offline without a shared counter, authentication layer or gateway, and no provisioned infrastructure is approved. Re-scope this task to a local defensive budget that is fully testable with mocked Maps responses. This is explicitly a per-process bound, not service-wide spend enforcement: Cloud Run instances may each consume their own configured allowance. The true aggregate quota control remains a separate unresolved operational requirement; do not claim this task solves it.",
+      "acceptance_criteria": [
+        "Each process enforces a configurable per-process limit on Maps cache-miss requests before any external call; successful cache hits do not spend the allowance.",
+        "Requests over the local limit fail with a documented generic response before the Maps call, without exposing the key or provider details.",
+        "Offline tests cover allowed requests, the limit boundary, rejection without an outbound call, and allowance reset using mocked time/client behavior; no live Maps access is used.",
+        "README documents the configuration and clearly states that per-process limits multiply across Cloud Run instances and do not enforce a service-wide spend cap."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "backend/tools/maps_imagery_service.py",
+        "backend/main.py",
+        "tests/test_maps_imagery_service.py",
+        "tests/test_api.py",
+        "README.md"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T06:20:26+00:00",
+      "updated": "2026-10-04T09:37:12+00:00"
+    },
+    {
+      "id": "TEST-002",
+      "type": "test",
+      "parent": "EPIC-010",
+      "title": "Raise Maps imagery client coverage to the 70 percent floor",
+      "description": "Sprint 6 report measured backend/tools/maps_imagery_service.py at 37.8%, below the project's 70% floor. Add focused offline tests for the client validation and image-response checks without making live Maps calls.",
+      "acceptance_criteria": [
+        "Coverage for backend/tools/maps_imagery_service.py reaches at least 70%.",
+        "Tests cover invalid coordinates before request, provider status and content type, PNG signature, and 640x640 dimension validation.",
+        "The focused tests run offline and do not require a Maps API key or cloud access."
+      ],
+      "priority": "P2",
+      "estimate": 2,
+      "status": "done",
+      "sprint": 7,
+      "files": [
+        "backend/tools/maps_imagery_service.py",
+        "tests/test_maps_imagery_service.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T06:20:34+00:00",
+      "updated": "2026-10-04T09:37:12+00:00"
+    },
+    {
+      "id": "TASK-051",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Verify frontend deployability and runtime configuration in release evidence",
+      "description": "Sprint 7 retro: BUG-026 was invisible for three sprints because every container proof exercised backend/Dockerfile only; the deployed Streamlit frontend was a broken WSGI/buildpack deployment, lacked streamlit after TASK-032 split dependencies, and had no API_BASE_URL. Add an enduring frontend-specific release check so a healthy backend cannot stand in for a working dashboard.",
+      "acceptance_criteria": [
+        "Build and run the frontend from frontend/Dockerfile in a clean local container using the frontend dependency set; do not rely on buildpack detection.",
+        "Verify Streamlit starts, honors the injected port, and returns healthy at /_stcore/health.",
+        "Verify release configuration sets API_BASE_URL to the backend, and the deployed frontend URL completes a coordinate analysis end to end.",
+        "Record frontend and backend verification results separately in release evidence; backend-only container proof cannot satisfy frontend deployability."
+      ],
+      "priority": "P1",
+      "estimate": 2,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        "frontend/Dockerfile",
+        "frontend/requirements.txt",
+        ".github/skills/cloudrun-deploy/scripts/deploy.sh"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T11:19:30+00:00",
+      "updated": "2026-10-04T11:19:30+00:00"
+    },
+    {
+      "id": "TASK-052",
+      "type": "task",
+      "parent": "EPIC-001",
+      "title": "Re-estimate stale-test impact when scope is added mid-sprint",
+      "description": "Sprint 7 retro, extending rather than duplicating delivered TASK-043. The phase-4 rule was added during sprint 7, so it could not govern sprint-7 planning. Applied prospectively, it should have identified the one assertion invalidated by TASK-045's deliberate behavior change. It could not predict TASK-038's human-approved legacy-script deletion because that work was added after planning. Add a change-control step: when authorized scope is added mid-sprint, identify invalidated tests and rebaseline estimate and capacity before implementation; record exceptional human-directed work explicitly.",
+      "acceptance_criteria": [
+        "Before a committed behavior-changing item starts, its description names affected existing tests and includes their updates in its estimate, as required by TASK-043.",
+        "Before any human-approved or otherwise authorized scope addition starts mid-sprint, identify tests invalidated by the change and update the point estimate and sprint rebaseline.",
+        "The sprint report distinguishes committed delivery from authorized unplanned work and records the revised total; stale-test fixes are not silently absorbed."
+      ],
+      "priority": "P1",
+      "estimate": 1,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        ".github/skills/agile-sdlc-loop/references/phases.md",
+        ".github/skills/agile-sdlc-loop/scripts/backlog.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T11:19:44+00:00",
+      "updated": "2026-10-04T11:19:44+00:00"
+    },
+    {
+      "id": "TASK-053",
+      "type": "task",
+      "parent": "EPIC-006",
+      "title": "Make container packaging acceptance independent of stale local image hashes",
+      "description": "Sprint 7 retro: tests/test_sprint3_acceptance.py::test_hardened_image_application_sources_match_canonical_workspace compares the workspace with sources inside a locally tagged Docker image. On this machine the test required a manual docker build to refresh hotspot-hardened:latest mid-sprint; a clean checkout or CI may have no matching image, and a stale image is not evidence for current source. Replace the implicit local-image prerequisite with source-tied, reproducible evidence.",
+      "acceptance_criteria": [
+        "The packaging acceptance test does not depend on a previously built local image tag or stale source hash.",
+        "A clean checkout or CI run has a deterministic path to compare current workspace source with the tested image, without a manual mid-sprint image refresh.",
+        "If Docker or a required build artifact is unavailable, the result is explicitly skipped/inconclusive and cannot be reported as a passing packaging proof."
+      ],
+      "priority": "P2",
+      "estimate": 1,
+      "status": "new",
+      "sprint": null,
+      "files": [
+        "tests/test_sprint3_acceptance.py",
+        "tests/test_sprint_packaging.py"
+      ],
+      "source": "retro",
+      "created": "2026-10-04T11:19:45+00:00",
+      "updated": "2026-10-04T11:19:45+00:00"
+    }
+  ]
+}

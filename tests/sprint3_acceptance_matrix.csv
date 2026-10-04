@@ -1,0 +1,108 @@
+item,ac,criterion,test,verdict,owner
+TASK-016,1,Canonical workspace command and artifact handoff,test_sprint3_acceptance.py::test_handoff_requires_workspace_command_and_canonical_artifact_evidence,PASS,TASK-016
+TASK-016,2,Parse actual workspace lock constraint and dependencies,test_sprint3_acceptance.py::test_workspace_uv_lock_python_constraint_and_declared_dependencies_are_parsed_in_place,PASS,TASK-016
+TASK-017,1,Same-change exception and SDK construction regressions required,test_sprint3_acceptance.py::test_narrowed_exception_boundaries_require_same_change_sdk_regressions,PASS,TASK-017
+TASK-017,2,Actual SDK failure inheritance proved,test_sprint3_cloud.py::test_exception_boundary_matrix_proves_sdk_failure_inheritance,PASS,TASK-017
+TASK-017,2,DataCorruption operational regression,test_seed_samples.py::test_checksum_failure_warns_retains_files_and_continues_uploads,PASS,TASK-017
+TASK-017,2,RpcError TimeoutError MessageTooLargeError construction and operations,test_alert_dispatcher.py::test_dispatch_failures_return_empty_id_and_type_only_logs,PASS,TASK-017
+TASK-017,2,TypeError and KeyError construction propagate,test_sprint3_cloud.py::test_typeerror_and_keyerror_still_propagate_from_client_construction,PASS,TASK-017
+TASK-017,2,TypeError and KeyError database and storage operations propagate,test_sprint3_cloud.py::test_typeerror_and_keyerror_still_propagate_from_database_and_seeder_operations,PASS,TASK-017
+TASK-017,3,Missing failure evidence fails mandatory QA check,test_sprint3_acceptance.py::test_missing_failure_case_evidence_blocks_qa_handoff,PASS,TASK-017
+TASK-021,1,Every collected test has a literal definition,test_sprint3_acceptance.py::test_literal_test_definitions_are_discoverable_without_generated_globals,PASS,TASK-021
+TASK-021,2,No-sys-path invariant is collected and checked,test_sprint3_acceptance.py::test_collected_tests_include_the_underlying_no_sys_path_invariant,PASS,TASK-021
+TASK-021,2,Underlying no-sys-path invariant holds,test_package_layout.py::test_backend_imports_do_not_mutate_interpreter_search_directories,PASS,TASK-021
+BUG-019,1,Missing project climate source is fallback,test_sprint3_cloud.py::test_missing_project_climate_lookup_returns_labelled_fallback,PASS,BUG-019
+BUG-019,2,Missing project Firestore DatabaseError maps to 503 on read and write,test_sprint3_cloud.py::test_missing_project_firestore_raises_database_error_and_api_returns_503,PASS,BUG-019
+BUG-019,3,Missing project seeder warns and retains generated files,test_sprint3_cloud.py::test_missing_project_seeder_warns_and_retains_generated_local_files,PASS,BUG-019
+BUG-019,4,Programming errors still propagate from constructors,test_sprint3_cloud.py::test_typeerror_and_keyerror_still_propagate_from_client_construction,PASS,BUG-019
+BUG-019,4,Programming errors still propagate from operations,test_sprint3_cloud.py::test_typeerror_and_keyerror_still_propagate_from_database_and_seeder_operations,PASS,BUG-019
+TASK-028,1,Contract consumer identities and mandatory checks,test_sprint3_acceptance.py::test_contract_changes_identify_analyzer_api_and_dashboard_consumers_and_checks,PASS,TASK-028
+TASK-028,2,Offline API response consumed by dashboard with persisted publish state,test_sprint3_api.py::test_offline_api_report_renders_current_dashboard_fields_without_none_metrics,PASS,TASK-028
+TASK-028,2,Every backend coroutine consumed,test_cross_layer_contract.py::test_every_resolved_backend_coroutine_call_is_consumed,PASS,TASK-028
+TASK-028,2,Schema field consumers agree with producer,test_cross_layer_contract.py::test_all_report_field_reads_match_the_producer_schema,PASS,TASK-028
+TASK-028,2,Single HVI classifier and specification bands,test_cross_layer_contract.py::test_hvi_bands_have_one_classifier_and_match_spec_boundaries,PASS,TASK-028
+TASK-028,2,Publish semantics before persistence,test_cross_layer_contract.py::test_alert_flag_and_banner_mean_successful_publish_before_persistence,PASS,TASK-028
+TASK-028,3,Real PNG and JPEG dashboard multipart MIME,test_frontend.py::test_dashboard_multipart_preserves_real_jpeg_and_png_types,PASS,TASK-028
+TASK-028,3,Dashboard API analyzer MIME agreement,test_cross_layer_contract.py::test_dashboard_api_and_analyzer_preserve_image_mime,PASS,TASK-028
+TASK-028,3,Real JPEG PNG forwarded and canonical reports validated,test_api.py::test_analyze_awaits_analyzer_and_returns_contract_valid_dict,PASS,TASK-028
+TASK-028,4,Historical unawaited coroutine rejected,test_cross_layer_contract.py::test_historical_bug_007_unawaited_analyzer_is_rejected,PASS,TASK-028
+TASK-028,4,Historical removed emergency field rejected,test_cross_layer_contract.py::test_historical_bug_008_deleted_emergency_field_is_rejected,PASS,TASK-028
+TASK-028,4,Historical deleted dashboard field rejected,test_cross_layer_contract.py::test_historical_bug_012_deleted_dashboard_temperature_is_rejected,PASS,TASK-028
+TASK-028,4,Historical mislabeled PNG rejected,test_cross_layer_contract.py::test_historical_bug_018_png_mislabeled_as_jpeg_is_rejected,PASS,TASK-028
+STORY-003,1,Mocked fixed-rubric industrial score exceeds park at shared ambient,test_sprint3_cloud.py::test_industrial_asphalt_ranks_above_green_park_at_equal_ambient_in_mocked_rubric,PASS_MOCKED,STORY-003
+STORY-003,2,Integer surfaces sum exactly to 100,test_vision_analyzer.py::test_surface_breakdown_is_integer_and_totals_exactly_100,PASS,STORY-003
+STORY-003,3,Bands derived once at all six requested boundaries,test_vision_analyzer.py::test_risk_level_is_derived_at_every_band_boundary,PASS,STORY-003
+STORY-003,extra,Fixed weights calibration and zero model temperature,test_sprint3_cloud.py::test_hvi_rubric_uses_fixed_weights_calibration_and_zero_temperature,PASS_MOCKED,STORY-003
+STORY-005,1,Complete fallback for construction submit and result failures,test_sprint3_cloud.py::test_expected_climate_cloud_failures_return_complete_labelled_fallback,PASS,STORY-005
+STORY-005,2,Empty and sentinel readings maximum and average gap,test_sprint3_cloud.py::test_empty_or_sentinel_only_climate_results_have_plausible_maximum_and_average_gap,PASS,STORY-005
+STORY-005,3,Warnings contain no secrets or raw payload,test_climate_service.py::test_fallback_reading_is_labelled_and_logs_no_raw_payload,PASS,STORY-005
+STORY-005,4,TypeError and KeyError not hidden by fallback,test_sprint3_cloud.py::test_local_programming_errors_are_not_hidden_by_climate_fallback,PASS,STORY-005
+STORY-005,extra,Five-second submission ten-second result retries disabled,test_sprint3_cloud.py::test_climate_submission_and_result_timeouts_are_bounded_with_retries_disabled,PASS,STORY-005
+STORY-007,1,Publish only at eight or above with canonical bands,test_sprint3_acceptance.py::test_alert_publishes_only_at_or_above_eight_with_canonical_bands,PASS,STORY-007
+STORY-007,2,Subcritical empty ID without constructing client,test_sprint3_acceptance.py::test_subcritical_alert_returns_empty_string_without_constructing_client,PASS,STORY-007
+STORY-007,3,Allowlisted coordinates temperature urgent actions stable event ID and attributes,test_sprint3_acceptance.py::test_alert_message_carries_coordinates_temperature_and_urgent_actions,PASS,STORY-007
+STORY-007,4,Publication failures return empty ID without raising,test_alert_dispatcher.py::test_dispatch_failures_return_empty_id_and_type_only_logs,PASS,STORY-007
+STORY-008,1,Stored and returned flag requires successful publish ID,test_api.py::test_alert_dispatched_is_stored_true_only_after_successful_publish,PASS,STORY-008
+STORY-008,2,Noncritical and failed publish stored false with HTTP 200,test_sprint3_api.py::test_alert_attempted_and_dispatched_match_actual_persisted_publish_outcome,PASS,STORY-008
+STORY-011,1,Recorded PNG JPEG WebP acceptance,test_sprint3_acceptance.py::test_png_jpeg_and_webp_are_accepted_as_recorded_by_story_011,FAIL_WEBP,BUG-020
+STORY-011,2,Decimal ten-megabyte exact boundary,test_api.py::test_upload_limit_uses_decimal_ten_megabyte_boundary,PASS,STORY-011
+STORY-011,3,Unsafe MIME and oversized upload before cloud calls,test_api.py::test_unsafe_uploads_are_rejected_before_cloud_calls,PASS,STORY-011
+STORY-011,3,Wrong magic mismatched types and empty upload before cloud calls,test_sprint3_api.py::test_magic_bytes_and_empty_uploads_are_rejected_before_any_cloud_call,PASS,STORY-011
+STORY-012,1,Vision failures map to 502,test_api.py::test_service_errors_map_status_without_secrets_in_response_or_logs,PASS,STORY-012
+STORY-012,2,Database read and write failures map to 503,test_api.py::test_service_errors_map_status_without_secrets_in_response_or_logs,PASS,STORY-012
+STORY-012,3,One sanitized envelope for 413 415 422 502 503 unexpected 500,test_sprint3_api.py::test_all_api_failures_use_one_sanitized_code_message_envelope,PASS,STORY-012
+STORY-012,4,Environment-driven CORS origins,test_api.py::test_cors_origins_come_from_environment_with_empty_entries_removed,PASS,STORY-012
+STORY-013,1,Newest-first Firestore query,test_database.py::test_history_is_newest_first_with_limits_clamped,PASS,STORY-013
+STORY-013,2,Empty scans list returns 200,test_api.py::test_scans_clamps_limits_through_real_database_helper,PASS,STORY-013
+TASK-025,1,Multi-stage and runtime has no uv or gcc,test_sprint3_acceptance.py::test_multistage_runtime_has_no_uv_or_build_tooling,PASS_CACHED_RUNTIME,TASK-025
+TASK-025,2,Non-root sentinel uid 10001,test_sprint3_acceptance.py::test_hardened_runtime_runs_as_non_root_sentinel_uid_10001,PASS_CACHED_RUNTIME,TASK-025
+TASK-025,3,Pinned uv 0.12.3 builder image,test_sprint3_acceptance.py::test_uv_builder_image_is_pinned_to_a_version_tag,PASS,TASK-025
+TASK-025,4,Actual image CMD honours PORT 9090 and 8080 is closed,test_sprint3_acceptance.py::test_hardened_runtime_honours_port_9090_and_does_not_bind_8080,PASS_CACHED_RUNTIME,TASK-025
+TASK-025,5,Required repository-root explicit copies resolve,test_sprint3_acceptance.py::test_documented_repository_root_docker_build_context_resolves_explicit_copies,FAIL,BUG-022
+TASK-027,1,Guide defines climate_source and API/storage placement,test_sprint3_acceptance.py::test_guide_defines_climate_source_values_and_response_storage_placement,PASS,TASK-027
+TASK-027,2,Guide and NFR-1 document US NOAA-only exception,test_sprint3_acceptance.py::test_guide_and_nfr_1_document_us_noaa_only_location_exception,FAIL,BUG-021
+TASK-027,3,Runtime provenance location and limits match ratified guide,test_sprint3_acceptance.py::test_documented_climate_provenance_and_location_match_runtime_policy,PASS,TASK-027
+STORY-009,1,Independent dependency probes and states,test_api.py::test_health_probes_dependencies_and_returns_200_with_readiness_states,PASS,STORY-009
+STORY-009,2,Readiness never returns credentials or raw failure,test_sprint3_api.py::test_readiness_never_returns_credentials_or_raw_dependency_failures,PASS,STORY-009
+STORY-009,3,Any dependency outage remains HTTP 200 degraded,test_api.py::test_health_probes_dependencies_and_returns_200_with_readiness_states,PASS,STORY-009
+STORY-009,extra,4.5-second wait_for expiry marks all unavailable,test_sprint3_api.py::test_readiness_enforces_4_5_second_deadline_and_marks_timeouts_unavailable,PASS,STORY-009
+STORY-009,extra,Real elapsed timeout within five-second route budget,test_sprint3_api.py::test_readiness_real_elapsed_deadline_is_4_5_seconds_without_worker_shutdown_delay,PASS,STORY-009
+STORY-009,extra,Liveness makes no cloud call,test_api.py::test_live_returns_200_without_cloud_calls,PASS,STORY-009
+STORY-010,1,Schema-valid Heat Analysis Result through validator,test_api.py::test_analyze_awaits_analyzer_and_returns_contract_valid_dict,PASS,STORY-010
+STORY-010,2,Persisted scan returns generated document ID,test_sprint3_acceptance.py::test_analysis_persists_scan_and_returns_generated_doc_id,PASS,STORY-010
+STORY-010,3,Publish outcome reflected in stored and returned flags,test_sprint3_api.py::test_alert_attempted_and_dispatched_match_actual_persisted_publish_outcome,PASS,STORY-010
+STORY-010,4,Climate provenance reaches response and Firestore,test_api.py::test_climate_source_round_trips_to_response_and_firestore,PASS,STORY-010
+TASK-026,1,Response model covers canonical and envelope fields,test_sprint3_acceptance.py::test_analyze_declares_response_model_with_canonical_and_envelope_fields,PASS,TASK-026
+TASK-026,2,Malformed analysis cannot return 200,test_sprint3_api.py::test_malformed_analysis_cannot_return_http_200,PASS,TASK-026
+TASK-026,3,Model agrees with canonical schema but TASK-027 acceptance is outstanding,test_sprint3_acceptance.py::test_http_model_agrees_with_canonical_report_and_documented_provenance,PARTIAL_PREREQUISITE,BUG-021
+STORY-017,1,Dark script-level theme configured,test_frontend.py::test_dark_theme_is_applied_from_script_level_config,PASS,STORY-017
+STORY-017,2,City slider and image controls present,test_frontend.py::test_city_slider_and_image_controls_are_present,FAIL,STORY-033
+STORY-017,3,POST to environment API URL with explicit timeout,test_frontend.py::test_dashboard_requests_use_environment_url_and_explicit_timeouts,PASS,STORY-017
+STORY-018,1,Exact badge colours at six boundaries,test_frontend.py::test_badge_colour_matches_every_hvi_band_exactly,PASS,STORY-018
+STORY-018,2,Image and score in adjacent columns,test_frontend.py::test_image_and_score_are_rendered_in_adjacent_columns,PASS,STORY-018
+STORY-018,3,Celsius temperature with BigQuery or fallback provenance,test_frontend.py::test_temperature_is_shown_in_celsius_with_provenance,PASS,STORY-018
+STORY-019,1,Chart fixed material colours and percentage scale,test_frontend.py::test_surface_breakdown_is_charted_with_fixed_material_colours,PASS,STORY-019
+STORY-019,2,Corridor orientation displayed,test_frontend.py::test_corridor_orientation_is_shown,PASS,STORY-019
+STORY-019,3,Coating m2 and projected drop C,test_frontend.py::test_coating_area_and_projected_drop_use_metric_units,PASS,STORY-019
+STORY-019,4,Interventions listed as checkbox actions,test_frontend.py::test_micro_canopy_interventions_are_listed,PASS,STORY-019
+STORY-020,1,Banner restricted to canonical critical reports,test_frontend.py::test_critical_alert_confirmation_uses_risk_and_dispatch_as_separate_facts,PASS,STORY-020
+STORY-020,2,Not-attempted failed and published banner states,test_frontend.py::test_alert_banner_distinguishes_not_attempted_failed_and_published,PASS,STORY-020
+STORY-021,1,Unreachable API renders friendly error,test_frontend.py::test_api_unreachable_renders_gracefully,PASS,STORY-021
+STORY-021,2,No tracebacks or raw payload rendered,test_frontend.py::test_dashboard_errors_do_not_disclose_raw_cloud_payloads,PASS,STORY-021
+STORY-021,3,Spinner active during analysis request,test_frontend.py::test_spinner_is_active_during_analysis_request,PASS,STORY-021
+TASK-013,1,Serving revision source version digest and human authorization,Phase7_live_evidence,NOT_RUN,TASK-013
+TASK-013,2,Serving health and contract-valid analysis,Phase7_live_evidence,NOT_RUN,TASK-013
+TASK-013,3,Live low/critical history publish evidence and rollback target,Phase7_live_evidence,NOT_RUN,TASK-013
+TASK-013,extra,Cached image source hashes match current canonical workspace,test_sprint3_acceptance.py::test_hardened_image_application_sources_match_canonical_workspace,FAIL,BUG-023
+TASK-028,4,Intentional aliased coroutine consumers accepted,test_cross_layer_contract.py::test_coroutine_gate_accepts_import_aliases_and_deliberate_consumers,PASS,TASK-028
+TASK-028,4,Discarded and threaded coroutines rejected,test_cross_layer_contract.py::test_coroutine_gate_rejects_discarded_or_threaded_coroutines,PASS,TASK-028
+TASK-028,4,Nested async definition resolved and rejected,test_cross_layer_contract.py::test_coroutine_gate_resolves_nested_async_definitions,PASS,TASK-028
+TASK-028,4,Uncertain parameter shadowing explicitly warned,test_cross_layer_contract.py::test_coroutine_gate_reports_uncertain_parameter_shadowing,PASS,TASK-028
+TASK-028,4,Deleted nested fields and aliases rejected,test_cross_layer_contract.py::test_report_gate_rejects_deleted_nested_fields_and_aliases,PASS,TASK-028
+TASK-028,4,Dashboard threshold rederivation rejected,test_cross_layer_contract.py::test_hvi_gate_rejects_dashboard_threshold_rederivation,PASS,TASK-028
+TASK-028,4,Analyzer boundary drift rejected,test_cross_layer_contract.py::test_hvi_gate_rejects_drifted_analyzer_boundaries,PASS,TASK-028
+TASK-028,4,API dropping forwarded MIME rejected,test_cross_layer_contract.py::test_mime_gate_rejects_api_dropping_forwarded_mime,PASS,TASK-028
+TASK-028,4,Dispatch claim on publication failure rejected,test_cross_layer_contract.py::test_alert_gate_rejects_claiming_dispatch_on_publish_failure,PASS,TASK-028
+TASK-028,4,Dashboard dispatch claim based on risk alone rejected,test_cross_layer_contract.py::test_alert_gate_rejects_dashboard_claiming_dispatch_from_risk_alone,PASS,TASK-028
+TASK-028,4,History dispatch claim based on risk alone rejected,test_cross_layer_contract.py::test_alert_gate_rejects_history_claiming_dispatch_from_risk_alone,PASS,TASK-028
+TASK-028,4,Persistence before awaited dispatch rejected,test_cross_layer_contract.py::test_alert_gate_rejects_persistence_before_dispatch_completion,PASS,TASK-028
