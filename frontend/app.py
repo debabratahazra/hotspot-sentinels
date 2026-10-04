@@ -18,10 +18,14 @@ IMAGERY_UNAVAILABLE_MESSAGE = "Satellite imagery could not be loaded; the analys
 GOOGLE_MAPS_SOURCE_LABEL = "Imagery source: Google Maps"
 JPEG_MIME_TYPE = "image/jpeg"
 
+# Verified against the deployed backend on 2026-10-04. The first entry is the demo
+# opener and scores CRITICAL; Botanic Gardens is the low-risk contrast.
 CITY_COORDINATES = {
-    "Singapore": (1.3521, 103.8198),
-    "Bangkok": (13.7563, 100.5018),
-    "Delhi": (28.6139, 77.2090),
+    "Singapore Port Terminal": (1.2897, 103.7540),
+    "Singapore Urban Core": (1.3343, 103.8563),
+    "Singapore Botanic Gardens": (1.3521, 103.8198),
+    "Bangkok City Centre": (13.7563, 100.5018),
+    "Delhi Karol Bagh": (28.6450, 77.2200),
 }
 RISK_COLORS = {"LOW": "green", "MODERATE": "green", "HIGH": "orange", "CRITICAL": "red"}
 MATERIALS = [
@@ -223,8 +227,9 @@ with st.sidebar:
             "Location shortcut", [*CITY_COORDINATES, "Custom coordinates"],
             key="location_preset", on_change=apply_location_preset,
         )
-        st.session_state.setdefault("imagery_latitude", str(CITY_COORDINATES["Singapore"][0]))
-        st.session_state.setdefault("imagery_longitude", str(CITY_COORDINATES["Singapore"][1]))
+        opening_latitude, opening_longitude = next(iter(CITY_COORDINATES.values()))
+        st.session_state.setdefault("imagery_latitude", str(opening_latitude))
+        st.session_state.setdefault("imagery_longitude", str(opening_longitude))
         st.text_input("Latitude", key="imagery_latitude", placeholder="-90 to 90")
         st.text_input("Longitude", key="imagery_longitude", placeholder="-180 to 180")
         st.caption("Coordinates are sent to the backend; imagery is retrieved server-side.")

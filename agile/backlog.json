@@ -2735,12 +2735,12 @@
       ],
       "priority": "P1",
       "estimate": 1,
-      "status": "todo",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "human",
       "created": "2026-10-04T13:30:00+00:00",
-      "updated": "2026-10-04T13:30:00+00:00"
+      "updated": "2026-10-04T11:58:53+00:00"
     },
     {
       "id": "TASK-048",

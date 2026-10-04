@@ -134,7 +134,7 @@ def test_location_mode_is_default_and_city_preset_submits_coordinates_without_fi
     app = dashboard[0].run()
     assert not app.exception
     assert app.segmented_control[0].value == "Satellite location"
-    next(control for control in app.selectbox if control.label == "Location shortcut").select("Bangkok").run()
+    next(control for control in app.selectbox if control.label == "Location shortcut").select("Bangkok City Centre").run()
     assert not app.exception
     next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
     assert not app.exception
@@ -167,8 +167,8 @@ def test_location_coordinate_inclusive_boundaries_are_accepted(dashboard, label,
     assert not app.exception
     dashboard[1].assert_called_once()
     data = dashboard[1].call_args.kwargs["data"]
-    assert data["imagery_lat"] == (-90.0 if label == "Latitude" and value == "-90" else 90.0 if label == "Latitude" else 1.3521)
-    assert data["imagery_lng"] == (-180.0 if label == "Longitude" and value == "-180" else 180.0 if label == "Longitude" else 103.8198)
+    assert data["imagery_lat"] == (-90.0 if label == "Latitude" and value == "-90" else 90.0 if label == "Latitude" else 1.2897)
+    assert data["imagery_lng"] == (-180.0 if label == "Longitude" and value == "-180" else 180.0 if label == "Longitude" else 103.754)
     assert dashboard[1].call_args.kwargs["files"] is None
 
 
@@ -250,7 +250,10 @@ def test_city_image_and_default_off_what_if_temperature_controls_are_present(das
     app = dashboard[0].run()
     assert not app.exception
     assert app.segmented_control[0].value == "Satellite location"
-    assert app.selectbox[0].options == ["Singapore", "Bangkok", "Delhi", "Custom coordinates"]
+    assert app.selectbox[0].options == [
+        "Singapore Port Terminal", "Singapore Urban Core", "Singapore Botanic Gardens",
+        "Bangkok City Centre", "Delhi Karol Bagh", "Custom coordinates",
+    ]
     assert app.selectbox[0].label == "Location shortcut"
     uploader.assert_not_called()
     assert len(app.toggle) == 1
@@ -261,8 +264,26 @@ def test_city_image_and_default_off_what_if_temperature_controls_are_present(das
     next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
     assert not app.exception
     dashboard[1].assert_called_once()
-    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.3521, "imagery_lng": 103.8198}
+    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.2897, "imagery_lng": 103.754}
     assert dashboard[1].call_args.kwargs["files"] is None
+
+
+def test_demo_opens_on_the_critical_hotspot_with_a_low_risk_contrast_available(dashboard):
+    # The opener scored CRITICAL 8.7 and Botanic Gardens LOW 1.5 against the deployed
+    # backend on 2026-10-04; a low-risk opener is what this guards against.
+    app = dashboard[0].run()
+    assert not app.exception
+    assert app.text_input[0].value == "1.2897"
+    assert app.text_input[1].value == "103.754"
+
+    shortcut = next(control for control in app.selectbox if control.label == "Location shortcut")
+    assert shortcut.options[0] == "Singapore Port Terminal"
+    assert "Singapore Botanic Gardens" in shortcut.options
+
+    contrast = shortcut.select("Singapore Botanic Gardens").run()
+    assert not contrast.exception
+    assert contrast.text_input[0].value == "1.3521"
+    assert contrast.text_input[1].value == "103.8198"
 
 
 def test_enabling_what_if_temperature_exposes_bounded_input_with_default_and_step(dashboard):
@@ -292,7 +313,7 @@ def test_enabled_what_if_temperature_sends_chosen_value_and_inclusive_boundaries
     assert not app.exception
     dashboard[1].assert_called_once()
     assert dashboard[1].call_args.kwargs["data"] == {
-        "ambient_temp_c": temperature, "imagery_lat": 1.3521, "imagery_lng": 103.8198,
+        "ambient_temp_c": temperature, "imagery_lat": 1.2897, "imagery_lng": 103.754,
     }
     assert dashboard[1].call_args.kwargs["files"] is None
 
@@ -310,7 +331,7 @@ def test_disabling_what_if_temperature_omits_previously_chosen_value(dashboard):
     next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
     assert not app.exception
     dashboard[1].assert_called_once()
-    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.3521, "imagery_lng": 103.8198}
+    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.2897, "imagery_lng": 103.754}
     assert dashboard[1].call_args.kwargs["files"] is None
 
 
@@ -503,7 +524,7 @@ def test_criterion_2_dashboard_uses_api_imagery_without_maps_url_or_api_key(dash
     assert not app.exception
     dashboard[2].assert_called_once_with(
         f"{api_base_url.rstrip('/')}/api/imagery",
-        params={"lat": 1.3521, "lng": 103.8198},
+        params={"lat": 1.2897, "lng": 103.754},
         timeout=(5, 60),
     )
     outbound_requests = repr(dashboard[1].call_args_list + dashboard[2].call_args_list)
