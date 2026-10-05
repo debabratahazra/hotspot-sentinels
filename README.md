@@ -230,6 +230,22 @@ python3 .github/skills/agile-sdlc-loop/scripts/sprint_report.py   # suite + cove
 
 Every test runs offline. Gemini, Firestore, Pub/Sub, BigQuery and Cloud Storage clients are mocked — a test that needs a real cloud call is a broken test.
 
+## Continuous integration
+
+Every push and pull request runs five independent checks, all without cloud credentials:
+
+| Check | What it guards |
+| ----- | -------------- |
+| Offline suite and coverage floor | 667 tests plus a per-file 70% floor |
+| Generated dependency exports are current | the three `requirements.txt` exports match `uv.lock` |
+| Build backend image | `backend/Dockerfile`, `linux/amd64` |
+| Build frontend image | `frontend/Dockerfile`, `linux/amd64` |
+| Secret scan | gitleaks over the working tree and full history |
+
+The two image builds are separate jobs with `fail-fast` disabled, so a passing backend image can never mask a failing frontend one.
+
+`main` is protected by a ruleset that requires all five checks before a pull request can merge, and forbids force pushes. Approvals are not required because a solo maintainer cannot approve their own pull request; the checks are the gate.
+
 ## Delivery process
 
 Sprint state lives in [agile/backlog.json](agile/backlog.json), requirements in [agile/requirements.md](agile/requirements.md), and sprint reports in `agile/reports/`.
