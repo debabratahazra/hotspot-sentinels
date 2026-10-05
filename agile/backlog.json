@@ -3331,7 +3331,7 @@
       ],
       "priority": "P2",
       "estimate": 2,
-      "status": "new",
+      "status": "done",
       "sprint": null,
       "files": [
         ".github/workflows/ci.yml",
@@ -3339,7 +3339,7 @@
       ],
       "source": "requirements",
       "created": "2026-10-04T12:11:52+00:00",
-      "updated": "2026-10-04T12:11:52+00:00"
+      "updated": "2026-10-05T03:47:19+00:00"
     },
     {
       "id": "STORY-043",
