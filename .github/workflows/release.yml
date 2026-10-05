@@ -1,0 +1,150 @@
+name: Release
+
+# Tags only. `pull_request` is deliberately absent: a fork PR must never be able to
+# reach Google Cloud, and a tag cannot be pushed by an outside contributor.
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+  id-token: write # mint the OIDC token for Workload Identity Federation
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PROJECT: hotspot-sentinels-7364
+  REGION: asia-southeast1
+  REPO: hotspot
+  BACKEND: hotspot-backend
+  FRONTEND: hotspot-frontend
+  RUNTIME_SA: hotspot-run@hotspot-sentinels-7364.iam.gserviceaccount.com
+  MAPS_SECRET: hotspot-maps-api-key
+
+jobs:
+  gate:
+    name: Release gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Tagged commit must be on main
+        run: |
+          git fetch --quiet origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$GITHUB_SHA is not an ancestor of main; refusing to release"
+            exit 1
+          fi
+          echo "commit is on main"
+
+      - name: Required checks must have passed for this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          required=(
+            "Offline suite and coverage floor"
+            "Generated dependency exports are current"
+            "Build backend image"
+            "Build frontend image"
+            "Secret scan"
+          )
+          runs=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/check-runs" \
+            --paginate --jq '.check_runs[] | .name + "=" + (.conclusion // "pending")')
+          echo "$runs"
+          failed=0
+          for name in "${required[@]}"; do
+            if ! grep -qxF "${name}=success" <<<"$runs"; then
+              echo "::error::required check not successful: ${name}"
+              failed=1
+            fi
+          done
+          [[ $failed -eq 0 ]] || exit 1
+
+  release:
+    name: Build, deploy and verify
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Keyless. No service-account JSON exists anywhere in this repository or in
+      # GitHub secrets; the provider only trusts tokens from this repository.
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/153692178986/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: hotspot-deployer@hotspot-sentinels-7364.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+
+      - name: Build and push both images
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          BASE="${REGION}-docker.pkg.dev/${PROJECT}/${REPO}"
+          # Cloud Run rejects arm64; the pin is not optional.
+          docker build --platform linux/amd64 -f backend/Dockerfile -t "${BASE}/${BACKEND}:${TAG}" backend
+          docker build --platform linux/amd64 -f frontend/Dockerfile -t "${BASE}/${FRONTEND}:${TAG}" frontend
+          docker push "${BASE}/${BACKEND}:${TAG}"
+          docker push "${BASE}/${FRONTEND}:${TAG}"
+
+      - name: Deploy backend
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          # BIGQUERY_LOCATION=US is the ratified exception: NOAA GSOD is US multi-region.
+          # The Maps key is mounted from Secret Manager, never --set-env-vars.
+          gcloud run deploy "$BACKEND" \
+            --image "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/${BACKEND}:${TAG}" \
+            --project "$PROJECT" --region "$REGION" --port 8080 \
+            --service-account "$RUNTIME_SA" \
+            --set-env-vars "^@^GOOGLE_CLOUD_PROJECT=${PROJECT}@GOOGLE_CLOUD_REGION=${REGION}@GCS_BUCKET_NAME=${PROJECT}-data@PUBSUB_TOPIC_ID=heat-resilience-alerts@MODEL_ID=gemini-2.5-flash@ALLOWED_ORIGINS=http://localhost:8501@BIGQUERY_LOCATION=US@GOOGLE_MAPS_REQUEST_LIMIT=100@GOOGLE_MAPS_REQUEST_WINDOW_SECONDS=3600" \
+            --set-secrets "GOOGLE_MAPS_API_KEY=${MAPS_SECRET}:latest"
+          echo "BACKEND_URL=$(gcloud run services describe "$BACKEND" --region "$REGION" --project "$PROJECT" --format='value(status.url)')" >> "$GITHUB_ENV"
+
+      - name: Deploy frontend
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          gcloud run deploy "$FRONTEND" \
+            --image "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/${FRONTEND}:${TAG}" \
+            --project "$PROJECT" --region "$REGION" --port 8080 \
+            --set-env-vars "API_BASE_URL=${BACKEND_URL}"
+          echo "FRONTEND_URL=$(gcloud run services describe "$FRONTEND" --region "$REGION" --project "$PROJECT" --format='value(status.url)')" >> "$GITHUB_ENV"
+
+      # Verified separately and on purpose: BUG-026 hid for three sprints because a
+      # healthy backend was treated as evidence the dashboard worked.
+      - name: Verify backend health
+        run: |
+          curl -fsS "${BACKEND_URL}/api/health" | tee /tmp/health.json
+          grep -q '"status":"operational"' /tmp/health.json
+
+      - name: Verify frontend health
+        run: curl -fsS "${FRONTEND_URL}/_stcore/health"
+
+      - name: Verify coordinate analysis
+        run: |
+          code=$(curl -sS -o /tmp/an.json -w '%{http_code}' -X POST "${BACKEND_URL}/api/analyze" \
+            -F imagery_lat=1.3521 -F imagery_lng=103.8198 -F zone_name='Release check')
+          echo "HTTP ${code}"
+          [[ "$code" == "200" ]] || { echo "::error::coordinate analysis failed"; exit 1; }
+          python -c "import json;d=json.load(open('/tmp/an.json'));assert 'hvi_score' in d and d['risk_level'];print('HVI',d['hvi_score'],d['risk_level'])"
+
+      - name: Release evidence
+        run: |
+          {
+            echo "## Release ${GITHUB_REF_NAME}"
+            echo ""
+            echo "| Service | Revision | Verification |"
+            echo "| --- | --- | --- |"
+            echo "| backend | $(gcloud run services describe "$BACKEND" --region "$REGION" --project "$PROJECT" --format='value(status.latestReadyRevisionName)') | \`/api/health\` operational, coordinate analysis 200 |"
+            echo "| frontend | $(gcloud run services describe "$FRONTEND" --region "$REGION" --project "$PROJECT" --format='value(status.latestReadyRevisionName)') | \`/_stcore/health\` ok |"
+            echo ""
+            echo "Backend: ${BACKEND_URL}"
+            echo "Frontend: ${FRONTEND_URL}"
+            echo ""
+            echo "Authenticated with Workload Identity Federation. No service-account key was used."
+          } >> "$GITHUB_STEP_SUMMARY"

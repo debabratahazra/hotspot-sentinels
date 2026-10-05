@@ -253,6 +253,7 @@ python-multipart==0.0.32
     #   streamlit
 pytz==2026.4 ; python_full_version < '3.11'
     # via pandas
+pyyaml==6.0.3
 referencing==0.37.0
     # via
     #   jsonschema
