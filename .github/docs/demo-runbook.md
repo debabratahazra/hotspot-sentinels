@@ -58,11 +58,11 @@ curl -sS "$U/api/health"
 Re-measured against the deployed stack on 2026-10-05. **The opener changed** — see
 "The port terminal no longer reaches CRITICAL" below.
 
-| Step                                   | API only | Notes                         |
-| -------------------------------------- | -------- | ----------------------------- |
-| Opening analysis (industrial upload)   | **15.0 s** | 3 runs: 15.0 / 14.9 / 15.9 s |
-| Contrast analysis (Botanic Gardens)    | **13.4 s** | unchanged from 2026-10-04     |
-| **Total spent waiting**                | **~28 s** |                               |
+| Step                                 | API only   | Notes                        |
+| ------------------------------------ | ---------- | ---------------------------- |
+| Opening analysis (industrial upload) | **15.0 s** | 3 runs: 15.0 / 14.9 / 15.9 s |
+| Contrast analysis (Botanic Gardens)  | **13.4 s** | unchanged from 2026-10-04    |
+| **Total spent waiting**              | **~28 s**  |                              |
 
 That leaves roughly **150 seconds of the 180-second budget** for narration — about
 12 seconds more headroom than the previous coordinate-led opener. Add a few seconds
@@ -103,22 +103,22 @@ on camera.
 
 ## Script
 
-| Time      | Beat                                                                                                                                                                       |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0:00–0:20 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is.                                                                               |
-| 0:20–0:35 | Upload the industrial district aerial crop.                                                                                                                                |
-| 0:35–0:55 | Run the analysis. Narrate over the wait: Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery.                                                 |
-| 0:55–1:40 | The result: **HVI 8.1 CRITICAL**. The Pub/Sub alert banner confirms a real alert was published.                                                                            |
-| 1:40–2:05 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop.                                                  |
+| Time      | Beat                                                                                                                                                                                                                                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00–0:20 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is.                                                                                                                                            |
+| 0:20–0:35 | Upload the industrial district aerial crop.                                                                                                                                                                                             |
+| 0:35–0:55 | Run the analysis. Narrate over the wait: Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery.                                                                                                              |
+| 0:55–1:40 | The result: **HVI 8.1 CRITICAL**. The Pub/Sub alert banner confirms a real alert was published.                                                                                                                                         |
+| 1:40–2:05 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop.                                                                                                               |
 | 2:05–2:40 | Reopen the sidebar with `»`, switch to Botanic Gardens — a **coordinate**, no upload, real Google satellite imagery. **HVI 1.5 LOW**, "Dense Tropical Forest". Same pipeline, same model — the score tracks real surfaces, not a guess. |
-| 2:40–3:00 | Architecture close: Gemini 2.5 Flash, Maps Static API, BigQuery NOAA GSOD, Firestore, Pub/Sub, all on Cloud Run in `asia-southeast1`.                                      |
+| 2:40–3:00 | Architecture close: Gemini 2.5 Flash, Maps Static API, BigQuery NOAA GSOD, Firestore, Pub/Sub, all on Cloud Run in `asia-southeast1`.                                                                                                   |
 
 ## Scripted scenarios
 
-| Scenario        | Input                            | Expected                           |
-| --------------- | -------------------------------- | ---------------------------------- |
-| Critical opener | upload `industrial_hotspot.jpg`  | HVI 8.1 CRITICAL, alert dispatched |
-| Low contrast    | coordinate 1.3521, 103.8198      | HVI 1.5 LOW, no alert              |
+| Scenario        | Input                           | Expected                           |
+| --------------- | ------------------------------- | ---------------------------------- |
+| Critical opener | upload `industrial_hotspot.jpg` | HVI 8.1 CRITICAL, alert dispatched |
+| Low contrast    | coordinate 1.3521, 103.8198     | HVI 1.5 LOW, no alert              |
 
 Each reproduced identically on three consecutive runs on 2026-10-05. They are
 inferred by the model, not hardcoded, so treat them as highly likely rather than
