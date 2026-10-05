@@ -78,7 +78,7 @@ streamlit run frontend/app.py
 | Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                                   |
 | Deploy           | one script builds, deploys and verifies **both** services, each with its own build context and its own health endpoint                                                                                                    |
 | Runtime identity | a dedicated `hotspot-run` service account with six narrow roles — no `roles/editor`, no `roles/owner`, and zero key files                                                                                                 |
-| Live             | deployed to Cloud Run in `asia-southeast1`; a coordinate analysis of Singapore's port terminal returns **HVI 8.7 → CRITICAL** with live NOAA telemetry at 31.0 °C, a contract-valid payload and a published Pub/Sub alert |
+| Live             | deployed to Cloud Run in `asia-southeast1`; the industrial sample returns **HVI 8.1 → CRITICAL** with a published Pub/Sub alert, and a Botanic Gardens coordinate analysis returns **HVI 1.5 → LOW** from live Google satellite imagery — both with NOAA telemetry at 31.0 °C and contract-valid payloads |
 
 ## Dependencies
 
