@@ -156,20 +156,20 @@ All temperatures are °C and all areas are m². Conversion happens at the source
 
 Every value comes from the environment, never from a literal in source. [.env.example](.env.example) is the template; `./setup_gcp.sh` writes the real `.env`, which is git-ignored and must never be committed.
 
-| Variable                             | Default                  | Used by                                   |
-| ------------------------------------ | ------------------------ | ----------------------------------------- |
-| `GOOGLE_CLOUD_PROJECT`               | — (required)             | all cloud clients                         |
-| `GOOGLE_CLOUD_REGION`                | `asia-southeast1`        | genai, Cloud Run                          |
-| `GCS_BUCKET_NAME`                    | `${PROJECT}-data`        | seeder, storage                           |
-| `PUBSUB_TOPIC_ID`                    | `heat-resilience-alerts` | alert dispatcher                          |
+| Variable                             | Default                  | Used by                                             |
+| ------------------------------------ | ------------------------ | --------------------------------------------------- |
+| `GOOGLE_CLOUD_PROJECT`               | — (required)             | all cloud clients                                   |
+| `GOOGLE_CLOUD_REGION`                | `asia-southeast1`        | genai, Cloud Run                                    |
+| `GCS_BUCKET_NAME`                    | `${PROJECT}-data`        | seeder, storage                                     |
+| `PUBSUB_TOPIC_ID`                    | `heat-resilience-alerts` | alert dispatcher                                    |
 | `BIGQUERY_LOCATION`                  | `US`                     | climate service — the one ratified region exception |
-| `GOOGLE_MAPS_API_KEY`                | — (required, **secret**) | Maps Static API                           |
-| `GOOGLE_MAPS_REQUEST_LIMIT`          | `100`                    | Maps cache-miss budget per rolling window |
-| `GOOGLE_MAPS_REQUEST_WINDOW_SECONDS` | `3600`                   | Maps cache-miss budget window in seconds  |
-| `MODEL_ID`                           | `gemini-2.5-flash`       | vision analyzer                           |
-| `ALLOWED_ORIGINS`                    | `http://localhost:8501`  | FastAPI CORS                              |
-| `API_BASE_URL`                       | `http://localhost:8080`  | Streamlit dashboard → backend             |
-| `PORT`                               | `8080`                   | uvicorn, Cloud Run                        |
+| `GOOGLE_MAPS_API_KEY`                | — (required, **secret**) | Maps Static API                                     |
+| `GOOGLE_MAPS_REQUEST_LIMIT`          | `100`                    | Maps cache-miss budget per rolling window           |
+| `GOOGLE_MAPS_REQUEST_WINDOW_SECONDS` | `3600`                   | Maps cache-miss budget window in seconds            |
+| `MODEL_ID`                           | `gemini-2.5-flash`       | vision analyzer                                     |
+| `ALLOWED_ORIGINS`                    | `http://localhost:8501`  | FastAPI CORS                                        |
+| `API_BASE_URL`                       | `http://localhost:8080`  | Streamlit dashboard → backend                       |
+| `PORT`                               | `8080`                   | uvicorn, Cloud Run                                  |
 
 Authentication is Application Default Credentials. There are no service-account key files anywhere in this project.
 
@@ -177,11 +177,11 @@ Authentication is Application Default Credentials. There are no service-account 
 
 `GOOGLE_MAPS_API_KEY` is the only true secret in the configuration, and it is handled differently from everything else:
 
-| Context | Where it lives | Who can read it |
-| ------- | -------------- | --------------- |
-| Local development | `.env`, git-ignored | you only |
-| Git / GitHub | **nowhere** — `.env.example` carries the name with an empty value | nobody |
-| Cloud Run | **Secret Manager** (`hotspot-maps-api-key`), mounted at runtime | only `hotspot-run`, via `roles/secretmanager.secretAccessor` on that single secret |
+| Context           | Where it lives                                                    | Who can read it                                                                    |
+| ----------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Local development | `.env`, git-ignored                                               | you only                                                                           |
+| Git / GitHub      | **nowhere** — `.env.example` carries the name with an empty value | nobody                                                                             |
+| Cloud Run         | **Secret Manager** (`hotspot-maps-api-key`), mounted at runtime   | only `hotspot-run`, via `roles/secretmanager.secretAccessor` on that single secret |
 
 It is deliberately **not** passed with `--set-env-vars`, because an environment variable's value is plainly visible to anyone holding `run.services.get` on the project. Mounting it with `--set-secrets` keeps the value out of the service definition, out of `gcloud run services describe`, and out of the Cloud Console. `tests/test_deploy_script.py` fails the build if it ever reappears as a plain environment variable.
 
