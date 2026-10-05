@@ -1,14 +1,14 @@
 # Submission Checklist
 
 Competition: Google Cloud AI Builder Cup — Sustainability and Social Impact.
-Deadline **2026-10-11**. Every claim below was verified on 2026-10-04, not assumed.
+Deadline **2026-10-11**. Every claim below was verified on 2026-10-05, not assumed.
 
 ## Acceptance criteria (TASK-006)
 
 | Criterion                                    | State                              | Evidence                                                                                                                                                                                           |
 | -------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Repository shared with no secrets in history | **MET**                            | `github.com/debabratahazra/hotspot-sentinels`, public. gitleaks v8.21.2 scanned all 8 commits: no leaks. `.env` never committed; `.env.example` carries `GOOGLE_MAPS_API_KEY` with an empty value. |
-| Deployed URL reachable                       | **MET**                            | `/api/live` 200, `/api/health` `operational` with gemini, firestore, pubsub and bigquery all `ready`. Frontend 200.                                                                                |
+| Repository shared with no secrets in history | **MET**                            | `github.com/debabratahazra/hotspot-sentinels`, public. gitleaks v8.21.2 scanned the full history: no leaks, and it now runs as a required check on every push and pull request. `.env` never committed; `.env.example` carries `GOOGLE_MAPS_API_KEY` with an empty value. |
+| Deployed URL reachable                       | **MET**                            | `/api/live` 200, `/api/health` `operational` with gemini, firestore, pubsub and bigquery all `ready`. Frontend `/_stcore/health` ok.                                                                |
 | Contract audit clean                         | **MET** — see reconciliation below | Full audit run 2026-10-04; no finding survived reconciliation as a genuine contract violation.                                                                                                     |
 | Recording uploaded                           | **OUTSTANDING**                    | Needs a human. Follow [demo-runbook.md](../.github/docs/demo-runbook.md).                                                                                                                          |
 
@@ -20,18 +20,20 @@ Deadline **2026-10-11**. Every claim below was verified on 2026-10-04, not assum
 | ----------------- | ------------------------------------------------------------------------ |
 | Dashboard         | https://hotspot-frontend-153692178986.asia-southeast1.run.app            |
 | Backend           | https://hotspot-backend-153692178986.asia-southeast1.run.app             |
-| Backend revision  | `hotspot-backend-00006-8ds`                                              |
-| Frontend revision | `hotspot-frontend-00005-ntr`                                             |
+| Backend revision  | `hotspot-backend-00009-bvp`                                              |
+| Frontend revision | `hotspot-frontend-00008-snq`                                             |
+| Runtime identity  | `hotspot-run@…` — six narrow roles, no editor or owner, zero key files   |
 | Region            | `asia-southeast1` (sole exception: `BIGQUERY_LOCATION=US` for NOAA GSOD) |
 
 ## Quality evidence
 
 |                 |                                                                                           |
 | --------------- | ----------------------------------------------------------------------------------------- |
-| Tests           | 656 passing, fully offline                                                                |
+| Tests           | 667 passing, fully offline                                                                |
 | Coverage        | 98.2%, no file below the 70% floor                                                        |
 | Open P0 defects | 0                                                                                         |
-| CI              | GitHub Actions green on every push — suite, coverage gate, both image builds, secret scan |
+| CI              | five required checks green on every push and pull request                                 |
+| Branch policy   | `main` protected: pull request required, all five checks must pass, no force push, no deletion |
 
 ## Contract audit reconciliation
 
@@ -52,6 +54,18 @@ genuine contract violation.**
 Areas confirmed clean with no findings: metric units, GenAI SDK usage
 (`from google import genai`, `gemini-2.5-flash` via `MODEL_ID`), region defaults,
 layering, the Maps request budget, and both CI workflows.
+
+## Scope not delivered
+
+Stated plainly rather than omitted. None of these is a defect; each needs a human decision, unimplemented feature work, or unprovisioned infrastructure.
+
+| Item | Missing | Impact on the submission |
+| ---- | ------- | ------------------------ |
+| `TASK-006` | the 3-minute recording | **Blocks submission.** Everything else in the package is done and evidenced. |
+| `STORY-031` | GCS retention of analysed imagery and heatmaps | None. A scan cannot retrieve the exact image it used, but analysis, persistence and alerting are unaffected. |
+| `STORY-043` | keyless deploy from GitHub Actions via Workload Identity Federation | None. Deployment runs from a workstation through `deploy.sh`, which is linted and verifies both services. |
+| `TASK-011` | correction of the human-owned `COPILOT_GUIDE.md` and `Epics_Stories.md` | None on the running system; those documents carry statements predating later ratified decisions. |
+| `TASK-046` | a Maps imagery cache shared across Cloud Run instances | **Demo risk only.** The cache is per-process and Cloud Run scales to zero, so a warmed coordinate can go cold and `/api/imagery` returns 502 after a successful analysis. Mitigated by the runbook's pre-flight. |
 
 ## Before submitting
 

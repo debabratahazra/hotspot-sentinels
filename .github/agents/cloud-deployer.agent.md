@@ -44,6 +44,7 @@ The Cloud Run runtime service account needs these roles on the project. Grant th
 | Gemini via Vertex AI     | `roles/aiplatform.user`      |
 | Firestore reads/writes   | `roles/datastore.user`       |
 | Pub/Sub alerts           | `roles/pubsub.publisher`     |
+| Pub/Sub readiness probe  | `roles/pubsub.viewer`        |
 | BigQuery climate queries | `roles/bigquery.jobUser`     |
 | GCS sample reads         | `roles/storage.objectViewer` |
 
@@ -56,6 +57,7 @@ Prefer a dedicated service account over the default Compute Engine one, and neve
 | Container fails to start         | App not listening on `$PORT`/8080, or import-time crash — read the revision logs            |
 | 403 from Vertex AI               | Runtime SA missing `roles/aiplatform.user`                                                  |
 | 403 publishing alerts            | Runtime SA missing `roles/pubsub.publisher`                                                 |
+| `/api/health` reports `degraded` | Runtime SA missing `roles/pubsub.viewer` — the probe calls `get_topic`, which `publisher` alone does not permit |
 | Health check passes, analyze 502 | `VisionAnalysisError` — model, region, or quota; check server logs, not the client response |
 | CORS errors from the dashboard   | `ALLOWED_ORIGINS` missing the frontend origin                                               |
 

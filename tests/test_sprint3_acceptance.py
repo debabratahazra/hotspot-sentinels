@@ -310,20 +310,30 @@ finally:
     docker_python(hardened_image, script)
 
 
-def test_documented_backend_docker_build_context_resolves_explicit_copies():
+def test_documented_docker_build_contexts_resolve_explicit_copies():
+    """Every documented build command must name a context in which its Dockerfile's COPY sources resolve.
+
+    Generalised from backend-only once the frontend gained its own image: each service
+    builds from its own directory, so the context must match the Dockerfile's directory.
+    """
+    documented = set()
     for document in (ROOT / "README.md", ROOT / ".github/skills/cloudrun-deploy/SKILL.md"):
         commands = re.findall(r"docker build [^`\n)]+", document.read_text())
         assert commands, f"No documented Docker build command in {document}"
         for command in commands:
             arguments = shlex.split(command)
-            assert arguments[arguments.index("-f") + 1] == "backend/Dockerfile"
-            assert arguments[-1] == "backend", command
-    context = ROOT / "backend"
-    dockerfile = (ROOT / "backend/Dockerfile").read_text()
-    for line in dockerfile.splitlines():
-        if line.startswith("COPY ") and "--from=" not in line:
-            for source in shlex.split(line)[1:-1]:
-                assert (context / source).exists(), f"Backend-context build cannot resolve COPY {source}"
+            dockerfile = arguments[arguments.index("-f") + 1]
+            service = Path(dockerfile).parent.name
+            assert service in {"backend", "frontend"}, command
+            assert arguments[-1] == service, f"Context must be {service}/ for {dockerfile}: {command}"
+            documented.add(service)
+    assert documented == {"backend", "frontend"}, f"Both images must be documented, got {documented}"
+    for service in sorted(documented):
+        context = ROOT / service
+        for line in (context / "Dockerfile").read_text().splitlines():
+            if line.startswith("COPY ") and "--from=" not in line:
+                for source in shlex.split(line)[1:-1]:
+                    assert (context / source).exists(), f"{service}-context build cannot resolve COPY {source}"
 
 
 def test_hardened_image_application_sources_match_canonical_workspace(hardened_image):

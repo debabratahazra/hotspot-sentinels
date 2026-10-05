@@ -59,6 +59,7 @@ A `--source ./backend` or `docker build ./backend` invocation cannot reach `requ
     | Gemini via Vertex AI     | `roles/aiplatform.user`      |
     | Firestore                | `roles/datastore.user`       |
     | Pub/Sub alerts           | `roles/pubsub.publisher`     |
+    | Pub/Sub readiness probe  | `roles/pubsub.viewer`        |
     | BigQuery climate queries | `roles/bigquery.jobUser`     |
     | GCS sample reads         | `roles/storage.objectViewer` |
 
@@ -105,7 +106,7 @@ bl add --type story --parent EPIC-006 --priority P1 --estimate 3 --source requir
   --ac "image tagged with the git SHA" "config injected as env vars at deploy time" \
        "deployed to asia-southeast1 on port 8080"
 bl add --type task --parent EPIC-006 --priority P1 --estimate 2 --source requirements \
-  --title "Grant the runtime service account its five narrow roles" \
+  --title "Grant the runtime service account its six narrow roles" \
   --ac "dedicated service account" "no owner or editor binding" "no key file created"
 bl add --type story --parent EPIC-006 --priority P1 --estimate 2 --source requirements \
   --title "As an operator I can verify a deploy and roll it back" \

@@ -2,19 +2,25 @@
 
 Every epic required to take this project from an empty workspace to a submitted hackathon entry. Each document is the authoritative scope for its epic; [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) remains the authority on technical constraints and the Heat Analysis Result schema.
 
+Progress below is derived from [agile/backlog.json](../../agile/backlog.json), which is the source of truth. EPIC-10 and EPIC-11 were added after this catalogue was first written and have no separate scope document; their stories live in the backlog.
+
 ## Epics
 
-| Epic                                                      | Title                                    | Delivers                                       | Depends on | Status      |
+| Epic                                                      | Title                                    | Delivers                                       | Depends on | Progress    |
 | --------------------------------------------------------- | ---------------------------------------- | ---------------------------------------------- | ---------- | ----------- |
-| [EPIC-01](./epics/EPIC-01-foundation-environment.md)      | Foundation & Environment                 | GCP provisioning, `.env`, deps, package layout | —          | In progress |
-| [EPIC-02](./epics/EPIC-02-multimodal-perception.md)       | Multimodal Perception & Gemini Reasoning | `vision_analyzer.py`, `seed_samples.py`        | 01         | In progress |
-| [EPIC-03](./epics/EPIC-03-climate-telemetry.md)           | Climate Telemetry & Ingestion            | `climate_service.py`                           | 01         | Not started |
-| [EPIC-04](./epics/EPIC-04-resilience-pipeline.md)         | Event-Driven Resilience Pipeline         | `database.py`, `alert_dispatcher.py`           | 01         | Not started |
-| [EPIC-05](./epics/EPIC-05-api-service.md)                 | FastAPI Core Service & Controller        | `main.py`                                      | 02, 03, 04 | Not started |
-| [EPIC-06](./epics/EPIC-06-containerization-deployment.md) | Containerization & Cloud Run Deployment  | `Dockerfile`, live service                     | 05         | Not started |
-| [EPIC-07](./epics/EPIC-07-dashboard.md)                   | Interactive Dashboard & Heat Visualizer  | `frontend/app.py`                              | 05         | Not started |
-| [EPIC-08](./epics/EPIC-08-quality-assurance.md)           | Quality Assurance & Test Coverage        | `tests/`, coverage reports                     | 02–07      | Not started |
-| [EPIC-09](./epics/EPIC-09-demo-submission.md)             | Demo, Documentation & Submission         | README, demo runbook, submission               | 06, 07, 08 | Not started |
+| [EPIC-01](./epics/EPIC-01-foundation-environment.md)      | Foundation & Environment                 | GCP provisioning, `.env`, deps, package layout | —          | 23/24       |
+| [EPIC-02](./epics/EPIC-02-multimodal-perception.md)       | Multimodal Perception & Gemini Reasoning | `vision_analyzer.py`, `seed_samples.py`        | 01         | 5/5 done    |
+| [EPIC-03](./epics/EPIC-03-climate-telemetry.md)           | Climate Telemetry & Ingestion            | `climate_service.py`                           | 01         | 5/5 done    |
+| [EPIC-04](./epics/EPIC-04-resilience-pipeline.md)         | Event-Driven Resilience Pipeline         | `database.py`, `alert_dispatcher.py`           | 01         | 6/6 done    |
+| [EPIC-05](./epics/EPIC-05-api-service.md)                 | FastAPI Core Service & Controller        | `main.py`                                      | 02, 03, 04 | 14/15       |
+| [EPIC-06](./epics/EPIC-06-containerization-deployment.md) | Containerization & Cloud Run Deployment  | both `Dockerfile`s, live services              | 05         | 13/13 done  |
+| [EPIC-07](./epics/EPIC-07-dashboard.md)                   | Interactive Dashboard & Heat Visualizer  | `frontend/app.py`                              | 05         | 11/11 done  |
+| [EPIC-08](./epics/EPIC-08-quality-assurance.md)           | Quality Assurance & Test Coverage        | `tests/`, coverage reports                     | 02–07      | 14/14 done  |
+| [EPIC-09](./epics/EPIC-09-demo-submission.md)             | Demo, Documentation & Submission         | README, demo runbook, submission               | 06, 07, 08 | 6/7         |
+| EPIC-10 (backlog only)                                    | Coordinate-Based Maps Imagery            | `maps_imagery_service.py`, `/api/imagery`      | 05, 07     | 7/8         |
+| EPIC-11 (backlog only)                                    | GitHub Actions CI/CD & Release           | `.github/workflows/`, branch protection        | 06, 08     | 5/6         |
+
+The five incomplete items are listed with their reasons under **Known limitations** in the [root README](../../README.md).
 
 ## Dependency graph
 
