@@ -3,12 +3,12 @@
 A 3-minute recording of HotSpot Sentinels against the deployed stack. Every number
 below was measured on 2026-10-04, not estimated.
 
-| | |
-| --- | --- |
-| Dashboard | https://hotspot-frontend-153692178986.asia-southeast1.run.app |
-| Backend | https://hotspot-backend-153692178986.asia-southeast1.run.app |
-| Region | `asia-southeast1` |
-| Recording cap | **3 minutes** (OQ-4) |
+|               |                                                               |
+| ------------- | ------------------------------------------------------------- |
+| Dashboard     | https://hotspot-frontend-153692178986.asia-southeast1.run.app |
+| Backend       | https://hotspot-backend-153692178986.asia-southeast1.run.app  |
+| Region        | `asia-southeast1`                                             |
+| Recording cap | **3 minutes** (OQ-4)                                          |
 
 ## The one thing that will break the demo
 
@@ -54,11 +54,11 @@ with latitude `1.2897` and longitude `103.754`.
 
 Rehearsed end to end through the deployed dashboard on 2026-10-04.
 
-| Step | Through the UI | API only |
-| --- | --- | --- |
-| Opening analysis (Port Terminal) | **25.7 s** | 23.7 s |
-| Contrast analysis (Botanic Gardens) | **12.5 s** | 13.4 s |
-| **Total spent waiting** | **38.2 s** | |
+| Step                                | Through the UI | API only |
+| ----------------------------------- | -------------- | -------- |
+| Opening analysis (Port Terminal)    | **25.7 s**     | 23.7 s   |
+| Contrast analysis (Botanic Gardens) | **12.5 s**     | 13.4 s   |
+| **Total spent waiting**             | **38.2 s**     |          |
 
 That leaves about **142 seconds of the 180-second budget** for narration, which
 the script below fits. The UI is slower than the API alone because it also fetches
@@ -77,37 +77,37 @@ on camera.
 
 ## Script
 
-| Time | Beat |
-| --- | --- |
-| 0:00–0:20 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is. |
-| 0:20–0:35 | The dashboard opens on Singapore's port terminal. One click, no upload. |
-| 0:35–1:00 | Run the analysis. Narrate over the wait: real Google satellite imagery, Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery. |
-| 1:00–1:45 | The result: **HVI 8.7 CRITICAL**, 100% asphalt, zero canopy, 31 °C measured. The Pub/Sub alert banner confirms a real alert was published. |
-| 1:45–2:10 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop. |
+| Time      | Beat                                                                                                                                                                       |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00–0:20 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is.                                                                               |
+| 0:20–0:35 | The dashboard opens on Singapore's port terminal. One click, no upload.                                                                                                    |
+| 0:35–1:00 | Run the analysis. Narrate over the wait: real Google satellite imagery, Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery.                  |
+| 1:00–1:45 | The result: **HVI 8.7 CRITICAL**, 100% asphalt, zero canopy, 31 °C measured. The Pub/Sub alert banner confirms a real alert was published.                                 |
+| 1:45–2:10 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop.                                                  |
 | 2:10–2:40 | Reopen the sidebar with `»`, switch to Botanic Gardens. **HVI 1.5 LOW**, "Dense Tropical Forest". Same pipeline, same model — the score tracks real surfaces, not a guess. |
-| 2:40–3:00 | Architecture close: Gemini 2.5 Flash, Maps Static API, BigQuery NOAA GSOD, Firestore, Pub/Sub, all on Cloud Run in `asia-southeast1`. |
+| 2:40–3:00 | Architecture close: Gemini 2.5 Flash, Maps Static API, BigQuery NOAA GSOD, Firestore, Pub/Sub, all on Cloud Run in `asia-southeast1`.                                      |
 
 ## Scripted scenarios
 
-| Scenario | Coordinates | Expected |
-| --- | --- | --- |
+| Scenario        | Coordinates      | Expected                           |
+| --------------- | ---------------- | ---------------------------------- |
 | Critical opener | 1.2897, 103.7540 | HVI 8.7 CRITICAL, alert dispatched |
-| Low contrast | 1.3521, 103.8198 | HVI 1.5 LOW, no alert |
+| Low contrast    | 1.3521, 103.8198 | HVI 1.5 LOW, no alert              |
 
 Both have reproduced identically on three separate runs. They are inferred by the
 model, not hardcoded, so treat them as highly likely rather than guaranteed.
 
 ## Fallbacks
 
-| If this happens | Do this |
-| --- | --- |
-| Imagery missing, "attribution image unavailable" | Cache went cold. Rerun the two warm-up calls, reload, re-record that take. |
-| Analysis exceeds ~30 s | Cold start. Run one throwaway analysis first, then record. |
-| `/api/health` reports `degraded` | Read which dependency is down. Analysis still works if `gemini` is ready; climate falls back to 38.5 °C and the UI labels it as a fallback. |
-| Coordinate returns 502 | That coordinate has no cached image. Use the other scenario and warm the failing one again. |
-| Analysis returns 502 | The model occasionally returns a payload that fails schema validation; one run in four did so on 2026-10-04. The backend correctly refuses it rather than showing a malformed report. Simply run it again — two immediate retries both succeeded. Do a throwaway run before recording so a retry is not your opening shot. |
-| Score differs from the table | Not a failure — the model re-reads the image. Narrate the score actually shown; the band is what matters. |
-| Dashboard unreachable | Check the frontend revision is serving: `gcloud run services describe hotspot-frontend --region asia-southeast1`. |
+| If this happens                                  | Do this                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Imagery missing, "attribution image unavailable" | Cache went cold. Rerun the two warm-up calls, reload, re-record that take.                                                                                                                                                                                                                                                 |
+| Analysis exceeds ~30 s                           | Cold start. Run one throwaway analysis first, then record.                                                                                                                                                                                                                                                                 |
+| `/api/health` reports `degraded`                 | Read which dependency is down. Analysis still works if `gemini` is ready; climate falls back to 38.5 °C and the UI labels it as a fallback.                                                                                                                                                                                |
+| Coordinate returns 502                           | That coordinate has no cached image. Use the other scenario and warm the failing one again.                                                                                                                                                                                                                                |
+| Analysis returns 502                             | The model occasionally returns a payload that fails schema validation; one run in four did so on 2026-10-04. The backend correctly refuses it rather than showing a malformed report. Simply run it again — two immediate retries both succeeded. Do a throwaway run before recording so a retry is not your opening shot. |
+| Score differs from the table                     | Not a failure — the model re-reads the image. Narrate the score actually shown; the band is what matters.                                                                                                                                                                                                                  |
+| Dashboard unreachable                            | Check the frontend revision is serving: `gcloud run services describe hotspot-frontend --region asia-southeast1`.                                                                                                                                                                                                          |
 
 ## Reset between takes
 

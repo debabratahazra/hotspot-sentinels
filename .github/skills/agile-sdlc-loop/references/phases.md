@@ -118,11 +118,11 @@ For each committed item in priority order:
 
 **When a run fails, separate the cause before retrying:**
 
-| Failure | Action |
-| ------------------------------- | ------------------------------------------------------------------- |
-| Transient (auth expiry, timeout) | Redispatch the same item from the recorded dispatch state; do not repeat completed exploration |
-| Task failure (agent did the work and it is wrong) | Treat as a finding, not a retry |
-| Permanent authorization failure | `--status blocked` for a human; never retry in a loop |
+| Failure                                           | Action                                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Transient (auth expiry, timeout)                  | Redispatch the same item from the recorded dispatch state; do not repeat completed exploration |
+| Task failure (agent did the work and it is wrong) | Treat as a finding, not a retry                                                                |
+| Permanent authorization failure                   | `--status blocked` for a human; never retry in a loop                                          |
 
 **Reviewing an item that accepts caller input:** require schema validation at the
 report boundary for every externally supplied override, including out-of-range
