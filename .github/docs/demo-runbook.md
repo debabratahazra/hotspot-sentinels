@@ -10,34 +10,32 @@ below was measured on 2026-10-04, not estimated.
 | Region        | `asia-southeast1`                                             |
 | Recording cap | **3 minutes** (OQ-4)                                          |
 
-## The one thing that will break the demo
+## The cache risk is now largely retired
 
-The imagery cache is **in-process**. Cloud Run scales to zero when idle, the
-container dies, and the cache dies with it. A coordinate warmed an hour ago is
-cold again, and a cold `/api/imagery` returns 502 — which the dashboard correctly
-renders as "Required Google Maps attribution image is unavailable", immediately
-after a perfectly successful analysis.
+The imagery cache used to be in-process only. Cloud Run scales to zero, the
+container died, and the cache died with it — so a coordinate warmed an hour
+earlier returned a 502 from `/api/imagery` immediately after a perfectly
+successful analysis.
 
-This was observed: both demo coordinates returned 502 roughly two hours after
-being warmed, with `maxScale=1` already set.
+`TASK-046` moved the cache to Cloud Storage, so imagery fetched by any instance is
+served by every other one and survives scale-to-zero for 24 hours. Verified live:
+a brand-new revision returned the 640×640 PNG a different instance had fetched.
 
-**Warm the cache immediately before recording and do not leave a long idle gap.**
+Two consequences for recording:
 
-Since 2026-10-05 this affects only the **contrast beat**. The opener is an upload,
-which never calls the Maps API, so the demo's CRITICAL result and alert cannot be
-taken out by a cold cache.
+- `--max-instances=1` is **no longer required**. Leave autoscaling alone.
+- The opener is an upload and never calls the Maps API at all, so the CRITICAL
+  result and the alert cannot be taken out by a cold cache either way.
+
+Still warm the contrast coordinate before recording. The first fetch after a
+24-hour gap re-requests from Maps and is slower.
 
 ## Pre-flight
 
-Run this within a few minutes of recording. It pins a single instance, warms the
-contrast coordinate, and proves the imagery is being served.
+Run this within a few minutes of recording.
 
 ```bash
 U=https://hotspot-backend-153692178986.asia-southeast1.run.app
-
-# One instance only: the cache is per-process, so a second instance would serve
-# /api/imagery without the image the analysis just fetched.
-gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=1
 
 # Generate the sample if data_samples/ is empty; it is not committed.
 python backend/seed_samples.py
@@ -48,18 +46,11 @@ curl -sS -o /dev/null -X POST "$U/api/analyze" -F file=@data_samples/industrial_
 # Warm the contrast coordinate.
 curl -sS -o /dev/null -X POST "$U/api/analyze" -F imagery_lat=1.3521 -F imagery_lng=103.8198
 
-# Must print 200. A 502 means the cache is cold — rerun the call above.
+# Must print 200.
 curl -sS -o /dev/null -w 'botanic gardens %{http_code}\n' "$U/api/imagery?lat=1.3521&lng=103.8198"
 
 # All four dependencies must read "ready".
 curl -sS "$U/api/health"
-```
-
-After recording, restore autoscaling — `--max-instances=1` is a demo constraint,
-not a production setting:
-
-```bash
-gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=3
 ```
 
 ## Measured timings

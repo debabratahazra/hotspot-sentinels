@@ -29,10 +29,11 @@ Deadline **2026-10-11**. Every claim below was verified on 2026-10-05, not assum
 
 |                 |                                                                                           |
 | --------------- | ----------------------------------------------------------------------------------------- |
-| Tests           | 667 passing, fully offline                                                                |
+| Tests           | 685 passing, fully offline                                                                |
 | Coverage        | 98.2%, no file below the 70% floor                                                        |
 | Open P0 defects | 0                                                                                         |
 | CI              | five required checks green on every push and pull request                                 |
+| Release         | keyless — a `vMAJOR.MINOR.PATCH` tag deploys both services through Workload Identity Federation, with zero service-account keys |
 | Branch policy   | `main` protected: pull request required, all five checks must pass, no force push, no deletion |
 
 ## Contract audit reconciliation
@@ -57,15 +58,15 @@ layering, the Maps request budget, and both CI workflows.
 
 ## Scope not delivered
 
-Stated plainly rather than omitted. None of these is a defect; each needs a human decision, unimplemented feature work, or unprovisioned infrastructure.
+Stated plainly rather than omitted. None of these is a defect; each needs a human decision or unimplemented feature work.
 
 | Item | Missing | Impact on the submission |
 | ---- | ------- | ------------------------ |
 | `TASK-006` | the 3-minute recording | **Blocks submission.** Everything else in the package is done and evidenced. |
-| `STORY-031` | GCS retention of analysed imagery and heatmaps | None. A scan cannot retrieve the exact image it used, but analysis, persistence and alerting are unaffected. |
-| `STORY-043` | keyless deploy from GitHub Actions via Workload Identity Federation | None. Deployment runs from a workstation through `deploy.sh`, which is linted and verifies both services. |
+| `STORY-031` | scan records linked to retained imagery | None. `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record carries no object URI yet. |
 | `TASK-011` | correction of the human-owned `COPILOT_GUIDE.md` and `Epics_Stories.md` | None on the running system; those documents carry statements predating later ratified decisions. |
-| `TASK-046` | a Maps imagery cache shared across Cloud Run instances | **Demo risk only.** The cache is per-process and Cloud Run scales to zero, so a warmed coordinate can go cold and `/api/imagery` returns 502 after a successful analysis. Mitigated by the runbook's pre-flight. |
+
+`STORY-043` and `TASK-046` were closed on 2026-10-05 and verified live — see Quality evidence above.
 
 ## Before submitting
 
