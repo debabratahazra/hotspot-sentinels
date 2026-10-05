@@ -1,3 +1,4 @@
+import ast
 import importlib
 import os
 import re
@@ -14,9 +15,33 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_VARIABLES = {
     "GOOGLE_CLOUD_PROJECT", "GOOGLE_CLOUD_REGION", "GCS_BUCKET_NAME",
     "PUBSUB_TOPIC_ID", "MODEL_ID", "ALLOWED_ORIGINS", "PORT",
-    "GOOGLE_MAPS_API_KEY",
+    "GOOGLE_MAPS_API_KEY", "BIGQUERY_LOCATION", "API_BASE_URL",
+    "GOOGLE_MAPS_REQUEST_LIMIT", "GOOGLE_MAPS_REQUEST_WINDOW_SECONDS",
 }
 SECRET_VARIABLES = {"GOOGLE_MAPS_API_KEY"}
+# Contract constants with safe in-code defaults, deliberately not operator knobs.
+EXCLUDED_FROM_TEMPLATE = {"MAX_UPLOAD_BYTES", "NOAA_GSOD_YEAR"}
+ENVIRONMENT_NAME = re.compile(r"[A-Z][A-Z0-9_]{2,}")
+
+
+def environment_names_read_by_code() -> set[str]:
+    """Every environment variable the shipped code reads, derived from its source."""
+    names: set[str] = set()
+    sources = sorted((ROOT / "backend").rglob("*.py")) + [ROOT / "frontend/app.py"]
+    for path in sources:
+        if "__pycache__" in path.parts:
+            continue
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if not isinstance(node, ast.Call) or not node.args:
+                continue
+            callee = getattr(node.func, "attr", None) or getattr(node.func, "id", "") or ""
+            if "env" not in callee.lower():
+                continue
+            first = node.args[0]
+            if isinstance(first, ast.Constant) and isinstance(first.value, str):
+                if ENVIRONMENT_NAME.fullmatch(first.value):
+                    names.add(first.value)
+    return names
 
 
 def local_command(arguments, *, cwd=ROOT, env=None):
@@ -55,17 +80,27 @@ def test_env_template_is_not_ignored_but_env_is_ignored():
     assert local_command(["git", "check-ignore", "-q", ".env"]).returncode == 0
 
 
-def test_env_example_contains_eight_contract_variables_without_secrets():
+def test_env_example_documents_every_variable_the_code_reads_without_secrets():
     from dotenv import dotenv_values
 
     result = local_command(["grep", "-E", "^[A-Z_]+=", ".env.example"])
     assert result.returncode == 0, "Template assignments could not be read through subprocess"
-    assert len(result.stdout.splitlines()) == 8
     values = dotenv_values(stream=StringIO(result.stdout), interpolate=False)
     assert set(values) == CONTRACT_VARIABLES
+
+    # Derived rather than counted: adding an os.getenv without documenting it fails
+    # here, instead of reaching whoever clones the repo as a missing-config surprise.
+    undocumented = environment_names_read_by_code() - set(values) - EXCLUDED_FROM_TEMPLATE
+    assert not undocumented, (
+        f"{sorted(undocumented)} are read by the code but absent from .env.example. "
+        "Document them in the template or record them in EXCLUDED_FROM_TEMPLATE."
+    )
+
     assert values["GOOGLE_CLOUD_PROJECT"] == ""
     assert values["GCS_BUCKET_NAME"] == ""
     assert values["GOOGLE_CLOUD_REGION"] == "asia-southeast1"
+    # NOAA GSOD is US multi-region; this is the one ratified region exception.
+    assert values["BIGQUERY_LOCATION"] == "US"
     for name in SECRET_VARIABLES:
         assert values[name] == "", (
             f"{name} holds a credential and .env.example is committed; "
