@@ -70,11 +70,13 @@ jobs:
           cache-dependency-glob: uv.lock
 
       # pyproject.toml and uv.lock are authoritative; all three exports are generated.
+      # Flag order and spelling are load-bearing: uv records the invocation in the file
+      # header, so an inconsistent form here surfaces as a spurious "stale export" diff.
       - name: Regenerate every export
         run: |
           uv export --locked --group frontend --group dev --no-hashes --no-emit-project --output-file requirements.txt
           uv export --locked --no-dev --no-hashes --no-emit-project --output-file backend/requirements.txt
-          uv export --locked --no-hashes --only-group frontend -o frontend/requirements.txt
+          uv export --locked --only-group frontend --no-hashes --no-emit-project --output-file frontend/requirements.txt
 
       - name: Fail when a committed export is stale
         run: |
