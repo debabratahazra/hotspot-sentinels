@@ -38,6 +38,6 @@ Every `COPY` path is relative to `backend/` — `COPY requirements.txt .`, `COPY
 
 ## Runtime
 
-Region is `asia-southeast1`. Container port is 8080. The runtime service account is `hotspot-run@PROJECT.iam.gserviceaccount.com` and needs `roles/aiplatform.user`, `roles/datastore.user`, `roles/pubsub.publisher`, `roles/pubsub.viewer`, `roles/bigquery.jobUser`, and `roles/storage.objectViewer` — grant those six, never `roles/editor` or `roles/owner`. `pubsub.viewer` is needed because the readiness probe calls `get_topic`, which `publisher` alone does not permit.
+Region is `asia-southeast1`. Container port is 8080. The runtime service account is `hotspot-run@PROJECT.iam.gserviceaccount.com` and needs `roles/aiplatform.user`, `roles/datastore.user`, `roles/pubsub.publisher`, `roles/pubsub.viewer`, `roles/bigquery.jobUser`, and `roles/storage.objectViewer` — grant those six, never `roles/editor` or `roles/owner`. `pubsub.viewer` is needed because the readiness probe calls `get_topic`, which `publisher` alone does not permit. It also needs `roles/secretmanager.secretAccessor` bound **on the `hotspot-maps-api-key` secret only**, never project-wide: `GOOGLE_MAPS_API_KEY` is mounted with `--set-secrets`, never `--set-env-vars`, because env var values are readable by anyone with `run.services.get`.
 
 Tag images with the short git SHA, not only `latest`, so a revision can be traced back to a commit.

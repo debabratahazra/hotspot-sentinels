@@ -26,7 +26,7 @@ The script creates the Artifact Registry repo if missing, then builds **each ser
 
 The services are `hotspot-backend` (override with `SERVICE_NAME`) and `hotspot-frontend`. Deploying under any other name creates a second service rather than a new revision. Each is verified on its own endpoint — the backend on `/api/health`, the frontend on `/_stcore/health` — because a healthy backend is not evidence that the dashboard works. The frontend receives the backend's resolved URL as `API_BASE_URL`.
 
-Nothing secret is baked into the image. Project, region, bucket, topic, model, allowed origins, `BIGQUERY_LOCATION` and `GOOGLE_MAPS_API_KEY` all arrive as Cloud Run environment variables. The script aborts if `GOOGLE_MAPS_API_KEY` is unset, because coordinate analysis returns 502 without it.
+Nothing secret is baked into the image. Project, region, bucket, topic, model, allowed origins and `BIGQUERY_LOCATION` arrive as Cloud Run environment variables. `GOOGLE_MAPS_API_KEY` is different: it is mounted from **Secret Manager** with `--set-secrets "GOOGLE_MAPS_API_KEY=hotspot-maps-api-key:latest"`, never `--set-env-vars`, because an environment variable's value is readable by anyone with `run.services.get`. The script aborts if the secret does not exist and prints the commands to create it. Only `hotspot-run` holds `roles/secretmanager.secretAccessor`, and only on that one secret.
 
 ## Runtime IAM
 
@@ -71,15 +71,15 @@ gcloud run services update-traffic hotspot-backend --region asia-southeast1 --to
 
 ## Triage
 
-| Symptom                                     | Cause                                                                                                      |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Symptom                                     | Cause                                                                                                                                                                         |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Build fails on `requirements.txt` not found | Built from the repo root — the context must be the service's own directory, as `docker build -f backend/Dockerfile backend` or `docker build -f frontend/Dockerfile frontend` |
-| Container fails to start                    | Not listening on `$PORT`/8080, or an import-time crash; read the revision logs                             |
-| 403 from Vertex AI                          | Runtime SA missing `roles/aiplatform.user`                                                                 |
-| 403 publishing alerts                       | Runtime SA missing `roles/pubsub.publisher`                                                                |
-| Health OK but analyze 502                   | `VisionAnalysisError` — model, region, or quota; check server logs, not the client response                |
-| Coordinate analyze 502, upload analyze fine | `GOOGLE_MAPS_API_KEY` missing from the revision, or the key is not authorised for the Maps Static API      |
-| CORS errors from the dashboard              | `ALLOWED_ORIGINS` missing the frontend origin                                                              |
+| Container fails to start                    | Not listening on `$PORT`/8080, or an import-time crash; read the revision logs                                                                                                |
+| 403 from Vertex AI                          | Runtime SA missing `roles/aiplatform.user`                                                                                                                                    |
+| 403 publishing alerts                       | Runtime SA missing `roles/pubsub.publisher`                                                                                                                                   |
+| Health OK but analyze 502                   | `VisionAnalysisError` — model, region, or quota; check server logs, not the client response                                                                                   |
+| Coordinate analyze 502, upload analyze fine | `GOOGLE_MAPS_API_KEY` missing from the revision, or the key is not authorised for the Maps Static API                                                                         |
+| CORS errors from the dashboard              | `ALLOWED_ORIGINS` missing the frontend origin                                                                                                                                 |
 
 ## Constraints
 

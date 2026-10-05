@@ -52,9 +52,27 @@ def backend_environment_names() -> set[str]:
 
 
 def injected_environment_names() -> set[str]:
-    match = re.search(r"--set-env-vars\s+\"(.*?)\"", DEPLOY_SCRIPT.read_text(encoding="utf-8"), re.DOTALL)
+    """Names the container receives, from both --set-env-vars and --set-secrets.
+
+    A secret-mounted value arrives as an environment variable too, so it counts
+    towards "the backend's configuration is supplied" even though it is not in
+    --set-env-vars. Keeping both in one set is what lets the secret-mounted Maps
+    key satisfy the completeness check without weakening it.
+    """
+    script = DEPLOY_SCRIPT.read_text(encoding="utf-8")
+    match = re.search(r"--set-env-vars\s+\"(.*?)\"", script, re.DOTALL)
     assert match, "deploy.sh must inject runtime configuration with --set-env-vars"
-    return set(re.findall(r"([A-Z][A-Z0-9_]+)=", match.group(1)))
+    names = set(re.findall(r"([A-Z][A-Z0-9_]+)=", match.group(1)))
+    return names | secret_mounted_environment_names()
+
+
+def secret_mounted_environment_names() -> set[str]:
+    script = DEPLOY_SCRIPT.read_text(encoding="utf-8")
+    return {
+        name
+        for block in re.findall(r"--set-secrets\s+\"(.*?)\"", script, re.DOTALL)
+        for name in re.findall(r"([A-Z][A-Z0-9_]+)=", block)
+    }
 
 
 @pytest.mark.parametrize("service", ["backend", "frontend"])
@@ -103,10 +121,28 @@ def test_deploy_injects_the_variables_whose_absence_broke_production(name):
     assert name in injected_environment_names()
 
 
-def test_deploy_aborts_when_the_maps_key_is_unset():
+def test_deploy_aborts_when_the_maps_secret_is_absent():
     script = DEPLOY_SCRIPT.read_text(encoding="utf-8")
-    assert re.search(r':\s*"\$\{GOOGLE_MAPS_API_KEY:\?', script), (
-        "deploy.sh must refuse to ship a revision that would 502 on coordinate analysis"
+    # The precondition moved from "the key is in .env" to "the secret exists",
+    # because the value no longer travels through the deploying shell at all.
+    assert re.search(r"gcloud secrets describe\s+\"\$MAPS_SECRET\"", script), (
+        "deploy.sh must verify the Maps secret exists before shipping a revision "
+        "that would 502 on coordinate analysis"
+    )
+    assert "exit 1" in script, "the missing-secret branch must abort the deploy"
+
+
+def test_maps_key_is_never_passed_as_a_plain_environment_variable():
+    script = DEPLOY_SCRIPT.read_text(encoding="utf-8")
+    env_block = re.search(r"--set-env-vars\s+\"(.*?)\"", script, re.DOTALL)
+    assert env_block, "deploy.sh must inject runtime configuration with --set-env-vars"
+    # --set-env-vars values are readable by anyone with run.services.get, so the
+    # key must arrive via --set-secrets instead.
+    assert "GOOGLE_MAPS_API_KEY" not in env_block.group(1), (
+        "GOOGLE_MAPS_API_KEY must not be a plain env var; mount it with --set-secrets"
+    )
+    assert "GOOGLE_MAPS_API_KEY" in secret_mounted_environment_names(), (
+        "GOOGLE_MAPS_API_KEY must be mounted from Secret Manager"
     )
 
 

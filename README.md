@@ -70,14 +70,14 @@ streamlit run frontend/app.py
 
 ## What is verified
 
-|                  |                                                                                                                                                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tests            | **667 passing**, every one offline with mocked cloud clients                                                                                                                                                |
-| Backend coverage | **98.2%**, no file below the 70% per-file floor                                                                                                                                                             |
-| Schema drift     | a standing cross-layer gate statically fails the build if the analyzer, the API and the dashboard disagree                                                                                                 |
-| Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                     |
-| Deploy           | one script builds, deploys and verifies **both** services, each with its own build context and its own health endpoint                                                                                      |
-| Runtime identity | a dedicated `hotspot-run` service account with six narrow roles — no `roles/editor`, no `roles/owner`, and zero key files                                                                                   |
+|                  |                                                                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tests            | **667 passing**, every one offline with mocked cloud clients                                                                                                                                                              |
+| Backend coverage | **98.2%**, no file below the 70% per-file floor                                                                                                                                                                           |
+| Schema drift     | a standing cross-layer gate statically fails the build if the analyzer, the API and the dashboard disagree                                                                                                                |
+| Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                                   |
+| Deploy           | one script builds, deploys and verifies **both** services, each with its own build context and its own health endpoint                                                                                                    |
+| Runtime identity | a dedicated `hotspot-run` service account with six narrow roles — no `roles/editor`, no `roles/owner`, and zero key files                                                                                                 |
 | Live             | deployed to Cloud Run in `asia-southeast1`; a coordinate analysis of Singapore's port terminal returns **HVI 8.7 → CRITICAL** with live NOAA telemetry at 31.0 °C, a contract-valid payload and a published Pub/Sub alert |
 
 ## Dependencies
@@ -162,15 +162,31 @@ Every value comes from the environment, never from a literal in source. [.env.ex
 | `GOOGLE_CLOUD_REGION`                | `asia-southeast1`        | genai, Cloud Run                          |
 | `GCS_BUCKET_NAME`                    | `${PROJECT}-data`        | seeder, storage                           |
 | `PUBSUB_TOPIC_ID`                    | `heat-resilience-alerts` | alert dispatcher                          |
-| `GOOGLE_MAPS_API_KEY`                | — (required)             | Maps Static API                           |
+| `BIGQUERY_LOCATION`                  | `US`                     | climate service — the one ratified region exception |
+| `GOOGLE_MAPS_API_KEY`                | — (required, **secret**) | Maps Static API                           |
 | `GOOGLE_MAPS_REQUEST_LIMIT`          | `100`                    | Maps cache-miss budget per rolling window |
 | `GOOGLE_MAPS_REQUEST_WINDOW_SECONDS` | `3600`                   | Maps cache-miss budget window in seconds  |
 | `MODEL_ID`                           | `gemini-2.5-flash`       | vision analyzer                           |
 | `ALLOWED_ORIGINS`                    | `http://localhost:8501`  | FastAPI CORS                              |
+| `API_BASE_URL`                       | `http://localhost:8080`  | Streamlit dashboard → backend             |
 | `PORT`                               | `8080`                   | uvicorn, Cloud Run                        |
 
 Authentication is Application Default Credentials. There are no service-account key files anywhere in this project.
-Restrict `GOOGLE_MAPS_API_KEY` to the Maps Static API and approved referrers/IP addresses; never deploy an unrestricted key.
+
+### How the Maps key is protected
+
+`GOOGLE_MAPS_API_KEY` is the only true secret in the configuration, and it is handled differently from everything else:
+
+| Context | Where it lives | Who can read it |
+| ------- | -------------- | --------------- |
+| Local development | `.env`, git-ignored | you only |
+| Git / GitHub | **nowhere** — `.env.example` carries the name with an empty value | nobody |
+| Cloud Run | **Secret Manager** (`hotspot-maps-api-key`), mounted at runtime | only `hotspot-run`, via `roles/secretmanager.secretAccessor` on that single secret |
+
+It is deliberately **not** passed with `--set-env-vars`, because an environment variable's value is plainly visible to anyone holding `run.services.get` on the project. Mounting it with `--set-secrets` keeps the value out of the service definition, out of `gcloud run services describe`, and out of the Cloud Console. `tests/test_deploy_script.py` fails the build if it ever reappears as a plain environment variable.
+
+Restrict the key to the Maps Static API and approved referrers/IP addresses; never deploy an unrestricted key. The backend never returns it to the browser, logs it, or includes it in an error — a request that cannot be served fails with a generic `imagery_unavailable`.
+
 The Maps request budget counts cache-miss attempts per process in a rolling window; cache hits do not consume it. This is a per-process defensive budget, not a service-wide spend cap: Cloud Run instances each have an independent allowance, so N instances can collectively consume N × the configured limit per rolling window. Aggregate quota enforcement remains an unresolved operational requirement.
 
 ## Container and deploy
@@ -205,6 +221,8 @@ The services run as `hotspot-run@PROJECT.iam.gserviceaccount.com` with exactly s
 `roles/aiplatform.user`, `roles/datastore.user`, `roles/pubsub.publisher`, `roles/pubsub.viewer`, `roles/bigquery.jobUser`, `roles/storage.objectViewer`
 
 `pubsub.viewer` is needed in addition to `publisher` because `/api/health` calls `get_topic`, which `publisher` alone does not permit. Without it the service reports `degraded` while publishing still works.
+
+It additionally holds `roles/secretmanager.secretAccessor` **scoped to the single `hotspot-maps-api-key` secret**, not granted at project level. That is what lets the revision read the Maps key at startup without any identity — including the deployer — needing broad secret access.
 
 ### Rollback
 
@@ -280,13 +298,13 @@ The two image builds are separate jobs with `fail-fast` disabled, so a passing b
 
 Five items are deliberately open. Each needs a human decision, an unimplemented feature, or infrastructure that has not been provisioned — none is a defect, and none is something the delivery loop can honestly close on its own.
 
-| Item | What is missing | Why it is still open |
-| ---- | --------------- | -------------------- |
-| `TASK-006` | the demo recording | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
-| `STORY-031` | Cloud Storage retention of analysed imagery | Uploaded aerial crops and generated heatmaps are not persisted to `GCS_BUCKET_NAME`, so a scan record cannot retrieve the exact image it was based on. This is unimplemented feature work, not a regression. |
-| `STORY-043` | keyless deploy from GitHub Actions | Requires a Workload Identity Federation pool and IAM bindings in Google Cloud. The project forbids service-account key files, so the usual JSON-key shortcut is not available. Deployment is currently run from a workstation by `deploy.sh`. |
-| `TASK-011` | correction of protected foundation specs | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents. |
-| `TASK-046` | a cache shared across instances | The Maps imagery cache is per-process. Cloud Run scales to zero and runs several instances, so a coordinate warmed on one instance is cold on another, and `/api/imagery` can return 502 after a successful analysis. A real fix needs Memorystore or an equivalent shared store; `TASK-047`'s per-process budget deliberately does **not** claim to solve it. |
+| Item        | What is missing                             | Why it is still open                                                                                                                                                                                                                                                                                                                                                       |
+| ----------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TASK-006`  | the demo recording                          | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
+| `STORY-031` | Cloud Storage retention of analysed imagery | Uploaded aerial crops and generated heatmaps are not persisted to `GCS_BUCKET_NAME`, so a scan record cannot retrieve the exact image it was based on. This is unimplemented feature work, not a regression.                                                                                                                                                               |
+| `STORY-043` | keyless deploy from GitHub Actions          | Requires a Workload Identity Federation pool and IAM bindings in Google Cloud. The project forbids service-account key files, so the usual JSON-key shortcut is not available. Deployment is currently run from a workstation by `deploy.sh`.                                                                                                                              |
+| `TASK-011`  | correction of protected foundation specs    | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
+| `TASK-046`  | a cache shared across instances             | The Maps imagery cache is per-process. Cloud Run scales to zero and runs several instances, so a coordinate warmed on one instance is cold on another, and `/api/imagery` can return 502 after a successful analysis. A real fix needs Memorystore or an equivalent shared store; `TASK-047`'s per-process budget deliberately does **not** claim to solve it.             |
 
 The practical consequence of `TASK-046` is a demo risk rather than a correctness problem: warm the imagery cache immediately before recording, as the runbook describes.
 
