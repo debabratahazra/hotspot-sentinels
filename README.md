@@ -48,10 +48,11 @@ The whole test suite and the container run with **no credentials**:
 
 ```bash
 uv sync --group frontend --group dev          # or: pip install -r requirements.txt
-pytest                                        # 502 tests, fully offline
+pytest                                        # 667 tests, fully offline
 
-# Build the backend image: 459 MB, runs as a non-root user, needs no credentials.
+# Build either image: both run as a non-root user and need no credentials.
 docker build -f backend/Dockerfile backend
+docker build -f frontend/Dockerfile frontend
 ```
 
 The climate service degrades to a clearly labelled fallback reading when BigQuery is unreachable, so the pipeline still demonstrates end to end offline.
@@ -71,11 +72,13 @@ streamlit run frontend/app.py
 
 |                  |                                                                                                                                                                                                            |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tests            | **502 passing**, every one offline with mocked cloud clients                                                                                                                                               |
-| Backend coverage | **98.3%**                                                                                                                                                                                                  |
+| Tests            | **667 passing**, every one offline with mocked cloud clients                                                                                                                                                |
+| Backend coverage | **98.2%**, no file below the 70% per-file floor                                                                                                                                                             |
 | Schema drift     | a standing cross-layer gate statically fails the build if the analyzer, the API and the dashboard disagree                                                                                                 |
-| Container        | multi-stage, **459 MB**, non-root uid 10001, honours the `PORT` Cloud Run injects, no credentials or build tooling in the image                                                                            |
-| Live             | deployed to Cloud Run in `asia-southeast1`; a real Gemini analysis of the industrial sample returned **HVI 8.6 → CRITICAL** with live NOAA telemetry at 31.0 °C and a successfully published Pub/Sub alert |
+| Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                     |
+| Deploy           | one script builds, deploys and verifies **both** services, each with its own build context and its own health endpoint                                                                                      |
+| Runtime identity | a dedicated `hotspot-run` service account with six narrow roles — no `roles/editor`, no `roles/owner`, and zero key files                                                                                   |
+| Live             | deployed to Cloud Run in `asia-southeast1`; a coordinate analysis of Singapore's port terminal returns **HVI 8.7 → CRITICAL** with live NOAA telemetry at 31.0 °C, a contract-valid payload and a published Pub/Sub alert |
 
 ## Dependencies
 
@@ -87,7 +90,7 @@ uv export --locked --group frontend --group dev --no-hashes --no-emit-project --
 uv export --locked --no-dev --no-hashes --no-emit-project --output-file backend/requirements.txt
 ```
 
-Streamlit lives in the `frontend` dependency group; backend packages stay in `[project.dependencies]`. The root export carries `frontend` and `dev`, so `pip install -r requirements.txt` still sets up backend, dashboard and tests in one step. The backend export excludes the frontend tree, which is what keeps the image at 459 MB rather than 899 MB. Packages genuinely shared with the runtime, such as `httpx` and `requests`, stay in the image.
+Streamlit lives in the `frontend` dependency group; backend packages stay in `[project.dependencies]`. The root export carries `frontend` and `dev`, so `pip install -r requirements.txt` still sets up backend, dashboard and tests in one step. The backend export excludes the frontend tree, which is what keeps the backend image at 432 MB rather than 899 MB; the frontend image is 159 MB. Packages genuinely shared with the runtime, such as `httpx` and `requests`, stay in the image.
 
 ## Architecture
 
@@ -172,18 +175,45 @@ The Maps request budget counts cache-miss attempts per process in a rolling wind
 
 ## Container and deploy
 
-The build context is **`backend/`**, not the repository root — `backend/Dockerfile` copies `requirements.txt`, `main.py`, `services/` and `tools/` relative to it, and `backend/.dockerignore` protects that context.
+Each service builds from **its own directory as the build context**, not the repository root. `backend/Dockerfile` copies `requirements.txt`, `main.py`, `services/` and `tools/` relative to `backend/`; `frontend/Dockerfile` copies `app.py` relative to `frontend/`. Each directory has its own `.dockerignore`.
 
 ```bash
-uv export --locked --no-dev --no-hashes --no-emit-project --output-file backend/requirements.txt
-docker build -f backend/Dockerfile -t hotspot-backend backend
+# Build and run either image locally.
+docker build --platform linux/amd64 -f backend/Dockerfile -t hotspot-backend backend
 docker run --rm -e PORT=9090 -e GOOGLE_CLOUD_PROJECT="$PROJECT" hotspot-backend
 
-cd backend && gcloud run deploy hotspot-backend --source . \
-  --region asia-southeast1 --platform managed --allow-unauthenticated
+docker build --platform linux/amd64 -f frontend/Dockerfile -t hotspot-frontend frontend
+docker run --rm -e PORT=9091 -e API_BASE_URL="$BACKEND_URL" hotspot-frontend
 ```
 
-The image is multi-stage and runs as the non-root user `sentinel` (uid 10001). It honours the `PORT` Cloud Run injects rather than hardcoding 8080, and carries no build tooling, tests or credentials.
+`--platform linux/amd64` matters: Cloud Run rejects an arm64 image, which an Apple-silicon host produces by default.
+
+Deploy both services with one command. It builds, pushes, deploys and then verifies each service **separately** — backend on `/api/health`, frontend on `/_stcore/health` — because a passing backend is not evidence that the dashboard works:
+
+```bash
+bash .github/skills/cloudrun-deploy/scripts/deploy.sh
+```
+
+The script tags images with the git SHA, injects runtime configuration as environment variables, pins the `hotspot-run` service account, and refuses to ship if `GOOGLE_MAPS_API_KEY` is unset. `tests/test_deploy_script.py` lints it offline so the build context, platform pin, service name and injected variable set cannot drift.
+
+Both images are multi-stage and run as the non-root user `sentinel` (uid 10001), carrying no build tooling, tests or credentials.
+
+### Runtime permissions
+
+The services run as `hotspot-run@PROJECT.iam.gserviceaccount.com` with exactly six roles and no key file:
+
+`roles/aiplatform.user`, `roles/datastore.user`, `roles/pubsub.publisher`, `roles/pubsub.viewer`, `roles/bigquery.jobUser`, `roles/storage.objectViewer`
+
+`pubsub.viewer` is needed in addition to `publisher` because `/api/health` calls `get_topic`, which `publisher` alone does not permit. Without it the service reports `degraded` while publishing still works.
+
+### Rollback
+
+Roll back by shifting traffic, never by deleting the service:
+
+```bash
+gcloud run services update-traffic hotspot-backend --region asia-southeast1 --to-revisions <previous>=100
+gcloud run services update-traffic hotspot-backend --region asia-southeast1 --to-latest
+```
 
 ## Layout
 
@@ -234,17 +264,31 @@ Every test runs offline. Gemini, Firestore, Pub/Sub, BigQuery and Cloud Storage 
 
 Every push and pull request runs five independent checks, all without cloud credentials:
 
-| Check | What it guards |
-| ----- | -------------- |
-| Offline suite and coverage floor | 667 tests plus a per-file 70% floor |
+| Check                                    | What it guards                                       |
+| ---------------------------------------- | ---------------------------------------------------- |
+| Offline suite and coverage floor         | 667 tests plus a per-file 70% floor                  |
 | Generated dependency exports are current | the three `requirements.txt` exports match `uv.lock` |
-| Build backend image | `backend/Dockerfile`, `linux/amd64` |
-| Build frontend image | `frontend/Dockerfile`, `linux/amd64` |
-| Secret scan | gitleaks over the working tree and full history |
+| Build backend image                      | `backend/Dockerfile`, `linux/amd64`                  |
+| Build frontend image                     | `frontend/Dockerfile`, `linux/amd64`                 |
+| Secret scan                              | gitleaks over the working tree and full history      |
 
 The two image builds are separate jobs with `fail-fast` disabled, so a passing backend image can never mask a failing frontend one.
 
 `main` is protected by a ruleset that requires all five checks before a pull request can merge, and forbids force pushes. Approvals are not required because a solo maintainer cannot approve their own pull request; the checks are the gate.
+
+## Known limitations
+
+Five items are deliberately open. Each needs a human decision, an unimplemented feature, or infrastructure that has not been provisioned — none is a defect, and none is something the delivery loop can honestly close on its own.
+
+| Item | What is missing | Why it is still open |
+| ---- | --------------- | -------------------- |
+| `TASK-006` | the demo recording | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
+| `STORY-031` | Cloud Storage retention of analysed imagery | Uploaded aerial crops and generated heatmaps are not persisted to `GCS_BUCKET_NAME`, so a scan record cannot retrieve the exact image it was based on. This is unimplemented feature work, not a regression. |
+| `STORY-043` | keyless deploy from GitHub Actions | Requires a Workload Identity Federation pool and IAM bindings in Google Cloud. The project forbids service-account key files, so the usual JSON-key shortcut is not available. Deployment is currently run from a workstation by `deploy.sh`. |
+| `TASK-011` | correction of protected foundation specs | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents. |
+| `TASK-046` | a cache shared across instances | The Maps imagery cache is per-process. Cloud Run scales to zero and runs several instances, so a coordinate warmed on one instance is cold on another, and `/api/imagery` can return 502 after a successful analysis. A real fix needs Memorystore or an equivalent shared store; `TASK-047`'s per-process budget deliberately does **not** claim to solve it. |
+
+The practical consequence of `TASK-046` is a demo risk rather than a correctness problem: warm the imagery cache immediately before recording, as the runbook describes.
 
 ## Delivery process
 

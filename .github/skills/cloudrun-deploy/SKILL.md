@@ -22,9 +22,9 @@ bash .github/skills/cloudrun-deploy/scripts/deploy.sh
 
 Extra `gcloud run deploy` flags pass straight through, for example `--no-allow-unauthenticated` or `--service-account hotspot-run@PROJECT.iam.gserviceaccount.com`.
 
-The script creates the Artifact Registry repo if missing, builds **with `backend/` as the build context** (`docker build -f backend/Dockerfile backend`), pushes a git-SHA tag, deploys with env vars injected at runtime, and health-checks the result — dumping revision logs if the check fails. The Dockerfile's `COPY requirements.txt .` and `COPY main.py …` are relative to `backend/`, and `backend/.dockerignore` protects exactly that context.
+The script creates the Artifact Registry repo if missing, then builds **each service from its own directory as the build context** — `docker build -f backend/Dockerfile backend` and `docker build -f frontend/Dockerfile frontend` — pushes a git-SHA tag, deploys with env vars injected at runtime, and health-checks the result, dumping revision logs if the check fails. Each Dockerfile's `COPY` paths are relative to its own directory, and each directory has its own `.dockerignore` protecting exactly that context. Builds pass `--platform linux/amd64`, because Cloud Run rejects the arm64 image an Apple-silicon host produces by default.
 
-The service is `hotspot-backend` (override with `SERVICE_NAME`). Deploying under any other name creates a second service rather than a new revision.
+The services are `hotspot-backend` (override with `SERVICE_NAME`) and `hotspot-frontend`. Deploying under any other name creates a second service rather than a new revision. Each is verified on its own endpoint — the backend on `/api/health`, the frontend on `/_stcore/health` — because a healthy backend is not evidence that the dashboard works. The frontend receives the backend's resolved URL as `API_BASE_URL`.
 
 Nothing secret is baked into the image. Project, region, bucket, topic, model, allowed origins, `BIGQUERY_LOCATION` and `GOOGLE_MAPS_API_KEY` all arrive as Cloud Run environment variables. The script aborts if `GOOGLE_MAPS_API_KEY` is unset, because coordinate analysis returns 502 without it.
 
@@ -73,7 +73,7 @@ gcloud run services update-traffic hotspot-backend --region asia-southeast1 --to
 
 | Symptom                                     | Cause                                                                                                      |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Build fails on `requirements.txt` not found | Built from the repo root — the context must be `backend/`, as `docker build -f backend/Dockerfile backend` |
+| Build fails on `requirements.txt` not found | Built from the repo root — the context must be the service's own directory, as `docker build -f backend/Dockerfile backend` or `docker build -f frontend/Dockerfile frontend` |
 | Container fails to start                    | Not listening on `$PORT`/8080, or an import-time crash; read the revision logs                             |
 | 403 from Vertex AI                          | Runtime SA missing `roles/aiplatform.user`                                                                 |
 | 403 publishing alerts                       | Runtime SA missing `roles/pubsub.publisher`                                                                |
