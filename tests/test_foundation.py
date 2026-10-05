@@ -242,13 +242,22 @@ def test_manifest_contains_backend_frontend_and_test_dependencies():
     } <= packages
 
 
+CANONICAL_EXPORTS = (
+    ("requirements.txt", ["--group", "frontend", "--group", "dev"]),
+    ("backend/requirements.txt", ["--no-dev"]),
+    ("frontend/requirements.txt", ["--only-group", "frontend"]),
+)
+
+
+def canonical_export_command(filename: str, groups: list[str]) -> str:
+    arguments = ["export", "--locked", *groups, "--no-hashes", "--no-emit-project"]
+    return "uv " + " ".join([*arguments, "--output-file", filename])
+
+
 def test_uv_export_reproduces_requirements_dependency_content():
-    for filename, groups in (
-        ("requirements.txt", ["--group", "frontend", "--group", "dev"]),
-        ("backend/requirements.txt", ["--no-dev"]),
-    ):
+    for filename, groups in CANONICAL_EXPORTS:
         arguments = ["export", "--locked", *groups, "--no-hashes", "--no-emit-project"]
-        regeneration = "uv " + " ".join([*arguments, "--output-file", filename])
+        regeneration = canonical_export_command(filename, groups)
         result = offline_uv([*arguments, "--no-header"])
         assert result.returncode == 0, result.stderr
         manifest = (ROOT / filename).read_text(encoding="utf-8")
@@ -262,9 +271,30 @@ def test_uv_export_reproduces_requirements_dependency_content():
                     if line.strip() and not line.lstrip().startswith("#")}
         if filename == "requirements.txt":
             assert {"fastapi", "streamlit", "requests", "pytest", "pytest-cov", "httpx"} <= packages
-        else:
+        elif filename == "backend/requirements.txt":
             assert {"fastapi", "requests"} <= packages
             assert not {"streamlit", "altair", "pyarrow"} & packages
+        else:
+            assert "streamlit" in packages
+            assert not {"fastapi", "pytest"} & packages
+
+
+def test_ci_regenerates_exports_with_the_canonical_commands():
+    """CI must invoke uv exactly as this suite pins it.
+
+    uv records the invocation in each file's header, so a differently-spelled but
+    semantically identical command produces a header-only diff and fails the job
+    with a misleading "stale export" error. That happened once: the frontend
+    export used '-o' and a different flag order, and the inconsistency went
+    unnoticed because only two of the three exports were pinned here.
+    """
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    for filename, groups in CANONICAL_EXPORTS:
+        expected = canonical_export_command(filename, groups)
+        assert expected in workflow, (
+            f"ci.yml must regenerate {filename} with the command this suite pins:\n"
+            f"  {expected}"
+        )
 
 
 def test_required_packages_importable():
