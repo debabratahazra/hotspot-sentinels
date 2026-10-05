@@ -20,7 +20,7 @@ Progress below is derived from [agile/backlog.json](../../agile/backlog.json), w
 | EPIC-10 (backlog only)                                    | Coordinate-Based Maps Imagery            | `maps_imagery_service.py`, `/api/imagery`      | 05, 07     | 7/8         |
 | EPIC-11 (backlog only)                                    | GitHub Actions CI/CD & Release           | `.github/workflows/`, branch protection        | 06, 08     | 5/6         |
 
-The five incomplete items are listed with their reasons under **Known limitations** in the [root README](../../README.md).
+The three incomplete items are listed with their reasons under **Known limitations** in the [root README](../../README.md).
 
 ## Dependency graph
 

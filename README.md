@@ -48,7 +48,7 @@ The whole test suite and the container run with **no credentials**:
 
 ```bash
 uv sync --group frontend --group dev          # or: pip install -r requirements.txt
-pytest                                        # 667 tests, fully offline
+pytest                                        # 685 tests, fully offline
 
 # Build either image: both run as a non-root user and need no credentials.
 docker build -f backend/Dockerfile backend
@@ -72,7 +72,7 @@ streamlit run frontend/app.py
 
 |                  |                                                                                                                                                                                                                                                                                                           |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tests            | **667 passing**, every one offline with mocked cloud clients                                                                                                                                                                                                                                              |
+| Tests            | **685 passing**, every one offline with mocked cloud clients                                                                                                                                                                                                                                              |
 | Backend coverage | **98.2%**, no file below the 70% per-file floor                                                                                                                                                                                                                                                           |
 | Schema drift     | a standing cross-layer gate statically fails the build if the analyzer, the API and the dashboard disagree                                                                                                                                                                                                |
 | Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                                                                                                                   |
@@ -284,7 +284,7 @@ Every push and pull request runs five independent checks, all without cloud cred
 
 | Check                                    | What it guards                                       |
 | ---------------------------------------- | ---------------------------------------------------- |
-| Offline suite and coverage floor         | 667 tests plus a per-file 70% floor                  |
+| Offline suite and coverage floor         | 685 tests plus a per-file 70% floor                  |
 | Generated dependency exports are current | the three `requirements.txt` exports match `uv.lock` |
 | Build backend image                      | `backend/Dockerfile`, `linux/amd64`                  |
 | Build frontend image                     | `frontend/Dockerfile`, `linux/amd64`                 |
@@ -296,17 +296,18 @@ The two image builds are separate jobs with `fail-fast` disabled, so a passing b
 
 ## Known limitations
 
-Five items are deliberately open. Each needs a human decision, an unimplemented feature, or infrastructure that has not been provisioned — none is a defect, and none is something the delivery loop can honestly close on its own.
+Three items are deliberately open. Each needs a human decision or unimplemented feature work — none is a defect, and none is something the delivery loop can honestly close on its own.
 
 | Item        | What is missing                             | Why it is still open                                                                                                                                                                                                                                                                                                                                                       |
 | ----------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TASK-006`  | the demo recording                          | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
-| `STORY-031` | Cloud Storage retention of analysed imagery | Uploaded aerial crops and generated heatmaps are not persisted to `GCS_BUCKET_NAME`, so a scan record cannot retrieve the exact image it was based on. This is unimplemented feature work, not a regression.                                                                                                                                                               |
-| `STORY-043` | keyless deploy from GitHub Actions          | Requires a Workload Identity Federation pool and IAM bindings in Google Cloud. The project forbids service-account key files, so the usual JSON-key shortcut is not available. Deployment is currently run from a workstation by `deploy.sh`.                                                                                                                              |
+| `STORY-031` | scan records linked to retained imagery     | `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record still carries no object URI, so you cannot retrieve the exact image a given scan used. The storage path now exists; the linkage does not.                                                                                                                                      |
 | `TASK-011`  | correction of protected foundation specs    | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
-| `TASK-046`  | a cache shared across instances             | The Maps imagery cache is per-process. Cloud Run scales to zero and runs several instances, so a coordinate warmed on one instance is cold on another, and `/api/imagery` can return 502 after a successful analysis. A real fix needs Memorystore or an equivalent shared store; `TASK-047`'s per-process budget deliberately does **not** claim to solve it.             |
 
-The practical consequence of `TASK-046` is a demo risk rather than a correctness problem: warm the imagery cache immediately before recording, as the runbook describes.
+### Recently closed
+
+- **`STORY-043`** — releases deploy from GitHub Actions via Workload Identity Federation. Pushing a `vMAJOR.MINOR.PATCH` tag builds, deploys and verifies both services with no service-account key anywhere, and the gate refuses to ship a commit that is not on `main` with all five checks green.
+- **`TASK-046`** — the Maps imagery cache is shared across instances through Cloud Storage. Verified live: a brand-new revision served a valid 640×640 PNG that a *different* instance had fetched, where previously that returned 502. `--max-instances=1` is no longer needed for the demo.
 
 ## Delivery process
 
