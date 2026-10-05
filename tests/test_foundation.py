@@ -92,7 +92,13 @@ def test_setup_script_emits_allowed_origins_and_all_contract_variables():
     source = (ROOT / "setup_gcp.sh").read_text(encoding="utf-8")
     match = re.search(r"cat\s*<<\s*EOF\s*>\s*\.env\s*\n(.*?)\nEOF", source, re.DOTALL)
     assert match is not None
-    values = dict(line.split("=", 1) for line in match.group(1).splitlines())
+    # The heredoc carries explanatory comments, so parse it the way a real .env
+    # reader would rather than assuming every line is KEY=VALUE.
+    values = dict(
+        line.split("=", 1)
+        for line in match.group(1).splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    )
     assert CONTRACT_VARIABLES <= values.keys()
     assert all(values[key] for key in CONTRACT_VARIABLES - SECRET_VARIABLES)
     for name in SECRET_VARIABLES:
@@ -102,6 +108,8 @@ def test_setup_script_emits_allowed_origins_and_all_contract_variables():
         )
     assert values["ALLOWED_ORIGINS"] == "http://localhost:8501"
     assert values["PORT"] == "8080"
+    # BIGQUERY_LOCATION's absence made every climate query fail in BUG-025.
+    assert values["BIGQUERY_LOCATION"] == "US"
 
 
 def test_execution_spec_uses_existing_setup_script():

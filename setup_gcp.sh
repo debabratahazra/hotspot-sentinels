@@ -93,6 +93,14 @@ GOOGLE_MAPS_API_KEY=
 MODEL_ID=gemini-2.5-flash
 ALLOWED_ORIGINS=http://localhost:8501
 PORT=8080
+# NOAA GSOD is a US multi-region dataset; this is the one ratified exception to
+# asia-southeast1. Its absence made every climate query fail in BUG-025.
+BIGQUERY_LOCATION=US
+# Where the Streamlit dashboard looks for the backend when run locally.
+API_BASE_URL=http://localhost:8080
+# Per-process cache-miss budget for Maps imagery. Cache hits do not consume it.
+GOOGLE_MAPS_REQUEST_LIMIT=100
+GOOGLE_MAPS_REQUEST_WINDOW_SECONDS=3600
 EOF
 
 echo "\n=========================================="

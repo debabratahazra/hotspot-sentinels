@@ -42,15 +42,27 @@ docker push "$IMAGE"
 log "4/7 Deploy backend"
 # BIGQUERY_LOCATION is the one ratified exception to asia-southeast1: the NOAA GSOD
 # public dataset is US multi-region and a cross-location job fails.
-# GOOGLE_MAPS_API_KEY is injected at runtime only and never baked into the image.
-: "${GOOGLE_MAPS_API_KEY:?GOOGLE_MAPS_API_KEY is not set in .env — coordinate analysis would 502 in production}"
+# GOOGLE_MAPS_API_KEY is mounted from Secret Manager, never --set-env-vars: an env var
+# value is plainly readable by anyone holding run.services.get on the project.
+MAPS_SECRET="${MAPS_SECRET_NAME:-hotspot-maps-api-key}"
+if ! gcloud secrets describe "$MAPS_SECRET" --project "$PROJECT" >/dev/null 2>&1; then
+  echo "Secret '${MAPS_SECRET}' does not exist — coordinate analysis would 502 in production." >&2
+  echo "Create it once, piping the value on stdin so it never enters argv or shell history:" >&2
+  echo "  printf '%s' \"\$GOOGLE_MAPS_API_KEY\" | gcloud secrets create ${MAPS_SECRET} \\" >&2
+  echo "    --data-file=- --replication-policy=user-managed --locations=${REGION} --project ${PROJECT}" >&2
+  echo "  gcloud secrets add-iam-policy-binding ${MAPS_SECRET} --project ${PROJECT} \\" >&2
+  echo "    --member=serviceAccount:hotspot-run@${PROJECT}.iam.gserviceaccount.com \\" >&2
+  echo "    --role=roles/secretmanager.secretAccessor" >&2
+  exit 1
+fi
 gcloud run deploy "$SERVICE" \
   --image "$IMAGE" \
   --project "$PROJECT" \
   --region "$REGION" \
   --port 8080 \
   --service-account "${RUNTIME_SERVICE_ACCOUNT:-hotspot-run@${PROJECT}.iam.gserviceaccount.com}" \
-  --set-env-vars "^@^GOOGLE_CLOUD_PROJECT=${PROJECT}@GOOGLE_CLOUD_REGION=${REGION}@GCS_BUCKET_NAME=${GCS_BUCKET_NAME}@PUBSUB_TOPIC_ID=${PUBSUB_TOPIC_ID}@MODEL_ID=${MODEL_ID}@ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8501}@BIGQUERY_LOCATION=${BIGQUERY_LOCATION:-US}@GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}@GOOGLE_MAPS_REQUEST_LIMIT=${GOOGLE_MAPS_REQUEST_LIMIT:-100}@GOOGLE_MAPS_REQUEST_WINDOW_SECONDS=${GOOGLE_MAPS_REQUEST_WINDOW_SECONDS:-3600}" \
+  --set-env-vars "^@^GOOGLE_CLOUD_PROJECT=${PROJECT}@GOOGLE_CLOUD_REGION=${REGION}@GCS_BUCKET_NAME=${GCS_BUCKET_NAME}@PUBSUB_TOPIC_ID=${PUBSUB_TOPIC_ID}@MODEL_ID=${MODEL_ID}@ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8501}@BIGQUERY_LOCATION=${BIGQUERY_LOCATION:-US}@GOOGLE_MAPS_REQUEST_LIMIT=${GOOGLE_MAPS_REQUEST_LIMIT:-100}@GOOGLE_MAPS_REQUEST_WINDOW_SECONDS=${GOOGLE_MAPS_REQUEST_WINDOW_SECONDS:-3600}" \
+  --set-secrets "GOOGLE_MAPS_API_KEY=${MAPS_SECRET}:latest" \
   "$@"
 
 URL="$(gcloud run services describe "$SERVICE" --region "$REGION" --project "$PROJECT" --format='value(status.url)')"
