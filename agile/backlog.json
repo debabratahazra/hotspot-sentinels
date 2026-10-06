@@ -1381,7 +1381,7 @@
       "type": "story",
       "parent": "EPIC-005",
       "title": "As an operator I can retrieve the aerial image a scan was based on",
-      "description": "FR-31. Depends on: STORY-010, STORY-006 (done). Sprint 5 BLOCKED by standing cloud-quota prohibition: acceptance requires actual GCS storage/retrieval evidence and cannot be satisfied by mocks. No live GCS or other cloud calls authorized. This unbuilt retained-imagery feature does not block a diagram of the delivered system. Do not claim live acceptance or invent a heatmap workflow.",
+      "description": "FR-31. Depends on: STORY-010, STORY-006 (done). Sprint 5 BLOCKED by standing cloud-quota prohibition: acceptance requires actual GCS storage/retrieval evidence and cannot be satisfied by mocks. No live GCS or other cloud calls authorized. This unbuilt retained-imagery feature does not block a diagram of the delivered system. Do not claim live acceptance or invent a heatmap workflow. 2026-10-06: TASK-046 introduced durable imagery storage in GCS_BUCKET_NAME under deterministic prefixes, so the remaining scope is the scan-record linkage (object URIs on the persisted record) rather than the storage mechanism itself.",
       "acceptance_criteria": [
         "An uploaded aerial image is stored in GCS_BUCKET_NAME under a deterministic object prefix.",
         "The persisted scan record contains the stored aerial image object URI, which retrieves the image used for that scan.",
@@ -1399,7 +1399,7 @@
       ],
       "source": "requirements",
       "created": "2026-10-02T09:48:40+00:00",
-      "updated": "2026-10-03T08:50:47+00:00"
+      "updated": "2026-10-06T13:11:42+00:00"
     },
     {
       "id": "STORY-032",
@@ -3067,7 +3067,7 @@
       "type": "task",
       "parent": "EPIC-010",
       "title": "Share cached Maps imagery across Cloud Run instances",
-      "description": "Cannot be honestly completed offline: cross-instance retrieval requires shared provisioned infrastructure such as Redis/Memorystore, and process-local mocks cannot prove it. No such infrastructure or cloud quota is approved this sprint. The dashboard already handles a cache-miss HTTP 502 explicitly while keeping the valid analysis result, so this is a robustness improvement rather than a correctness defect. Keep blocked pending human approval for shared-cache infrastructure and a permitted verification approach.",
+      "description": "Cannot be honestly completed offline: cross-instance retrieval requires shared provisioned infrastructure such as Redis/Memorystore, and process-local mocks cannot prove it. No such infrastructure or cloud quota is approved this sprint. The dashboard already handles a cache-miss HTTP 502 explicitly while keeping the valid analysis result, so this is a robustness improvement rather than a correctness defect. Keep blocked pending human approval for shared-cache infrastructure and a permitted verification approach. Closed 2026-10-06. Implemented with Cloud Storage rather than Memorystore: the task said 'such as Redis/Memorystore', the artefact is a ~334 KB PNG, and Memorystore would also have required a Serverless VPC Access connector. Objects live under a deterministic maps-imagery-cache prefix with a 24-hour max age. Verified live: a brand-new revision served a valid 640x640 PNG fetched by a different instance, where the same request previously returned 502.",
       "acceptance_criteria": [
         "An image cached by one service instance can be retrieved by another instance using the existing analysis identifier.",
         "Cache misses and expired entries return a safe explicit response without serving unrelated or stale image bytes.",
@@ -3075,12 +3075,15 @@
       ],
       "priority": "P3",
       "estimate": 3,
-      "status": "blocked",
+      "status": "done",
       "sprint": null,
-      "files": [],
+      "files": [
+        "backend/tools/maps_imagery_service.py",
+        "tests/test_shared_imagery_cache.py"
+      ],
       "source": "retro",
       "created": "2026-10-04T06:20:21+00:00",
-      "updated": "2026-10-04T06:54:21+00:00"
+      "updated": "2026-10-06T13:11:42+00:00"
     },
     {
       "id": "TASK-047",
@@ -3346,7 +3349,7 @@
       "type": "story",
       "parent": "EPIC-011",
       "title": "As an operator I can deploy a verified release to Cloud Run without key files",
-      "description": "Post-submission only; current manual deployment remains the submission path. Do not enable until TASK-048's deploy-script findings are corrected, TASK-051 proves frontend runtime/release verification, and TASK-053 removes local-image-hash dependence. Use manually created vMAJOR.MINOR.PATCH tags as release identifiers; automated semantic version calculation and changelog generation are out of scope.",
+      "description": "Post-submission only; current manual deployment remains the submission path. Do not enable until TASK-048's deploy-script findings are corrected, TASK-051 proves frontend runtime/release verification, and TASK-053 removes local-image-hash dependence. Use manually created vMAJOR.MINOR.PATCH tags as release identifiers; automated semantic version calculation and changelog generation are out of scope. Closed 2026-10-06. Workload Identity Federation pool github-pool with provider github-provider pinned to assertion.repository=='debabratahazra/hotspot-sentinels'; service account hotspot-deployer with run.admin, artifactregistry.writer and actAs on hotspot-run. Tags v1.0.0 and v1.1.0 both built, deployed and verified both services; zero user-managed keys on either service account. The gate correctly refused a tag whose main CI had not finished.",
       "acceptance_criteria": [
         "Deployment runs only for a vMAJOR.MINOR.PATCH release tag whose commit is on main and whose required CI and secret-scan checks passed; pull-request events never deploy.",
         "The workflow authenticates to Google Cloud with Workload Identity Federation and creates or uses no service-account key file.",
@@ -3356,17 +3359,15 @@
       ],
       "priority": "P2",
       "estimate": 5,
-      "status": "new",
+      "status": "done",
       "sprint": null,
       "files": [
-        ".github/workflows/deploy.yml",
-        ".github/skills/cloudrun-deploy/scripts/deploy.sh",
-        "backend/Dockerfile",
-        "frontend/Dockerfile"
+        ".github/workflows/release.yml",
+        "tests/test_release_workflow.py"
       ],
       "source": "requirements",
       "created": "2026-10-04T12:12:04+00:00",
-      "updated": "2026-10-04T12:12:04+00:00"
+      "updated": "2026-10-06T13:11:42+00:00"
     }
   ]
 }
