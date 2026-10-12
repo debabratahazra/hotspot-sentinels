@@ -1,7 +1,7 @@
 {
   "version": 1,
   "product": "HotSpot Sentinels",
-  "current_sprint": 8,
+  "current_sprint": 9,
   "sprints": [
     {
       "number": 1,
@@ -3368,6 +3368,190 @@
       "source": "requirements",
       "created": "2026-10-04T12:12:04+00:00",
       "updated": "2026-10-06T13:11:42+00:00"
+    },
+    {
+      "id": "EPIC-012",
+      "type": "epic",
+      "parent": null,
+      "title": "Public Real-Time Heat Alert Wall",
+      "description": "A citizen-facing page on Firebase Hosting that subscribes to Firestore in real time and shows CRITICAL zones the moment they are detected. Deliberately a separate artifact from the Streamlit operator dashboard so the working demo path is never put at risk. Publishes to a curated public_alerts collection rather than exposing hotspot_scans, so only chosen fields are world-readable.",
+      "acceptance_criteria": [],
+      "priority": "P1",
+      "estimate": null,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "EPIC-013",
+      "type": "epic",
+      "parent": null,
+      "title": "Dashboard Experience Upgrade",
+      "description": "Make the operator dashboard more informative and more striking on camera without changing the API contract: clearer HVI presentation, better surface and blueprint layout, and visible state transitions. Presentation layer only.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": null,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "EPIC-014",
+      "type": "epic",
+      "parent": null,
+      "title": "City-Wide Heat Map",
+      "description": "Plot every persisted scan on one interactive map coloured by risk band, so a viewer sees the city-scale picture instead of one zone at a time.",
+      "acceptance_criteria": [],
+      "priority": "P2",
+      "estimate": null,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "EPIC-015",
+      "type": "epic",
+      "parent": null,
+      "title": "Operator Identity with Firebase Authentication",
+      "description": "Sign-in for the operator dashboard using Firebase Authentication, attributing each scan to the operator who ran it. Lowest priority of the sprint: it adds a login step to the demo for limited evaluation value, and will be dropped before anything above it slips.",
+      "acceptance_criteria": [],
+      "priority": "P3",
+      "estimate": null,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "STORY-044",
+      "type": "story",
+      "parent": "EPIC-012",
+      "title": "As a citizen I see critical heat zones appear live without refreshing",
+      "description": "",
+      "acceptance_criteria": [
+        "A page served by Firebase Hosting lists current CRITICAL zones newest first.",
+        "A new CRITICAL analysis appears on an already-open page within seconds and without a reload.",
+        "The page shows zone name, HVI score, risk band, measured ambient temperature and detection time.",
+        "With no alerts present the page shows an explicit empty state, never a blank screen or an error."
+      ],
+      "priority": "P1",
+      "estimate": 5,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "firebase.json"
+      ],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "STORY-045",
+      "type": "story",
+      "parent": "EPIC-012",
+      "title": "As a maintainer I publish only curated fields to the public collection",
+      "description": "",
+      "acceptance_criteria": [
+        "A CRITICAL analysis writes a record to public_alerts containing only the fields the wall needs.",
+        "hotspot_scans itself is never world-readable.",
+        "Firestore security rules allow public read of public_alerts and deny all client writes.",
+        "A publish failure is logged and never fails the analysis response."
+      ],
+      "priority": "P1",
+      "estimate": 3,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [
+        "backend/services/database.py",
+        "backend/main.py",
+        "firestore.rules"
+      ],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "STORY-046",
+      "type": "story",
+      "parent": "EPIC-013",
+      "title": "As an operator I read the result faster from a clearer layout",
+      "description": "",
+      "acceptance_criteria": [
+        "The HVI score, risk band and alert state are legible at a glance at presentation scale.",
+        "The surface breakdown and cooling blueprint are visually distinct from each other.",
+        "No change to the Heat Analysis Result contract or to any API route.",
+        "Existing frontend tests still pass without weakening an assertion."
+      ],
+      "priority": "P2",
+      "estimate": 3,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "STORY-047",
+      "type": "story",
+      "parent": "EPIC-014",
+      "title": "As a planner I see every analysed zone on one map coloured by risk",
+      "description": "",
+      "acceptance_criteria": [
+        "Persisted scans with coordinates render as markers coloured by risk band.",
+        "Selecting a marker shows that zone's HVI, risk band and measured temperature.",
+        "A scan without coordinates is skipped without breaking the map.",
+        "The map degrades to an explicit message when no scans are available."
+      ],
+      "priority": "P2",
+      "estimate": 5,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [
+        "frontend/app.py"
+      ],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
+    },
+    {
+      "id": "STORY-048",
+      "type": "story",
+      "parent": "EPIC-015",
+      "title": "As an operator I sign in before running an analysis",
+      "description": "",
+      "acceptance_criteria": [
+        "An unauthenticated visitor cannot trigger an analysis.",
+        "A signed-in operator's identifier is recorded on the scans they create.",
+        "Sign-in failure produces a clear message and never exposes a token or credential.",
+        "The deployed demo path still works end to end with authentication enabled."
+      ],
+      "priority": "P3",
+      "estimate": 5,
+      "status": "groomed",
+      "sprint": 9,
+      "files": [
+        "frontend/app.py",
+        "backend/main.py"
+      ],
+      "source": "hackathon-enhancement",
+      "created": "2026-10-12T12:07:42+00:00",
+      "updated": "2026-10-12T12:07:42+00:00"
     }
   ]
 }

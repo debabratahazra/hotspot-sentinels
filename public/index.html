@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HotSpot Sentinels — Live Heat Alerts</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #141b24;
+    --edge: #223040;
+    --text: #e6edf3;
+    --muted: #8b9aad;
+    --critical: #ff4d4f;
+    --glow: rgba(255, 77, 79, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 28px 32px 20px; border-bottom: 1px solid var(--edge);
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -0.3px; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .live {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--muted);
+  }
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--muted);
+    box-shadow: 0 0 0 0 var(--glow);
+  }
+  .dot.on { background: var(--critical); animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 var(--glow); }
+    70%  { box-shadow: 0 0 0 12px rgba(255, 77, 79, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
+  }
+  main { padding: 24px 32px 48px; }
+  #grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--edge); border-left: 4px solid var(--critical);
+    border-radius: 12px; padding: 18px 20px; animation: rise 0.45s ease-out;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .zone { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .hvi { font-size: 40px; font-weight: 700; color: var(--critical); line-height: 1; }
+  .hvi span { font-size: 15px; color: var(--muted); font-weight: 400; }
+  .badge {
+    display: inline-block; margin: 12px 0 14px; padding: 4px 12px; border-radius: 999px;
+    background: rgba(255, 77, 79, 0.14); color: var(--critical);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.8px;
+  }
+  .meta { color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .state { text-align: center; padding: 72px 20px; color: var(--muted); }
+  .state h2 { color: var(--text); font-weight: 500; margin: 0 0 8px; font-size: 19px; }
+  footer { padding: 0 32px 32px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Live Heat Alerts</h1>
+    <span class="sub">Zones scored CRITICAL by HotSpot Sentinels</span>
+    <span class="live"><span class="dot" id="dot"></span><span id="status">connecting…</span></span>
+  </header>
+
+  <main>
+    <div class="state" id="state">
+      <h2>Connecting to the live feed…</h2>
+      <p>Critical zones appear here the moment they are detected.</p>
+    </div>
+    <div id="grid"></div>
+  </main>
+
+  <footer>
+    Published automatically when an analysis scores HVI 8.0 or above. Operator scan data stays private.
+  </footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const grid = document.getElementById("grid");
+const state = document.getElementById("state");
+const status = document.getElementById("status");
+const dot = document.getElementById("dot");
+
+function showState(heading, detail) {
+  grid.innerHTML = "";
+  state.style.display = "block";
+  state.innerHTML = `<h2>${heading}</h2><p>${detail}</p>`;
+}
+
+function when(value) {
+  if (!value?.toDate) return "just now";
+  const seconds = Math.floor((Date.now() - value.toDate().getTime()) / 1000);
+  if (seconds < 60) return "moments ago";
+  if (seconds < 3600) return `${Math.floor(seconds / 60)} min ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)} h ago`;
+  return value.toDate().toLocaleDateString();
+}
+
+function card(alert) {
+  const el = document.createElement("article");
+  el.className = "card";
+  const coords = alert.coordinates
+    ? `${Number(alert.coordinates.lat).toFixed(4)}, ${Number(alert.coordinates.lng).toFixed(4)}`
+    : "—";
+  const temp = alert.ambient_temp_c != null ? `${Number(alert.ambient_temp_c).toFixed(1)} °C` : "—";
+  el.innerHTML = `
+    <div class="zone">${alert.zone_name ?? "Unnamed zone"}</div>
+    <div class="hvi">${Number(alert.hvi_score ?? 0).toFixed(1)}<span> / 10 HVI</span></div>
+    <div class="badge">${alert.risk_level ?? "CRITICAL"}</div>
+    <div class="meta">
+      Measured ambient &nbsp;<strong>${temp}</strong><br />
+      Coordinates &nbsp;${coords}<br />
+      Detected &nbsp;${when(alert.detected_at)}
+    </div>`;
+  return el;
+}
+
+try {
+  const db = getFirestore(initializeApp(firebaseConfig));
+  const q = query(collection(db, "public_alerts"), orderBy("detected_at", "desc"), limit(24));
+
+  onSnapshot(q, (snap) => {
+    dot.classList.add("on");
+    status.textContent = `live · ${snap.size} alert${snap.size === 1 ? "" : "s"}`;
+    if (snap.empty) {
+      showState("No critical zones right now", "That is good news. New alerts appear here instantly.");
+      return;
+    }
+    state.style.display = "none";
+    grid.innerHTML = "";
+    snap.forEach((doc) => grid.appendChild(card(doc.data())));
+  }, (error) => {
+    // Never surface raw cloud errors to a public page.
+    console.error("feed error:", error.code);
+    dot.classList.remove("on");
+    status.textContent = "disconnected";
+    showState("The live feed is unavailable", "Please try again shortly.");
+  });
+} catch (error) {
+  console.error("init error:", error);
+  showState("The live feed is unavailable", "Please try again shortly.");
+}
+</script>
+</body>
+</html>

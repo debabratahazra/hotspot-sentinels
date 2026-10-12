@@ -320,7 +320,8 @@ def test_synchronous_climate_database_and_dispatch_use_to_thread(api_environment
 
     monkeypatch.setattr(main.asyncio, "to_thread", tracked_to_thread)
     assert upload(api_environment, sample_png_bytes).status_code == 200
-    assert calls == [main.get_latest_temperature, main.trigger_alert_if_critical, main.save_hotspot_report]
+    assert calls == [main.get_latest_temperature, main.trigger_alert_if_critical, main.save_hotspot_report,
+                     main.publish_public_alert]
     api_environment[3].assert_called_once()
 
 

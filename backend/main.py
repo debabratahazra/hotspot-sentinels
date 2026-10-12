@@ -14,7 +14,7 @@ from services import alert_dispatcher, database, vision_analyzer
 from tools import climate_service
 from tools.climate_service import get_latest_temperature
 from services.vision_analyzer import HotspotAnalysisResult, IdentitySource, VisionAnalysisError, analyze_urban_hotspot
-from services.database import DatabaseError, save_hotspot_report, get_recent_reports
+from services.database import DatabaseError, save_hotspot_report, get_recent_reports, publish_public_alert
 from services.alert_dispatcher import dispatch_heat_alert
 from tools.maps_imagery_service import (
     MapsImageryError,
@@ -360,5 +360,9 @@ async def analyze_hotspot(
     if not isinstance(doc_id, str) or not doc_id.strip():
         raise DatabaseError("Storage did not return a document identifier.")
     analysis_report["doc_id"] = doc_id
-    
+
+    # 5. Mirror CRITICAL zones to the public wall. Best-effort: a failure here must
+    # never turn a successful analysis into an error for the caller.
+    await asyncio.to_thread(publish_public_alert, analysis_report)
+
     return analysis_report

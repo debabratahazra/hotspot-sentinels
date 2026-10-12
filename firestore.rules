@@ -1,0 +1,21 @@
+rules_version = '2';
+
+// The operator data (hotspot_scans) stays private; only the curated public_alerts
+// mirror is world-readable, and nothing is writable from a browser. Every write
+// happens server-side through the backend's service account, which bypasses these
+// rules, so denying all client writes costs the application nothing.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /public_alerts/{alertId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Default deny. hotspot_scans and anything added later are unreachable from a
+    // client unless a rule above is written deliberately.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

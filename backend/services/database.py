@@ -10,6 +10,16 @@ from requests.exceptions import RequestException
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 COLLECTION_NAME = "hotspot_scans"
+PUBLIC_ALERTS_COLLECTION = "public_alerts"
+# Only these reach the world-readable collection. hotspot_scans stays private.
+PUBLIC_ALERT_FIELDS = (
+    "zone_id",
+    "zone_name",
+    "hvi_score",
+    "risk_level",
+    "ambient_temp_c",
+    "coordinates",
+)
 _CLOUD_ERRORS = (GoogleAPIError, GoogleAuthError, RequestException)
 _client: firestore.Client | None = None
 logger = logging.getLogger(__name__)
@@ -60,6 +70,39 @@ def save_hotspot_report(report: dict) -> str:
     except _CLOUD_ERRORS as error:
         logger.log(logging.ERROR, "Firestore write failed (%s)", type(error).__name__)
         raise DatabaseError("Unable to save the scan report.") from None
+
+
+def publish_public_alert(report: dict) -> str:
+    """Mirror a CRITICAL report into the world-readable alert collection.
+
+    Best-effort by design: the public wall is a secondary surface, so a failure
+    here is logged and swallowed rather than failing a successful analysis.
+    Returns the new document id, or "" when nothing was published.
+    """
+    if str(report.get("risk_level", "")).upper() != "CRITICAL":
+        return ""
+
+    # Written out literally rather than looped over PUBLIC_ALERT_FIELDS so the
+    # cross-layer contract check can statically verify every field against the
+    # analyzer's schema. test_public_alerts keeps the two in step.
+    candidates = {
+        "zone_id": report.get("zone_id"),
+        "zone_name": report.get("zone_name"),
+        "hvi_score": report.get("hvi_score"),
+        "risk_level": report.get("risk_level"),
+        "ambient_temp_c": report.get("ambient_temp_c"),
+        "coordinates": report.get("coordinates"),
+    }
+    alert = {name: value for name, value in candidates.items() if value is not None}
+    alert["detected_at"] = firestore.SERVER_TIMESTAMP
+    try:
+        doc_ref = _get_client().collection(PUBLIC_ALERTS_COLLECTION).document()
+        doc_ref.set(alert)
+        logger.info("Published public alert for a CRITICAL zone")
+        return doc_ref.id
+    except (*_CLOUD_ERRORS, DatabaseError) as error:
+        logger.warning("Public alert publish failed (%s)", type(error).__name__)
+        return ""
 
 
 def get_recent_reports(limit: int = 10) -> list[dict]:

@@ -75,6 +75,17 @@ def fake_firestore(monkeypatch):
     document.id = "generated-scan-id"
     query = collection.order_by.return_value.limit.return_value
     query.stream.return_value = []
+
+    # Scans and public alerts go to different collections. Modelling both keeps a
+    # public-alert write from being mistaken for the persisted scan, which is what
+    # `collection.return_value...set.call_args` reads throughout the suite.
+    public_alerts = Mock()
+    public_alerts.document.return_value.id = "generated-alert-id"
+    client.collection.side_effect = (
+        lambda name=None, *args, **kwargs:
+        public_alerts if name == database.PUBLIC_ALERTS_COLLECTION else collection
+    )
+
     monkeypatch.setattr(database, "_get_client", lambda: client)
     return client
 
