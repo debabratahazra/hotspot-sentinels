@@ -273,8 +273,10 @@ def test_demo_opens_on_the_critical_hotspot_with_a_low_risk_contrast_available(d
     # backend on 2026-10-04; a low-risk opener is what this guards against.
     app = dashboard[0].run()
     assert not app.exception
-    assert app.text_input[0].value == "1.2897"
-    assert app.text_input[1].value == "103.754"
+    # Selected by label: a search box now precedes the coordinate inputs.
+    coordinates = {box.label: box.value for box in app.text_input}
+    assert coordinates["Latitude"] == "1.2897"
+    assert coordinates["Longitude"] == "103.754"
 
     shortcut = next(control for control in app.selectbox if control.label == "Location shortcut")
     assert shortcut.options[0] == "Singapore Port Terminal"
@@ -282,8 +284,9 @@ def test_demo_opens_on_the_critical_hotspot_with_a_low_risk_contrast_available(d
 
     contrast = shortcut.select("Singapore Botanic Gardens").run()
     assert not contrast.exception
-    assert contrast.text_input[0].value == "1.3521"
-    assert contrast.text_input[1].value == "103.8198"
+    contrast_coordinates = {box.label: box.value for box in contrast.text_input}
+    assert contrast_coordinates["Latitude"] == "1.3521"
+    assert contrast_coordinates["Longitude"] == "103.8198"
 
 
 def test_enabling_what_if_temperature_exposes_bounded_input_with_default_and_step(dashboard):
