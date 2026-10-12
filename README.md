@@ -150,13 +150,23 @@ Anything you omit is inferred by Gemini, and `identity_source` tells you per fie
 
 `GET /api/scans?limit=N` returns recent scans newest-first, `limit` clamped to 1..100. `GET /api/health` reports per-dependency readiness; `GET /api/live` is a cheap liveness check with no cloud calls — use that one for container restart probes.
 
-`GET /api/geocode?q=Karol+Bagh,+Delhi` turns a place name into coordinates:
+`GET /api/places/suggest?q=Karol+Ba` powers the dashboard's typeahead:
+
+```json
+{ "suggestions": [ { "description": "Karol Bagh, New Delhi, Delhi, India", "place_id": "ChIJ0y5AX5wCDTkRRtmdTCl0IZQ" } ] }
+```
+
+Queries shorter than three characters return an empty list without calling the provider, because autocomplete is billed per keystroke. Repeats are served from a one-hour cache.
+
+`GET /api/geocode` turns a place into coordinates, taking **either** `q=Karol+Bagh,+Delhi` **or** `place_id=...` — supplying both, or neither, is a `422`:
 
 ```json
 { "lat": 28.655046, "lng": 77.188820, "formatted_address": "Karol Bagh, New Delhi, Delhi, India" }
 ```
 
-It answers `404` when nothing matches and `502` when the geocoding provider is unreachable. The lookup runs **server-side on purpose**: `GOOGLE_MAPS_API_KEY` stays in the backend and never reaches the browser. Google echoes that key back inside its `error_message` field on `REQUEST_DENIED`, so the service never logs or forwards it. Successful lookups are cached in-process for 24 hours.
+It answers `404` when nothing matches and `502` when the provider is unreachable. Prefer `place_id` when resolving a suggestion: Places routinely returns several distinct places sharing a name, and only the id picks the right one.
+
+Both lookups run **server-side on purpose**: `GOOGLE_MAPS_API_KEY` stays in the backend and never reaches the browser. It is sent to Places as an `X-Goog-Api-Key` header rather than a query parameter, since a key in a URL is copied into proxy and server access logs. Google echoes the key back inside `error_message` on `REQUEST_DENIED`, so provider error bodies are never logged or forwarded — only the status code is.
 
 All temperatures are °C and all areas are m². Conversion happens at the source, never at the client.
 
