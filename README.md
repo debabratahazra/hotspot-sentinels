@@ -150,6 +150,14 @@ Anything you omit is inferred by Gemini, and `identity_source` tells you per fie
 
 `GET /api/scans?limit=N` returns recent scans newest-first, `limit` clamped to 1..100. `GET /api/health` reports per-dependency readiness; `GET /api/live` is a cheap liveness check with no cloud calls — use that one for container restart probes.
 
+`GET /api/geocode?q=Karol+Bagh,+Delhi` turns a place name into coordinates:
+
+```json
+{ "lat": 28.655046, "lng": 77.188820, "formatted_address": "Karol Bagh, New Delhi, Delhi, India" }
+```
+
+It answers `404` when nothing matches and `502` when the geocoding provider is unreachable. The lookup runs **server-side on purpose**: `GOOGLE_MAPS_API_KEY` stays in the backend and never reaches the browser. Google echoes that key back inside its `error_message` field on `REQUEST_DENIED`, so the service never logs or forwards it. Successful lookups are cached in-process for 24 hours.
+
 All temperatures are °C and all areas are m². Conversion happens at the source, never at the client.
 
 ## Configuration

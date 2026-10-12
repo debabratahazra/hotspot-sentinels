@@ -3558,11 +3558,11 @@
       "type": "epic",
       "parent": null,
       "title": "Location Discovery",
-      "description": "Let an operator reach any location in the world, not just the five presets. Three input methods that all resolve to the same latitude/longitude pair the analysis already takes: the existing preset shortcuts, a search by city or area name, and a click on a world map. Geocoding runs on the backend so GOOGLE_MAPS_API_KEY is never exposed to the browser.",
+      "description": "Let an operator reach any location in the world, not just the five presets. Three input methods that all resolve to the same latitude/longitude pair the analysis already takes: the existing preset shortcuts, a search by city or area name, and a click on a world map. Geocoding runs on the backend so GOOGLE_MAPS_API_KEY is never exposed to the browser. Closed 2026-10-12. Three ways to choose a location: preset shortcut, place-name search, and a click on a world map; all funnel through set_coordinates() so they cannot disagree.",
       "acceptance_criteria": [],
       "priority": "P1",
       "estimate": null,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [],
       "source": "hackathon-enhancement",
@@ -3574,7 +3574,7 @@
       "type": "story",
       "parent": "EPIC-016",
       "title": "As an operator I can search any city or area by name",
-      "description": "",
+      "description": " Closed 2026-10-12. GET /api/geocode backed by backend/tools/geocoding_service.py. Server-side by design so GOOGLE_MAPS_API_KEY never reaches the browser; Google's error_message is never logged because it echoes the key on REQUEST_DENIED. 24h in-process cache. Verified live: Karol Bagh, Delhi resolved to 28.655046, 77.188820; a nonsense query returned 404; the key was absent from the response.",
       "acceptance_criteria": [
         "Searching a place name sets the latitude and longitude used by the analysis.",
         "The resolved place is shown back to the operator so a wrong match is obvious before analysing.",
@@ -3584,7 +3584,7 @@
       ],
       "priority": "P1",
       "estimate": 5,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "backend/tools/geocoding_service.py",
@@ -3600,7 +3600,7 @@
       "type": "story",
       "parent": "EPIC-016",
       "title": "As an operator I can click anywhere on a world map to choose a location",
-      "description": "",
+      "description": " Closed 2026-10-12. folium world map; clicking sets the coordinate. Shipped broken once: the picker renders after the sidebar, so writing the widget key raised StreamlitWidgetAlreadyInstantiatedError on every click. Fixed by deferring to pending_coordinate and applying it at module level before any widget exists. AppTest cannot drive streamlit-folium, so this was only caught by clicking the deployed page; map changes must be verified live. Default folium pin also replaced with a vector CircleMarker because its icon CDN is browser-blocked.",
       "acceptance_criteria": [
         "Clicking a point on the map sets the latitude and longitude used by the analysis.",
         "The chosen point is visibly marked and its coordinates are displayed.",
@@ -3609,7 +3609,7 @@
       ],
       "priority": "P2",
       "estimate": 5,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "frontend/app.py"
