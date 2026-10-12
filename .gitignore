@@ -32,3 +32,9 @@ data_samples/
 
 # Local tooling symlink into .venv (dangles on a fresh clone)
 .agents/
+
+# PowerPoint/Word lock files
+~$*
+
+# Editor config; keep local workspace settings out of a public repo
+.vscode/
