@@ -13,7 +13,13 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from services import alert_dispatcher, database, vision_analyzer
 from tools import climate_service
 from tools.climate_service import get_latest_temperature
-from tools.geocoding_service import GeocodingError, GeocodingNoMatch, geocode_place
+from tools.geocoding_service import (
+    GeocodingError,
+    GeocodingNoMatch,
+    geocode_place,
+    geocode_place_id,
+)
+from tools.places_service import PlacesError, suggest_places
 from services.vision_analyzer import HotspotAnalysisResult, IdentitySource, VisionAnalysisError, analyze_urban_hotspot
 from services.database import DatabaseError, save_hotspot_report, get_recent_reports, publish_public_alert
 from services.alert_dispatcher import dispatch_heat_alert
@@ -260,16 +266,48 @@ class GeocodeResult(BaseModel):
     formatted_address: str = Field(min_length=1)
 
 
+class PlaceSuggestionModel(BaseModel):
+    description: str = Field(min_length=1)
+    place_id: str = Field(min_length=1)
+
+
+class PlaceSuggestionsResponse(BaseModel):
+    suggestions: list[PlaceSuggestionModel]
+
+
+@app.get(
+    "/api/places/suggest",
+    response_model=PlaceSuggestionsResponse,
+    responses={502: {"description": "Place suggestions are unavailable."}},
+)
+async def places_suggest(q: Annotated[str, Query(min_length=1, max_length=200)]):
+    """Suggest places for a partial name. Keeps the Maps key server-side."""
+    try:
+        suggestions = await asyncio.to_thread(suggest_places, q)
+    except PlacesError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from None
+    return {"suggestions": suggestions}
+
+
 @app.get(
     "/api/geocode",
     response_model=GeocodeResult,
     responses={404: {"description": "No place matched that search."},
+               422: {"description": "Supply exactly one of q or place_id."},
                502: {"description": "Location search is unavailable."}},
 )
-async def geocode(q: Annotated[str, Query(min_length=1, max_length=200)]):
-    """Resolve a place name to coordinates. Keeps the Maps key server-side."""
+async def geocode(
+    q: Annotated[str | None, Query(min_length=1, max_length=200)] = None,
+    place_id: Annotated[str | None, Query(min_length=1, max_length=200)] = None,
+):
+    """Resolve a place name or an autocomplete place_id to coordinates."""
+    if bool(q) == bool(place_id):
+        raise HTTPException(status_code=422, detail="Supply exactly one of q or place_id.")
     try:
-        place = await asyncio.to_thread(geocode_place, q)
+        if place_id:
+            place = await asyncio.to_thread(geocode_place_id, place_id)
+        else:
+            place = await asyncio.to_thread(geocode_place, q)
     except GeocodingNoMatch as error:
         raise HTTPException(status_code=404, detail=str(error)) from None
     except GeocodingError as error:

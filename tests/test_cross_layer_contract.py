@@ -32,8 +32,9 @@ REPORT_ENVELOPE = {
 }
 # Firestore-owned metadata, not Heat Analysis Result fields. No deleted fields waived.
 STORAGE_ENVELOPE = {"created_at"}
-# /api/scans is an HTTP envelope containing reports, not itself a report.
-HTTP_ENVELOPE = {"scans"}
+# /api/scans and /api/places/suggest are HTTP envelopes containing their own
+# payloads, not themselves reports.
+HTTP_ENVELOPE = {"scans", "suggestions"}
 # Climate readings are a separate contract; never apply these exemptions to reports.
 CLIMATE_KEYS = {"station_id", "observation_date", "max_temp_c", "avg_temp_c", "source"}
 

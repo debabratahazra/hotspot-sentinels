@@ -14,6 +14,11 @@ MAX_UPLOAD_BYTES = 10_000_000
 SAMPLE_DIRECTORY = Path(__file__).resolve().parents[1] / "data_samples"
 MODE_LOCATION = "Satellite location"
 MODE_UPLOAD = "Upload image"
+MIN_SEARCH_CHARACTERS = 3
+SEARCH_DEBOUNCE_MS = 350
+SUGGEST_TIMEOUT_SECONDS = (3, 10)
+# Both typeaheads are reset together so they always show the same place.
+SEARCHBOX_KEYS = ("place_search_sidebar", "place_search_map")
 IMAGERY_UNAVAILABLE_MESSAGE = "Satellite imagery could not be loaded; the analysis remains valid."
 GOOGLE_MAPS_SOURCE_LABEL = "Imagery source: Google Maps"
 JPEG_MIME_TYPE = "image/jpeg"
@@ -27,8 +32,7 @@ CITY_COORDINATES = {
     "Bangkok City Centre": (13.7563, 100.5018),
     "Delhi Karol Bagh": (28.6450, 77.2200),
 }
-RISK_COLORS = {"LOW": "green", "MODERATE": "green", "HIGH": "orange", "CRITICAL": "red"}
-# Hex rather than named colours: st.map needs explicit values per point.
+RISK_COLORS = {"LOW": "green", "MODERATE": "green", "HIGH": "orange", "CRITICAL": "red"}# Hex rather than named colours: st.map needs explicit values per point.
 MAP_RISK_COLOURS = {"CRITICAL": "#ff4d4f", "HIGH": "#ff9f43", "MODERATE": "#ffd166", "LOW": "#2dd4a7"}
 MATERIALS = [
     ("Asphalt", "asphalt_pct", "#555555"),
@@ -212,31 +216,67 @@ def set_coordinates(latitude, longitude, label=None):
     st.session_state["resolved_place"] = label
 
 
-def search_place():
-    """Runs as a submit callback, before the rerun, so widget keys may be written."""
-    query = (st.session_state.get("place_query") or "").strip()
-    st.session_state["search_message"] = None
-    if not query:
-        return
+def fetch_place_suggestions(searchterm):
+    """Typeahead source. Runs per keystroke, so it must never raise."""
+    query = (searchterm or "").strip()
+    if len(query) < MIN_SEARCH_CHARACTERS:
+        return []
     try:
-        response = requests.get(
-            f"{API_BASE_URL}/api/geocode", params={"q": query}, timeout=REQUEST_TIMEOUT_SECONDS
-        )
+        response = requests.get(f"{API_BASE_URL}/api/places/suggest",
+                                params={"q": query}, timeout=SUGGEST_TIMEOUT_SECONDS)
+        if response.status_code != 200:
+            return []
+        suggestions = response.json().get("suggestions") or []
+    except Exception:
+        # A failed suggestion is not worth interrupting typing over.
+        return []
+    return [(item["description"], item["place_id"]) for item in suggestions
+            if item.get("description") and item.get("place_id")]
+
+
+def select_place(place_id):
+    """Resolve a chosen suggestion by place_id, which is exact where a name is not."""
+    st.session_state["search_message"] = None
+    try:
+        response = requests.get(f"{API_BASE_URL}/api/geocode",
+                                params={"place_id": place_id}, timeout=REQUEST_TIMEOUT_SECONDS)
     except Exception as error:
         # Never surface a raw transport error; it can carry a URL with the key.
         st.session_state["search_message"] = ("error", f"Location search is unavailable ({type(error).__name__}).")
         return
-    if response.status_code == 200:
-        try:
-            place = response.json()
-            set_coordinates(place["lat"], place["lng"], place.get("formatted_address"))
-        except (ValueError, KeyError, TypeError):
-            st.session_state["search_message"] = ("error", "Location search returned an unexpected response.")
-    elif response.status_code == 404:
-        st.session_state["search_message"] = (
-            "warning", f"No place matched “{query}”. The current coordinates are unchanged.")
-    else:
+    if response.status_code != 200:
         st.session_state["search_message"] = ("error", f"Location search failed (HTTP {response.status_code}).")
+        return
+    try:
+        place = response.json()
+        st.session_state["pending_coordinate"] = (
+            place["lat"], place["lng"], place.get("formatted_address"))
+    except (ValueError, KeyError, TypeError):
+        st.session_state["search_message"] = ("error", "Location search returned an unexpected response.")
+
+
+def render_place_search(key, label=None, placeholder="e.g. Karol Bagh, Delhi"):
+    """Typeahead over Google Places. Both instances share one coordinate."""
+    try:
+        from streamlit_searchbox import st_searchbox
+    except ImportError:
+        st.caption("Place search unavailable. Use the shortcut or type coordinates.")
+        return
+
+    chosen = st_searchbox(
+        fetch_place_suggestions,
+        key=key,
+        label=label,
+        placeholder=placeholder,
+        # Seeds the box with the active place, which is how the two stay in step.
+        default_searchterm=st.session_state.get("resolved_place") or "",
+        edit_after_submit="option",
+        debounce=SEARCH_DEBOUNCE_MS,
+    )
+    if chosen:
+        select_place(chosen)
+        if st.session_state.get("pending_coordinate"):
+            st.rerun()
 
 
 def render_location_picker():
@@ -287,6 +327,10 @@ def apply_pending_coordinate():
     pending = st.session_state.pop("pending_coordinate", None)
     if pending:
         set_coordinates(*pending)
+        # Dropping their state makes both typeaheads re-seed from resolved_place,
+        # so two boxes can never show different places for one coordinate.
+        for searchbox in SEARCHBOX_KEYS:
+            st.session_state.pop(searchbox, None)
 
 
 st.set_page_config(
@@ -326,10 +370,7 @@ with st.sidebar:
         st.session_state.setdefault("imagery_latitude", str(opening_latitude))
         st.session_state.setdefault("imagery_longitude", str(opening_longitude))
 
-        with st.form("place_search", border=False):
-            st.text_input("Search a city or area", key="place_query",
-                          placeholder="e.g. Karol Bagh, Delhi")
-            st.form_submit_button("Search", icon=":material/search:", on_click=search_place)
+        render_place_search(SEARCHBOX_KEYS[0], "Search a city or area")
         message = st.session_state.get("search_message")
         if message:
             level, text = message
@@ -438,6 +479,7 @@ if analysis_ready:
             st.subheader("Selected location")
             st.text(f"Latitude: {latitude} | Longitude: {longitude}")
             with st.expander("Pick a location on the map", icon=":material/map:"):
+                render_place_search(SEARCHBOX_KEYS[1], placeholder="Search here, or click the map")
                 render_location_picker()
             satellite_preview = st.empty()
     with score_column:

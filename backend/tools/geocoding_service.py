@@ -38,15 +38,24 @@ class GeocodedPlace(TypedDict):
 def geocode_place(query: str) -> GeocodedPlace:
     """Resolve a place name to coordinates, with a short-lived in-process cache."""
     cleaned = _clean_query(query)
+    return _lookup({"address": cleaned}, cleaned.lower())
 
+
+def geocode_place_id(place_id: str) -> GeocodedPlace:
+    """Resolve an autocomplete suggestion to its exact coordinates."""
+    cleaned = _clean_query(place_id)
+    return _lookup({"place_id": cleaned}, f"place_id:{cleaned}")
+
+
+def _lookup(query_params: dict, cache_key: str) -> GeocodedPlace:
     with _cache_lock:
-        entry = _cache.get(cleaned.lower())
+        entry = _cache.get(cache_key)
         if entry is not None:
             stored_at, place = entry
             if time.monotonic() - stored_at <= CACHE_TTL_SECONDS:
-                _cache.move_to_end(cleaned.lower())
+                _cache.move_to_end(cache_key)
                 return place
-            del _cache[cleaned.lower()]
+            del _cache[cache_key]
 
     api_key = os.getenv("GOOGLE_MAPS_API_KEY")
     if not api_key:
@@ -55,7 +64,7 @@ def geocode_place(query: str) -> GeocodedPlace:
     try:
         response = requests.get(
             GEOCODE_API_URL,
-            params={"address": cleaned, "key": api_key},
+            params={**query_params, "key": api_key},
             timeout=REQUEST_TIMEOUT,
         )
     except RequestException as error:
@@ -82,7 +91,7 @@ def geocode_place(query: str) -> GeocodedPlace:
 
     place = _first_place(geocoded)
     with _cache_lock:
-        _cache[cleaned.lower()] = (time.monotonic(), place)
+        _cache[cache_key] = (time.monotonic(), place)
         while len(_cache) > MAX_CACHE_ENTRIES:
             _cache.popitem(last=False)
     return place
