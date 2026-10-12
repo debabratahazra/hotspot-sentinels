@@ -166,7 +166,15 @@ Queries shorter than three characters return an empty list without calling the p
 
 It answers `404` when nothing matches and `502` when the provider is unreachable. Prefer `place_id` when resolving a suggestion: Places routinely returns several distinct places sharing a name, and only the id picks the right one.
 
-Both lookups run **server-side on purpose**: `GOOGLE_MAPS_API_KEY` stays in the backend and never reaches the browser. It is sent to Places as an `X-Goog-Api-Key` header rather than a query parameter, since a key in a URL is copied into proxy and server access logs. Google echoes the key back inside `error_message` on `REQUEST_DENIED`, so provider error bodies are never logged or forwarded — only the status code is.
+`GET /api/geocode/reverse?lat=1.2897&lng=103.7540` names a coordinate, which is what turns a map click into somewhere recognisable:
+
+```json
+{ "lat": 1.2897, "lng": 103.754, "formatted_address": "Singapore" }
+```
+
+The name is built from the broadest useful address component — locality, else district, else region, else country — rather than `formatted_address`, which for a remote point is a Plus Code like `7GM72222+22`. Over water Google still answers `200`, but with a Plus Code and **no country component**; that absence is how water is detected, and the point is then named from a curated table of seas falling back to the five oceans. Those boxes are approximate, so a point near a boundary can take its neighbour's name — a deliberate trade, since naming the Mediterranean beats calling it the Atlantic.
+
+All three lookups run **server-side on purpose**: `GOOGLE_MAPS_API_KEY` stays in the backend and never reaches the browser. It is sent to Places as an `X-Goog-Api-Key` header rather than a query parameter, since a key in a URL is copied into proxy and server access logs. Google echoes the key back inside `error_message` on `REQUEST_DENIED`, so provider error bodies are never logged or forwarded — only the status code is.
 
 All temperatures are °C and all areas are m². Conversion happens at the source, never at the client.
 
@@ -314,16 +322,19 @@ The two image builds are separate jobs with `fail-fast` disabled, so a passing b
 
 ## Known limitations
 
-Three items are deliberately open. Each needs a human decision or unimplemented feature work — none is a defect, and none is something the delivery loop can honestly close on its own.
+Four items are deliberately open. Each needs a human decision or unimplemented feature work — none is a defect, and none is something the delivery loop can honestly close on its own.
 
 | Item        | What is missing                          | Why it is still open                                                                                                                                                                                                                                                                                                                                                       |
 | ----------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TASK-006`  | the demo recording                       | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
 | `STORY-031` | scan records linked to retained imagery  | `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record still carries no object URI, so you cannot retrieve the exact image a given scan used. The storage path now exists; the linkage does not.                                                                                                                                    |
 | `TASK-011`  | correction of protected foundation specs | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
+| `STORY-048` | operator sign-in (Firebase Auth)         | Deliberately deprioritised. A login wall adds friction to a judged demo for little evaluation value, and the dashboard holds no per-user data to protect. The public alert wall is already read-only by Firestore rule rather than by authentication.                                                                                                                       |
 
 ### Recently closed
 
+- **`EPIC-016`, `EPIC-017`, `EPIC-018`** — location discovery. A place can now be reached four ways: a preset shortcut, a typeahead over Google Places that suggests neighbourhoods after three characters, a click anywhere on a world map, and typed coordinates. A map click names the point it set, including the sea or ocean when the click lands on water. Every lookup is proxied by the backend so `GOOGLE_MAPS_API_KEY` never reaches the browser.
+- **`EPIC-012`, `EPIC-013`, `EPIC-014`** — the public alert wall, the dashboard layout pass, and the city-wide heat map.
 - **`STORY-043`** — releases deploy from GitHub Actions via Workload Identity Federation. Pushing a `vMAJOR.MINOR.PATCH` tag builds, deploys and verifies both services with no service-account key anywhere, and the gate refuses to ship a commit that is not on `main` with all five checks green.
 - **`TASK-046`** — the Maps imagery cache is shared across instances through Cloud Storage. Verified live: a brand-new revision served a valid 640×640 PNG that a *different* instance had fetched, where previously that returned 502. `--max-instances=1` is no longer needed for the demo.
 

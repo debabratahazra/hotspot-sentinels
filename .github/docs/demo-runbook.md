@@ -7,6 +7,7 @@ below was measured on 2026-10-04, not estimated.
 | ------------- | ------------------------------------------------------------- |
 | Dashboard     | https://hotspot-frontend-153692178986.asia-southeast1.run.app |
 | Backend       | https://hotspot-backend-153692178986.asia-southeast1.run.app  |
+| Alert wall    | https://hotspot-sentinels-7364.web.app                        |
 | Region        | `asia-southeast1`                                             |
 | Recording cap | **3 to 4 minutes** — target **3:15**                          |
 
@@ -97,22 +98,43 @@ is still demonstrated.
 
 ## Flow gotcha
 
-The sidebar collapses once a result renders. To switch from the opener to the
-contrast location you must reopen it with the `»` control at the top left before
-the Location shortcut is reachable. Rehearse that movement; it is easy to fumble
-on camera.
+The sidebar collapses once a result renders. That used to force a fumbly reopen
+with the `»` control to reach the Location shortcut. It no longer does: the map
+panel carries its own search box, so the contrast location can be chosen from the
+main area without touching the sidebar. Use that path on camera.
+
+## What to show from location discovery
+
+These cost no analysis time — they are interactive, so only the two analyses
+spend the clock. All were verified against the deployed stack on 2026-10-12.
+
+| Feature             | On camera                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Place autocomplete  | Type three characters; a dropdown of real places appears, neighbourhoods included   |
+| Synced search boxes | Choosing in one box updates the other, so the active location is never ambiguous    |
+| Map click naming    | Click anywhere; the point is named (`Padang City, Indonesia`, `Mediterranean Sea`)  |
+| Public alert wall   | A Firebase-hosted page where citizens see CRITICAL zones appear live                |
+
+The alert wall is the pay-off for the Pub/Sub beat: it shows the alert reaching
+someone outside the dashboard. Open it in a second tab **before** recording, so
+the CRITICAL zone appears without a page reload.
 
 ## Script
 
 | Time      | Beat                                                                                                                                                                                                                                    |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0:00–0:20 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is.                                                                                                                                            |
-| 0:20–0:35 | Upload the industrial district aerial crop.                                                                                                                                                                                             |
-| 0:35–0:55 | Run the analysis. Narrate over the wait: Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery.                                                                                                              |
-| 0:55–1:40 | The result: **HVI 8.1 CRITICAL**. The Pub/Sub alert banner confirms a real alert was published.                                                                                                                                         |
-| 1:40–2:05 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop.                                                                                                               |
-| 2:05–2:40 | Reopen the sidebar with `»`, switch to Botanic Gardens — a **coordinate**, no upload, real Google satellite imagery. **HVI 1.5 LOW**, "Dense Tropical Forest". Same pipeline, same model — the score tracks real surfaces, not a guess. |
-| 2:40–3:00 | Architecture close: Gemini 2.5 Flash, Maps Static API, BigQuery NOAA GSOD, Firestore, Pub/Sub, all on Cloud Run in `asia-southeast1`.                                                                                                   |
+| 0:00–0:18 | The problem: urban heat islands, and that nobody can point at a block and say how bad it is.                                                                                                                                            |
+| 0:18–0:32 | Upload the industrial district aerial crop.                                                                                                                                                                                             |
+| 0:32–0:52 | Run the analysis. Narrate over the wait: Gemini 2.5 Flash reading surface materials, NOAA climate telemetry from BigQuery.                                                                                                              |
+| 0:52–1:25 | The result: **HVI 8.1 CRITICAL**. The Pub/Sub alert banner confirms a real alert was published.                                                                                                                                         |
+| 1:25–1:45 | Cut to the public alert wall. The zone is already there — the alert left the system and reached citizens.                                                                                                                               |
+| 1:45–2:08 | The passive cooling blueprint: wind corridor orientation, retroreflective coating area in m², projected temperature drop.                                                                                                               |
+| 2:08–2:45 | Type `Botanic` into the search beside the map and pick the suggestion. A **coordinate**, no upload, real Google satellite imagery. **HVI 1.5 LOW**, "Dense Tropical Forest". Same pipeline, same model — the score tracks real surfaces. |
+| 2:45–2:58 | Scroll to the city map: every analysed zone on one map, coloured by risk.                                                                                                                                                                |
+| 2:58–3:15 | Architecture close: Gemini 2.5 Flash, Maps Static/Geocoding/Places, BigQuery NOAA GSOD, Firestore, Pub/Sub, Firebase Hosting, all on Cloud Run in `asia-southeast1`.                                                                     |
+
+If this runs long, cut the city map beat. Do not cut the alert wall — it is what
+proves the alert is real rather than a banner.
 
 ## Scripted scenarios
 

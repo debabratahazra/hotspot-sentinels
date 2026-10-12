@@ -17,6 +17,7 @@ MODE_UPLOAD = "Upload image"
 MIN_SEARCH_CHARACTERS = 3
 SEARCH_DEBOUNCE_MS = 350
 SUGGEST_TIMEOUT_SECONDS = (3, 10)
+MAP_CLICK_FALLBACK_LABEL = "Chosen from the map"
 # Both typeaheads are reset together so they always show the same place.
 SEARCHBOX_KEYS = ("place_search_sidebar", "place_search_map")
 IMAGERY_UNAVAILABLE_MESSAGE = "Satellite imagery could not be loaded; the analysis remains valid."
@@ -281,6 +282,21 @@ def render_place_search(key, label=None, placeholder="e.g. Karol Bagh, Delhi"):
             st.rerun()
 
 
+def describe_point(latitude, longitude):
+    """Name a clicked point so the box reads as a place, not as a bare click."""
+    try:
+        response = requests.get(f"{API_BASE_URL}/api/geocode/reverse",
+                                params={"lat": latitude, "lng": longitude},
+                                timeout=REQUEST_TIMEOUT_SECONDS)
+        if response.status_code != 200:
+            return MAP_CLICK_FALLBACK_LABEL
+        named = response.json()
+        return named.get("formatted_address") or MAP_CLICK_FALLBACK_LABEL
+    except Exception:
+        # A nameless point is still analysable, so never fail the click over this.
+        return MAP_CLICK_FALLBACK_LABEL
+
+
 def render_location_picker():
     """World map where a click chooses the coordinate to analyse."""
     try:
@@ -320,7 +336,8 @@ def render_location_picker():
         # The picker renders after the sidebar's coordinate inputs exist, and a
         # widget key cannot be written once its widget is instantiated. Hand the
         # click to the next run, which applies it before any widget is created.
-        st.session_state["pending_coordinate"] = (new_latitude, new_longitude, "Chosen from the map")
+        st.session_state["pending_coordinate"] = (
+            new_latitude, new_longitude, describe_point(new_latitude, new_longitude))
         st.rerun()
 
 

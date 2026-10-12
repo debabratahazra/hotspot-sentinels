@@ -847,7 +847,7 @@
       "acceptance_criteria": [],
       "priority": "P1",
       "estimate": 10,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "manual",
@@ -2902,7 +2902,7 @@
       "acceptance_criteria": [],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "manual",
@@ -3215,7 +3215,7 @@
       "acceptance_criteria": [],
       "priority": "P2",
       "estimate": 1,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "requirements",
@@ -3378,7 +3378,7 @@
       "acceptance_criteria": [],
       "priority": "P1",
       "estimate": null,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [],
       "source": "hackathon-enhancement",
@@ -3394,7 +3394,7 @@
       "acceptance_criteria": [],
       "priority": "P2",
       "estimate": null,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [],
       "source": "hackathon-enhancement",
@@ -3410,7 +3410,7 @@
       "acceptance_criteria": [],
       "priority": "P2",
       "estimate": null,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [],
       "source": "hackathon-enhancement",
@@ -3438,7 +3438,7 @@
       "type": "story",
       "parent": "EPIC-012",
       "title": "As a citizen I see critical heat zones appear live without refreshing",
-      "description": "",
+      "description": " Closed 2026-10-12 (backlog lagged the code; shipped in PR #13 and verified live at https://hotspot-sentinels-7364.web.app).",
       "acceptance_criteria": [
         "A page served by Firebase Hosting lists current CRITICAL zones newest first.",
         "A new CRITICAL analysis appears on an already-open page within seconds and without a reload.",
@@ -3447,7 +3447,7 @@
       ],
       "priority": "P1",
       "estimate": 5,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "public/index.html",
@@ -3463,7 +3463,7 @@
       "type": "story",
       "parent": "EPIC-012",
       "title": "As a maintainer I publish only curated fields to the public collection",
-      "description": "",
+      "description": " Closed 2026-10-12 (backlog lagged the code; publish_public_alert with PUBLIC_ALERT_FIELDS shipped in PR #13).",
       "acceptance_criteria": [
         "A CRITICAL analysis writes a record to public_alerts containing only the fields the wall needs.",
         "hotspot_scans itself is never world-readable.",
@@ -3472,7 +3472,7 @@
       ],
       "priority": "P1",
       "estimate": 3,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "backend/services/database.py",
@@ -3488,7 +3488,7 @@
       "type": "story",
       "parent": "EPIC-013",
       "title": "As an operator I read the result faster from a clearer layout",
-      "description": "",
+      "description": " Closed 2026-10-12 (backlog lagged the code; shipped in PR #14).",
       "acceptance_criteria": [
         "The HVI score, risk band and alert state are legible at a glance at presentation scale.",
         "The surface breakdown and cooling blueprint are visually distinct from each other.",
@@ -3497,7 +3497,7 @@
       ],
       "priority": "P2",
       "estimate": 3,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "frontend/app.py"
@@ -3511,7 +3511,7 @@
       "type": "story",
       "parent": "EPIC-014",
       "title": "As a planner I see every analysed zone on one map coloured by risk",
-      "description": "",
+      "description": " Closed 2026-10-12 (backlog lagged the code; render_city_map shipped in PR #14).",
       "acceptance_criteria": [
         "Persisted scans with coordinates render as markers coloured by risk band.",
         "Selecting a marker shows that zone's HVI, risk band and measured temperature.",
@@ -3520,7 +3520,7 @@
       ],
       "priority": "P2",
       "estimate": 5,
-      "status": "groomed",
+      "status": "done",
       "sprint": 9,
       "files": [
         "frontend/app.py"
@@ -3675,6 +3675,67 @@
         "Selecting in the sidebar updates the map-panel input to the same text.",
         "Selecting in the map panel updates the sidebar input to the same text.",
         "The displayed text always matches the active coordinates."
+      ]
+    },
+    {
+      "id": "EPIC-018",
+      "type": "epic",
+      "parent": null,
+      "status": "done",
+      "points": 8,
+      "title": "Name the Place Behind a Map Click",
+      "description": "A map click labelled itself 'Chosen from the map', which says nothing about where the point is. Clicking anywhere should name the place, so an operator can tell at a glance which city, country or sea they are about to analyse.",
+      "acceptance_criteria": [
+        "Clicking land names the city and country, or the region and country where there is no city.",
+        "Clicking open water names the sea or ocean.",
+        "The name appears in both search boxes, like any other selection.",
+        "A naming failure never blocks the analysis."
+      ]
+    },
+    {
+      "id": "STORY-054",
+      "type": "story",
+      "parent": "EPIC-018",
+      "status": "done",
+      "points": 5,
+      "title": "As an operator a map click tells me which city and country I picked",
+      "description": "GET /api/geocode/reverse names a coordinate from Google's address components, choosing the broadest useful one: locality, else district, else region, else country. The raw formatted_address is not used because for remote points it is a Plus Code. Closed 2026-10-12. GET /api/geocode/reverse names a coordinate from address components, broadest useful first. Verified live: New Delhi, India | Al Wadi Al Gadid Desert, Egypt | Antarctica | Singapore. In the UI a click showed 'Singapore', 'Padang City, Indonesia' and 'Indonesia'.",
+      "acceptance_criteria": [
+        "A click in a city shows 'City, Country'.",
+        "A click in remote land with no city shows 'Region, Country'.",
+        "A Plus Code is never shown.",
+        "The name reaches both search boxes and the active location line.",
+        "A reverse geocoding outage leaves the coordinate usable."
+      ]
+    },
+    {
+      "id": "STORY-055",
+      "type": "story",
+      "parent": "EPIC-018",
+      "status": "done",
+      "points": 3,
+      "title": "As an operator a click at sea names the sea or ocean",
+      "description": "Google answers OK over water but returns a Plus Code and no country, so water is detected by the absent country and named from a curated table of seas falling back to the five oceans. The boxes are approximate by design; naming the Mediterranean beats calling it the Atlantic. Closed 2026-10-12. Water is detected by the absent country component (Google answers OK with a Plus Code at sea) and named from tools/water_bodies.py. Verified live: Pacific Ocean, Mediterranean Sea, South China Sea, Black Sea. A shadowing test proved the Black Sea was being returned as the Mediterranean until it was ordered first.",
+      "acceptance_criteria": [
+        "A click in the Mediterranean shows 'Mediterranean Sea', not an ocean.",
+        "A click in the mid-Pacific shows 'Pacific Ocean'.",
+        "Enclosed seas are matched before the oceans containing them.",
+        "A point matching nothing shows 'Open water' rather than a wrong name."
+      ]
+    },
+    {
+      "id": "TASK-057",
+      "type": "task",
+      "parent": "EPIC-018",
+      "status": "done",
+      "points": 3,
+      "title": "Bring the core documents back in line with the codebase",
+      "description": "README, demo runbook, COPILOT_GUIDE, copilot-instructions, the docs index and requirements predate the alert wall, city map, location discovery, autocomplete and place naming. Sprint reports are point-in-time records and are deliberately excluded. Closed 2026-10-12. Updated README (endpoints, known limitations), .github/copilot-instructions.md (architecture tree gained maps_imagery_service, geocoding_service, places_service, water_bodies, public/ and firestore.rules; HTTP surface listed), .github/docs/README.md (epic catalogue extended to EPIC-18 with counts derived from this file), and the demo runbook (re-sequenced around the alert wall, autocomplete and city map). Also reconciled backlog drift: STORY-044/045/046/047 had shipped in PR #13 and #14 but were still 'groomed', and six epics whose children were all done were still open. agile/reports/ left untouched as point-in-time records.",
+      "acceptance_criteria": [
+        "The architecture tree lists every module that exists.",
+        "The documented endpoints match the routes in main.py.",
+        "The demo runbook reflects the current dashboard.",
+        "No sprint report is altered."
       ]
     }
   ]

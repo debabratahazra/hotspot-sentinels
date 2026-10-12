@@ -22,6 +22,7 @@ from streamlit.testing.v1 import AppTest
 APP = str(Path(__file__).resolve().parents[1] / "frontend/app.py")
 
 GEOCODED = {"lat": 28.655, "lng": 77.1888, "formatted_address": "Karol Bagh, New Delhi, Delhi, India"}
+REVERSE_GEOCODED = {"lat": 1.2897, "lng": 103.754, "formatted_address": "Singapore"}
 SUGGESTIONS = {"suggestions": [
     {"description": "Karol Bagh, New Delhi, Delhi, India", "place_id": "PLACE-1"},
     {"description": "Karol Bagh Metro Station, New Delhi, India", "place_id": "PLACE-2"},
@@ -38,6 +39,8 @@ def dashboard(monkeypatch, valid_report, sample_png_bytes):
     def routed_get(url, **kwargs):
         if "/api/places/suggest" in url:
             return Mock(status_code=200, json=lambda: SUGGESTIONS)
+        if "/api/geocode/reverse" in url:
+            return Mock(status_code=200, json=lambda: REVERSE_GEOCODED)
         if "/api/geocode" in url:
             return Mock(status_code=200, json=lambda: GEOCODED)
         return Mock(status_code=200, json=lambda: {"scans": [valid_report]})
@@ -238,6 +241,16 @@ def test_an_applied_map_click_is_not_replayed_on_later_runs(dashboard):
     next(box for box in app.text_input if box.label == "Latitude").set_value("5.000000").run()
     # A stale pending click would stamp the map coordinate back over the edit.
     assert coordinates(app)[0] == "5.000000"
+
+
+def test_a_map_click_is_named_rather_than_labelled_as_a_click():
+    # "Chosen from the map" tells an operator nothing about where they clicked;
+    # it survives only as the fallback when naming the point fails.
+    source = Path(APP).read_text()
+    picker = source[source.index("def render_location_picker"):]
+    assignment = picker[picker.index("pending_coordinate"):][:260]
+    assert "describe_point(" in assignment, "a map click must name the point it set"
+    assert "MAP_CLICK_FALLBACK_LABEL" in source
 
 
 def test_pending_coordinates_are_applied_before_the_widgets_exist():
