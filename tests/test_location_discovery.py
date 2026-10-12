@@ -51,8 +51,8 @@ def dashboard(monkeypatch, valid_report, sample_png_bytes):
 @pytest.fixture
 def choose_suggestion(monkeypatch):
     """Pick a suggestion once, as the real component does before it resets."""
-    def choose(place_id):
-        remaining = [place_id]
+    def choose(place_id, description="Karol Bagh, New Delhi, Delhi, India"):
+        remaining = [(description, place_id)]
         monkeypatch.setattr(streamlit_searchbox, "st_searchbox",
                             lambda *a, **k: remaining.pop() if remaining else None)
     return choose
@@ -139,6 +139,18 @@ def test_a_geocoding_outage_does_not_break_the_page(dashboard, monkeypatch, choo
     assert "AIzaSy" not in rendered and "Bearer" not in rendered
 
 
+def test_the_chosen_suggestions_own_wording_is_what_is_shown(dashboard, choose_suggestion):
+    # Geocoding returns the official name, which for many places differs from
+    # the one the operator clicked; showing it back reads as a mis-pick.
+    app = dashboard[0]
+    app.run()
+    choose_suggestion("PLACE-9", description="Salt Lake City, Kolkata, West Bengal, India")
+    app.run()
+    assert not app.exception
+    assert app.session_state["resolved_place"] == "Salt Lake City, Kolkata, West Bengal, India"
+    assert coordinates(app) == ("28.655000", "77.188800"), "coordinates still come from the geocoder"
+
+
 def test_both_search_boxes_are_reset_together_so_they_cannot_disagree(dashboard, choose_suggestion):
     # Two inputs showing different places while one coordinate is live would
     # leave the operator unsure which location is actually being analysed.
@@ -172,8 +184,10 @@ def test_a_long_enough_query_returns_label_and_place_id_pairs(dashboard, suggest
     app = dashboard[0]
     app.run()
     assert suggestion_source["fn"]("Karol Ba") == [
-        ("Karol Bagh, New Delhi, Delhi, India", "PLACE-1"),
-        ("Karol Bagh Metro Station, New Delhi, India", "PLACE-2"),
+        ("Karol Bagh, New Delhi, Delhi, India",
+         ("Karol Bagh, New Delhi, Delhi, India", "PLACE-1")),
+        ("Karol Bagh Metro Station, New Delhi, India",
+         ("Karol Bagh Metro Station, New Delhi, India", "PLACE-2")),
     ]
 
 

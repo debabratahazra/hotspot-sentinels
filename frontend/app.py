@@ -230,12 +230,13 @@ def fetch_place_suggestions(searchterm):
     except Exception:
         # A failed suggestion is not worth interrupting typing over.
         return []
-    return [(item["description"], item["place_id"]) for item in suggestions
+    return [(item["description"], (item["description"], item["place_id"])) for item in suggestions
             if item.get("description") and item.get("place_id")]
 
 
-def select_place(place_id):
+def select_place(chosen):
     """Resolve a chosen suggestion by place_id, which is exact where a name is not."""
+    description, place_id = chosen
     st.session_state["search_message"] = None
     try:
         response = requests.get(f"{API_BASE_URL}/api/geocode",
@@ -249,8 +250,9 @@ def select_place(place_id):
         return
     try:
         place = response.json()
-        st.session_state["pending_coordinate"] = (
-            place["lat"], place["lng"], place.get("formatted_address"))
+        # The suggestion's own wording, not the geocoder's official name: picking
+        # "Salt Lake City, Kolkata" and being shown "Bidhannagar" reads as a mis-pick.
+        st.session_state["pending_coordinate"] = (place["lat"], place["lng"], description)
     except (ValueError, KeyError, TypeError):
         st.session_state["search_message"] = ("error", "Location search returned an unexpected response.")
 
