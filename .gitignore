@@ -38,3 +38,10 @@ data_samples/
 
 # Editor config; keep local workspace settings out of a public repo
 .vscode/
+
+# Generated at deploy time; public by design but kept out of git so the
+# no-keys-in-repo rule stays absolute and gitleaks needs no exception.
+public/firebase-config.js
+
+# Firebase CLI deploy cache
+.firebase/

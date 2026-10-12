@@ -8,7 +8,7 @@ below was measured on 2026-10-04, not estimated.
 | Dashboard     | https://hotspot-frontend-153692178986.asia-southeast1.run.app |
 | Backend       | https://hotspot-backend-153692178986.asia-southeast1.run.app  |
 | Region        | `asia-southeast1`                                             |
-| Recording cap | **3 to 4 minutes** — target **3:15**                                          |
+| Recording cap | **3 to 4 minutes** — target **3:15**                          |
 
 ## The cache risk is now largely retired
 
