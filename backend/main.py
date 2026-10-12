@@ -18,6 +18,7 @@ from tools.geocoding_service import (
     GeocodingNoMatch,
     geocode_place,
     geocode_place_id,
+    reverse_geocode,
 )
 from tools.places_service import PlacesError, suggest_places
 from services.vision_analyzer import HotspotAnalysisResult, IdentitySource, VisionAnalysisError, analyze_urban_hotspot
@@ -287,6 +288,26 @@ async def places_suggest(q: Annotated[str, Query(min_length=1, max_length=200)])
     except PlacesError as error:
         raise HTTPException(status_code=502, detail=str(error)) from None
     return {"suggestions": suggestions}
+
+
+@app.get(
+    "/api/geocode/reverse",
+    response_model=GeocodeResult,
+    responses={404: {"description": "No place matched that coordinate."},
+               502: {"description": "Location search is unavailable."}},
+)
+async def geocode_reverse(
+    lat: Annotated[float, Query(ge=-90, le=90)],
+    lng: Annotated[float, Query(ge=-180, le=180)],
+):
+    """Name the place at a coordinate, including the sea for points at sea."""
+    try:
+        place = await asyncio.to_thread(reverse_geocode, lat, lng)
+    except GeocodingNoMatch as error:
+        raise HTTPException(status_code=404, detail=str(error)) from None
+    except GeocodingError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from None
+    return place
 
 
 @app.get(

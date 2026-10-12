@@ -9,6 +9,8 @@ from typing import TypedDict
 import requests
 from requests.exceptions import RequestException
 
+from tools.water_bodies import name_water_body
+
 GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 REQUEST_TIMEOUT = (3.0, 10.0)
 MAX_QUERY_LENGTH = 200
@@ -47,16 +49,55 @@ def geocode_place_id(place_id: str) -> GeocodedPlace:
     return _lookup({"place_id": cleaned}, f"place_id:{cleaned}")
 
 
+def reverse_geocode(latitude: float, longitude: float) -> GeocodedPlace:
+    """Name the place at a coordinate, so a map click reads as somewhere real."""
+    if not _is_coordinate(latitude, -90, 90) or not _is_coordinate(longitude, -180, 180):
+        raise GeocodingError("Coordinates are out of range.")
+    latitude, longitude = round(float(latitude), 6), round(float(longitude), 6)
+    cache_key = f"reverse:{latitude},{longitude}"
+
+    cached = _cached(cache_key)
+    if cached is not None:
+        return cached
+
+    geocoded = _request({"latlng": f"{latitude},{longitude}"})
+    place: GeocodedPlace = {
+        "lat": latitude,
+        "lng": longitude,
+        "formatted_address": _describe(geocoded, latitude, longitude),
+    }
+    return _store(cache_key, place)
+
+
 def _lookup(query_params: dict, cache_key: str) -> GeocodedPlace:
+    cached = _cached(cache_key)
+    if cached is not None:
+        return cached
+    return _store(cache_key, _first_place(_request(query_params)))
+
+
+def _cached(cache_key: str) -> GeocodedPlace | None:
     with _cache_lock:
         entry = _cache.get(cache_key)
-        if entry is not None:
-            stored_at, place = entry
-            if time.monotonic() - stored_at <= CACHE_TTL_SECONDS:
-                _cache.move_to_end(cache_key)
-                return place
-            del _cache[cache_key]
+        if entry is None:
+            return None
+        stored_at, place = entry
+        if time.monotonic() - stored_at <= CACHE_TTL_SECONDS:
+            _cache.move_to_end(cache_key)
+            return place
+        del _cache[cache_key]
+        return None
 
+
+def _store(cache_key: str, place: GeocodedPlace) -> GeocodedPlace:
+    with _cache_lock:
+        _cache[cache_key] = (time.monotonic(), place)
+        while len(_cache) > MAX_CACHE_ENTRIES:
+            _cache.popitem(last=False)
+    return place
+
+
+def _request(query_params: dict) -> dict:
     api_key = os.getenv("GOOGLE_MAPS_API_KEY")
     if not api_key:
         raise GeocodingError("Location search is not configured.")
@@ -88,13 +129,31 @@ def _lookup(query_params: dict, cache_key: str) -> GeocodedPlace:
         # error_message can echo the key back; never let it reach a caller or a log.
         logger.warning("Geocoding status %s", status)
         raise GeocodingError(UNAVAILABLE_MESSAGE)
+    return geocoded
 
-    place = _first_place(geocoded)
-    with _cache_lock:
-        _cache[cache_key] = (time.monotonic(), place)
-        while len(_cache) > MAX_CACHE_ENTRIES:
-            _cache.popitem(last=False)
-    return place
+
+def _describe(geocoded: dict, latitude: float, longitude: float) -> str:
+    """Build a readable place name from the broadest useful address components."""
+    components: dict[str, str] = {}
+    for result in geocoded.get("results") or []:
+        for component in result.get("address_components") or []:
+            name = component.get("long_name")
+            if not name:
+                continue
+            for component_type in component.get("types") or []:
+                components.setdefault(component_type, name)
+
+    country = components.get("country")
+    if not country:
+        # At sea Google still answers OK, but with a Plus Code and no country.
+        return name_water_body(latitude, longitude)
+
+    for key in ("locality", "postal_town", "administrative_area_level_2",
+                "administrative_area_level_1"):
+        area = components.get(key)
+        if area and area != country:
+            return f"{area}, {country}"
+    return country
 
 
 def _clean_query(query: str) -> str:

@@ -2,7 +2,7 @@
 
 Every epic required to take this project from an empty workspace to a submitted hackathon entry. Each document is the authoritative scope for its epic; [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) remains the authority on technical constraints and the Heat Analysis Result schema.
 
-Progress below is derived from [agile/backlog.json](../../agile/backlog.json), which is the source of truth. EPIC-10 and EPIC-11 were added after this catalogue was first written and have no separate scope document; their stories live in the backlog.
+Progress below is derived from [agile/backlog.json](../../agile/backlog.json), which is the source of truth. EPIC-10 onwards were added after this catalogue was first written and have no separate scope document; their stories live in the backlog.
 
 ## Epics
 
@@ -17,10 +17,17 @@ Progress below is derived from [agile/backlog.json](../../agile/backlog.json), w
 | [EPIC-07](./epics/EPIC-07-dashboard.md)                   | Interactive Dashboard & Heat Visualizer  | `frontend/app.py`                              | 05         | 11/11 done |
 | [EPIC-08](./epics/EPIC-08-quality-assurance.md)           | Quality Assurance & Test Coverage        | `tests/`, coverage reports                     | 02–07      | 14/14 done |
 | [EPIC-09](./epics/EPIC-09-demo-submission.md)             | Demo, Documentation & Submission         | README, demo runbook, submission               | 06, 07, 08 | 6/7        |
-| EPIC-10 (backlog only)                                    | Coordinate-Based Maps Imagery            | `maps_imagery_service.py`, `/api/imagery`      | 05, 07     | 7/8        |
-| EPIC-11 (backlog only)                                    | GitHub Actions CI/CD & Release           | `.github/workflows/`, branch protection        | 06, 08     | 5/6        |
+| EPIC-10 (backlog only)                                    | Coordinate-Based Maps Imagery            | `maps_imagery_service.py`, `/api/imagery`      | 05, 07     | 8/8 done   |
+| EPIC-11 (backlog only)                                    | GitHub Actions CI/CD & Release           | `.github/workflows/`, branch protection        | 06, 08     | 6/6 done   |
+| EPIC-12 (backlog only)                                    | Public Real-Time Heat Alert Wall         | `public/index.html`, `firestore.rules`         | 04, 06     | 2/2 done   |
+| EPIC-13 (backlog only)                                    | Dashboard Experience Upgrade             | `frontend/app.py` layout                       | 07         | 1/1 done   |
+| EPIC-14 (backlog only)                                    | City-Wide Heat Map                       | `render_city_map`                              | 07         | 1/1 done   |
+| EPIC-15 (backlog only)                                    | Operator Identity (Firebase Auth)        | — deprioritised, see README                   | 07         | 0/1        |
+| EPIC-16 (backlog only)                                    | Location Discovery                       | `geocoding_service.py`, map picker             | 05, 07     | 2/2 done   |
+| EPIC-17 (backlog only)                                    | Place Autocomplete                       | `places_service.py`, `/api/places/suggest`     | 16         | 3/3 done   |
+| EPIC-18 (backlog only)                                    | Name the Place Behind a Map Click        | `water_bodies.py`, `/api/geocode/reverse`      | 16         | 3/3 done   |
 
-The three incomplete items are listed with their reasons under **Known limitations** in the [root README](../../README.md).
+Incomplete items are listed with their reasons under **Known limitations** in the [root README](../../README.md).
 
 ## Dependency graph
 
