@@ -28,6 +28,8 @@ CITY_COORDINATES = {
     "Delhi Karol Bagh": (28.6450, 77.2200),
 }
 RISK_COLORS = {"LOW": "green", "MODERATE": "green", "HIGH": "orange", "CRITICAL": "red"}
+# Hex rather than named colours: st.map needs explicit values per point.
+MAP_RISK_COLOURS = {"CRITICAL": "#ff4d4f", "HIGH": "#ff9f43", "MODERATE": "#ffd166", "LOW": "#2dd4a7"}
 MATERIALS = [
     ("Asphalt", "asphalt_pct", "#555555"),
     ("Dark Roofs", "dark_roof_pct", "#181818"),
@@ -121,20 +123,22 @@ def render_surface_chart(surfaces):
 
 def render_score(data):
     risk = data.get("risk_level")
-    if risk in RISK_COLORS:
-        st.badge(risk, color=RISK_COLORS[risk])
-    else:
-        st.caption("Risk level: -")
-    st.text(display_value(data.get("zone_name")))
+    with st.container(horizontal=True, vertical_alignment="center"):
+        if risk in RISK_COLORS:
+            st.badge(risk, color=RISK_COLORS[risk])
+        else:
+            st.caption("Risk level: -")
+        st.subheader(display_value(data.get("zone_name")))
     plan = data.get("passive_cooling_plan") or {}
-    metrics = st.columns(3)
+    # Bordered cards so the headline numbers stay legible when projected.
+    metrics = st.columns(3, border=True)
     metrics[0].metric("HVI (1-10)", display_value(data.get("hvi_score")))
     metrics[1].metric("Ambient Temp", display_value(data.get("ambient_temp_c"), " °C"))
     metrics[2].metric("Projected Cooling Drop", display_value(plan.get("projected_surface_temp_drop_c"), " °C"))
     provenance = {"bigquery": "BigQuery / NOAA GSOD", "fallback": "Offline fallback", "caller": "Analyst what-if input"}
     st.caption(f"Temperature source: {provenance.get(data.get('climate_source'), '-')}")
     if data.get("climate_source") == "bigquery":
-        st.success("MEASURED TELEMETRY · BigQuery / NOAA GSOD")
+        st.success("MEASURED TELEMETRY · BigQuery / NOAA GSOD", icon=":material/verified:")
     elif data.get("climate_source") == "fallback":
         st.info("Live climate telemetry unavailable. This report uses the backend's fallback temperature.")
     elif data.get("climate_source") == "caller":
@@ -171,23 +175,24 @@ def render_blueprint(report):
     st.divider()
     surfaces_column, plan_column = st.columns([1, 1])
     surfaces = report.get("surface_breakdown") or {}
-    with surfaces_column:
-        st.subheader("Surface material breakdown")
+    # Each half is its own bordered card so the diagnosis and the prescription
+    # read as two distinct things rather than one continuous wall of numbers.
+    with surfaces_column, st.container(border=True):
+        st.subheader("Surface material breakdown", divider="grey")
         render_surface_chart(surfaces)
         with st.container(horizontal=True):
             for label, percentage in surface_values(surfaces):
                 st.metric(label, display_value(percentage, "%"))
-    with plan_column:
-        st.subheader("Passive cooling blueprint")
+    with plan_column, st.container(border=True):
+        st.subheader("Passive cooling blueprint", divider="grey")
         plan = report.get("passive_cooling_plan") or {}
         if not plan:
             st.info("Passive cooling plan unavailable for this report.")
         st.markdown("**Wind corridor orientation**")
         st.text(display_value(plan.get("corridor_orientation")))
-        st.markdown("**Retroreflective coating area**")
-        st.text(display_value(plan.get("retroreflective_coating_sqm"), " m²"))
-        st.markdown("**Projected temperature drop**")
-        st.text(display_value(plan.get("projected_surface_temp_drop_c"), " °C"))
+        with st.container(horizontal=True):
+            st.metric("Retroreflective coating area", display_value(plan.get("retroreflective_coating_sqm"), " m²"), border=True)
+            st.metric("Projected temperature drop", display_value(plan.get("projected_surface_temp_drop_c"), " °C"), border=True)
         st.markdown("**Micro-canopy interventions**")
         interventions = plan.get("micro_canopy_interventions") or []
         if not interventions:
@@ -412,6 +417,52 @@ else:
 
 st.divider()
 st.subheader("Recent municipal audits")
+def render_city_map(scans):
+    """Plot every scan that carries coordinates, coloured by risk band."""
+    points = []
+    for scan in scans:
+        # Only coordinates the caller actually asked for are real. For an uploaded
+        # image the model infers a plausible-looking location, which has put zones
+        # in Los Angeles; plotting those would make the map meaningless.
+        if scan.get("image_source") != "google_maps":
+            continue
+        coordinates = scan.get("coordinates") or {}
+        latitude, longitude = coordinates.get("lat"), coordinates.get("lng")
+        # A scan without coordinates is an uploaded image, not a located zone.
+        if not isinstance(latitude, (int, float)) or not isinstance(longitude, (int, float)):
+            continue
+        if isinstance(latitude, bool) or isinstance(longitude, bool):
+            continue
+        score = scan.get("hvi_score")
+        points.append({
+            "lat": float(latitude),
+            "lon": float(longitude),
+            "colour": MAP_RISK_COLOURS.get(scan.get("risk_level"), "#8b9aad"),
+            # Area scales with risk so the worst zones read first at a glance.
+            "size": 120 + 40 * (float(score) if isinstance(score, (int, float)) and not isinstance(score, bool) else 0),
+        })
+
+    if not points:
+        st.info("No located scans yet. Analyse a coordinate to put a zone on the map.")
+        return
+
+    # Without an explicit zoom, st.map frames the whole world for a handful of
+    # nearby points, which renders the markers as unreadable specks.
+    latitudes = [point["lat"] for point in points]
+    longitudes = [point["lon"] for point in points]
+    spread = max(max(latitudes) - min(latitudes), max(longitudes) - min(longitudes))
+    for threshold, level in ((0.05, 13), (0.2, 11), (1.0, 9), (5.0, 6), (20.0, 4)):
+        if spread <= threshold:
+            zoom = level
+            break
+    else:
+        zoom = 2
+
+    st.map(points, latitude="lat", longitude="lon", color="colour", size="size", zoom=zoom)
+    legend = " · ".join(f"{band} {colour}" for band, colour in MAP_RISK_COLOURS.items())
+    st.caption(f"Marker colour by risk band — {legend}. Marker size scales with HVI.")
+
+
 if st.button("Refresh Recent Audits", icon=":material/refresh:"):
     try:
         with st.spinner("Loading recent audits..."):
@@ -419,6 +470,9 @@ if st.button("Refresh Recent Audits", icon=":material/refresh:"):
         if history_res.status_code == 200:
             scans = history_res.json().get("scans") or []
             if scans:
+                with st.container(border=True):
+                    st.subheader("City-wide heat map", divider="grey")
+                    render_city_map(scans)
                 rows = []
                 for scan in scans:
                     rows.append({
