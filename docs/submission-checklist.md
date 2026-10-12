@@ -1,7 +1,8 @@
 # Submission Checklist
 
 Competition: Google Cloud AI Builder Cup — Sustainability and Social Impact.
-Deadline **2026-10-11**. Every claim below was verified on 2026-10-05, not assumed.
+Prototype module closes **2026-10-18**. An earlier revision of this file recorded
+2026-10-11, which was wrong; the date below comes from the live submission portal.
 
 ## Acceptance criteria (TASK-006)
 

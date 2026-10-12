@@ -1,6 +1,6 @@
 # Demo Runbook
 
-A 3-minute recording of HotSpot Sentinels against the deployed stack. Every number
+A 3-to-4 minute recording of HotSpot Sentinels against the deployed stack. Every number
 below was measured on 2026-10-04, not estimated.
 
 |               |                                                               |
@@ -8,7 +8,7 @@ below was measured on 2026-10-04, not estimated.
 | Dashboard     | https://hotspot-frontend-153692178986.asia-southeast1.run.app |
 | Backend       | https://hotspot-backend-153692178986.asia-southeast1.run.app  |
 | Region        | `asia-southeast1`                                             |
-| Recording cap | **3 minutes** (OQ-4)                                          |
+| Recording cap | **3 to 4 minutes** — target **3:15**                                          |
 
 ## The cache risk is now largely retired
 
@@ -64,10 +64,11 @@ Re-measured against the deployed stack on 2026-10-05. **The opener changed** —
 | Contrast analysis (Botanic Gardens)  | **13.4 s** | unchanged from 2026-10-04    |
 | **Total spent waiting**              | **~28 s**  |                              |
 
-That leaves roughly **150 seconds of the 180-second budget** for narration — about
-12 seconds more headroom than the previous coordinate-led opener. Add a few seconds
-for UI rendering on top of the API figures. Either narrate over the spinner or cut
-the wait in the edit; do not record it in silence.
+That leaves roughly **167 seconds of a 195-second (3:15) target** for narration.
+The rules allow 3 to 4 minutes while the submission template says 3 minutes, so
+3:00–3:30 is the window that satisfies both; do not come in under 3:00. Add a few
+seconds for UI rendering on top of the API figures. Either narrate over the spinner
+or cut the wait in the edit; do not record it in silence.
 
 The first analysis after an idle period is the slow one: it pays a container cold
 start. Run one throwaway analysis before recording — the measured cold start on
