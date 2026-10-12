@@ -169,6 +169,7 @@ def apply_location_preset():
         latitude, longitude = CITY_COORDINATES[location]
         st.session_state["imagery_latitude"] = str(latitude)
         st.session_state["imagery_longitude"] = str(longitude)
+        st.session_state["resolved_place"] = location
 
 
 def render_blueprint(report):
@@ -202,6 +203,92 @@ def render_blueprint(report):
                 st.checkbox(str(intervention), key=f"intervention_{report.get('zone_id')}_{index}")
 
 
+def set_coordinates(latitude, longitude, label=None):
+    """Single place where any of the three input methods lands a coordinate."""
+    st.session_state["imagery_latitude"] = f"{float(latitude):.6f}"
+    st.session_state["imagery_longitude"] = f"{float(longitude):.6f}"
+    # Any explicit choice means the preset no longer describes the coordinates.
+    st.session_state["location_preset"] = "Custom coordinates"
+    st.session_state["resolved_place"] = label
+
+
+def search_place():
+    """Runs as a submit callback, before the rerun, so widget keys may be written."""
+    query = (st.session_state.get("place_query") or "").strip()
+    st.session_state["search_message"] = None
+    if not query:
+        return
+    try:
+        response = requests.get(
+            f"{API_BASE_URL}/api/geocode", params={"q": query}, timeout=REQUEST_TIMEOUT_SECONDS
+        )
+    except Exception as error:
+        # Never surface a raw transport error; it can carry a URL with the key.
+        st.session_state["search_message"] = ("error", f"Location search is unavailable ({type(error).__name__}).")
+        return
+    if response.status_code == 200:
+        try:
+            place = response.json()
+            set_coordinates(place["lat"], place["lng"], place.get("formatted_address"))
+        except (ValueError, KeyError, TypeError):
+            st.session_state["search_message"] = ("error", "Location search returned an unexpected response.")
+    elif response.status_code == 404:
+        st.session_state["search_message"] = (
+            "warning", f"No place matched “{query}”. The current coordinates are unchanged.")
+    else:
+        st.session_state["search_message"] = ("error", f"Location search failed (HTTP {response.status_code}).")
+
+
+def render_location_picker():
+    """World map where a click chooses the coordinate to analyse."""
+    try:
+        import folium
+        from streamlit_folium import st_folium
+    except ImportError:
+        st.caption("Map picker unavailable. Use the shortcut, search, or type coordinates.")
+        return
+
+    try:
+        latitude = float(st.session_state.get("imagery_latitude"))
+        longitude = float(st.session_state.get("imagery_longitude"))
+    except (TypeError, ValueError):
+        latitude, longitude = next(iter(CITY_COORDINATES.values()))
+
+    world = folium.Map(location=[latitude, longitude], zoom_start=11, control_scale=True)
+    # A vector marker, not folium's default pin: the pin's icon PNG is fetched
+    # from a CDN that browsers block, which renders a broken image over the map.
+    folium.CircleMarker([latitude, longitude], radius=9, tooltip="Selected location",
+                        color="#ff4d4f", weight=3, fill=True,
+                        fill_color="#ff4d4f", fill_opacity=0.45).add_to(world)
+    clicked = st_folium(world, height=320, width=None, key="location_picker",
+                        returned_objects=["last_clicked"])
+
+    point = (clicked or {}).get("last_clicked") or {}
+    new_latitude, new_longitude = point.get("lat"), point.get("lng")
+    if new_latitude is None or new_longitude is None:
+        return
+    # Folium can report a longitude beyond ±180 when the world map is panned
+    # across the date line; the backend rejects those, so never send them.
+    if not (-90 <= new_latitude <= 90) or not (-180 <= new_longitude <= 180):
+        st.warning("That point is outside the valid coordinate range.")
+        return
+    if (f"{new_latitude:.6f}", f"{new_longitude:.6f}") != (
+        st.session_state.get("imagery_latitude"), st.session_state.get("imagery_longitude")
+    ):
+        # The picker renders after the sidebar's coordinate inputs exist, and a
+        # widget key cannot be written once its widget is instantiated. Hand the
+        # click to the next run, which applies it before any widget is created.
+        st.session_state["pending_coordinate"] = (new_latitude, new_longitude, "Chosen from the map")
+        st.rerun()
+
+
+def apply_pending_coordinate():
+    """Apply a deferred map click. Must run before the coordinate widgets exist."""
+    pending = st.session_state.pop("pending_coordinate", None)
+    if pending:
+        set_coordinates(*pending)
+
+
 st.set_page_config(
     page_title="HotSpot Sentinels", page_icon=":material/landscape:",
     layout="wide", initial_sidebar_state="expanded",
@@ -209,6 +296,9 @@ st.set_page_config(
 
 st.title("HotSpot Sentinels")
 st.caption("Name a place. See its urban heat risk.")
+
+# Before any widget is created, so a deferred map click can write its keys.
+apply_pending_coordinate()
 
 with st.sidebar:
     st.header("Analysis inputs")
@@ -235,6 +325,18 @@ with st.sidebar:
         opening_latitude, opening_longitude = next(iter(CITY_COORDINATES.values()))
         st.session_state.setdefault("imagery_latitude", str(opening_latitude))
         st.session_state.setdefault("imagery_longitude", str(opening_longitude))
+
+        with st.form("place_search", border=False):
+            st.text_input("Search a city or area", key="place_query",
+                          placeholder="e.g. Karol Bagh, Delhi")
+            st.form_submit_button("Search", icon=":material/search:", on_click=search_place)
+        message = st.session_state.get("search_message")
+        if message:
+            level, text = message
+            (st.error if level == "error" else st.warning)(text)
+        elif st.session_state.get("resolved_place"):
+            st.success(st.session_state["resolved_place"], icon=":material/place:")
+
         st.text_input("Latitude", key="imagery_latitude", placeholder="-90 to 90")
         st.text_input("Longitude", key="imagery_longitude", placeholder="-180 to 180")
         st.caption("Coordinates are sent to the backend; imagery is retrieved server-side.")
@@ -335,6 +437,8 @@ if analysis_ready:
         else:
             st.subheader("Selected location")
             st.text(f"Latitude: {latitude} | Longitude: {longitude}")
+            with st.expander("Pick a location on the map", icon=":material/map:"):
+                render_location_picker()
             satellite_preview = st.empty()
     with score_column:
         st.subheader("Heat risk assessment")

@@ -12,6 +12,10 @@ attrs==26.1.0
     # via
     #   jsonschema
     #   referencing
+branca==0.8.2
+    # via
+    #   folium
+    #   streamlit-folium
 certifi==2026.7.22
     # via requests
 charset-normalizer==3.5.2
@@ -22,6 +26,8 @@ click==8.5.0
     #   uvicorn
 exceptiongroup==1.3.1 ; python_full_version < '3.11'
     # via anyio
+folium==0.20.0
+    # via streamlit-folium
 h11==0.16.0
     # via uvicorn
 httptools==0.8.0
@@ -35,7 +41,10 @@ itsdangerous==2.2.0
 jinja2==3.1.6
     # via
     #   altair
+    #   branca
+    #   folium
     #   pydeck
+    #   streamlit-folium
 jsonschema==4.26.0
     # via altair
 jsonschema-specifications==2025.9.1
@@ -46,16 +55,19 @@ narwhals==2.26.0
     # via altair
 numpy==2.2.6 ; python_full_version < '3.11'
     # via
+    #   folium
     #   pandas
     #   pydeck
     #   streamlit
 numpy==2.4.6 ; python_full_version == '3.11.*'
     # via
+    #   folium
     #   pandas
     #   pydeck
     #   streamlit
 numpy==2.5.3 ; python_full_version >= '3.12'
     # via
+    #   folium
     #   pandas
     #   pydeck
     #   streamlit
@@ -86,7 +98,9 @@ referencing==0.37.0
     #   jsonschema
     #   jsonschema-specifications
 requests==2.34.2
-    # via streamlit
+    # via
+    #   folium
+    #   streamlit
 rpds-py==0.30.0 ; python_full_version < '3.11'
     # via
     #   jsonschema
@@ -100,6 +114,9 @@ six==1.17.0
 starlette==1.7.0
     # via streamlit
 streamlit==1.64.0
+    # via streamlit-folium
+streamlit-folium==0.26.2 ; python_full_version < '3.11'
+streamlit-folium==0.27.4 ; python_full_version >= '3.11'
 toml==0.10.2
     # via streamlit
 typing-extensions==4.16.0
@@ -121,3 +138,5 @@ watchdog==6.0.0 ; sys_platform != 'darwin'
     # via streamlit
 websockets==16.1.1
     # via streamlit
+xyzservices==2026.9.1
+    # via folium

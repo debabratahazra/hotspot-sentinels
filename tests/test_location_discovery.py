@@ -1,0 +1,156 @@
+"""Location discovery in the dashboard (STORY-049, STORY-050).
+
+Three input methods must land on the same coordinate pair without fighting each
+other, so most of what matters here is their interaction.
+"""
+
+import re
+from io import BytesIO
+from pathlib import Path
+from unittest.mock import Mock
+
+import pytest
+import requests
+import streamlit as st
+from streamlit.testing.v1 import AppTest
+
+APP = str(Path(__file__).resolve().parents[1] / "frontend/app.py")
+
+GEOCODED = {"lat": 28.655, "lng": 77.1888, "formatted_address": "Karol Bagh, New Delhi, Delhi, India"}
+
+
+@pytest.fixture
+def dashboard(monkeypatch, valid_report, sample_png_bytes):
+    image = BytesIO(sample_png_bytes)
+    image.name = "district.png"
+    monkeypatch.setattr(st, "file_uploader", lambda *a, **k: image)
+    post = Mock(return_value=Mock(status_code=200, json=lambda: valid_report))
+
+    def routed_get(url, **kwargs):
+        if "/api/geocode" in url:
+            return Mock(status_code=200, json=lambda: GEOCODED)
+        return Mock(status_code=200, json=lambda: {"scans": [valid_report]})
+
+    get = Mock(side_effect=routed_get)
+    monkeypatch.setattr(requests, "post", post)
+    monkeypatch.setattr(requests, "get", get)
+    return AppTest.from_file(APP, default_timeout=10), post, get
+
+
+def coordinates(app):
+    boxes = {box.label: box.value for box in app.text_input}
+    return boxes["Latitude"], boxes["Longitude"]
+
+
+def search(app, query):
+    app.run()
+    next(box for box in app.text_input if box.label == "Search a city or area").set_value(query).run()
+    next(button for button in app.button if button.label == "Search").click().run()
+    assert not app.exception
+    return app
+
+
+def test_searching_a_place_sets_the_analysis_coordinates(dashboard):
+    app = search(dashboard[0], "Karol Bagh, Delhi")
+    assert coordinates(app) == ("28.655000", "77.188800")
+
+
+def test_the_resolved_place_is_shown_back_so_a_wrong_match_is_obvious(dashboard):
+    app = search(dashboard[0], "Karol Bagh, Delhi")
+    assert any("Karol Bagh" in element.value for element in app.success)
+
+
+def test_searching_switches_the_preset_to_custom(dashboard):
+    # Otherwise the shortcut would still claim to describe the coordinates.
+    app = search(dashboard[0], "Karol Bagh, Delhi")
+    assert next(box.value for box in app.selectbox if box.label == "Location shortcut") == "Custom coordinates"
+
+
+def test_a_search_with_no_match_leaves_coordinates_untouched(dashboard, monkeypatch):
+    app = dashboard[0]
+    app.run()
+    before = coordinates(app)
+
+    def not_found(url, **kwargs):
+        if "/api/geocode" in url:
+            return Mock(status_code=404, json=lambda: {"detail": "No place matched that search."})
+        return Mock(status_code=200, json=lambda: {"scans": []})
+
+    monkeypatch.setattr(requests, "get", Mock(side_effect=not_found))
+    app = search(app, "Nonexistentplacexyz")
+    assert coordinates(app) == before
+    assert any("No place matched" in element.value for element in app.warning)
+
+
+def test_a_geocoding_outage_does_not_break_the_page(dashboard, monkeypatch):
+    def failing(url, **kwargs):
+        if "/api/geocode" in url:
+            raise requests.ConnectionError("RAW-CLOUD-PAYLOAD AIzaSyLEAKED Bearer secret")
+        return Mock(status_code=200, json=lambda: {"scans": []})
+
+    monkeypatch.setattr(requests, "get", Mock(side_effect=failing))
+    app = search(dashboard[0], "Singapore")
+    assert not app.exception
+    rendered = " ".join(element.value for group in (app.error, app.warning, app.info) for element in group)
+    assert "AIzaSy" not in rendered and "Bearer" not in rendered
+
+
+def test_an_empty_search_makes_no_request(dashboard):
+    app = dashboard[0]
+    app.run()
+    next(box for box in app.text_input if box.label == "Search a city or area").set_value("   ").run()
+    next(button for button in app.button if button.label == "Search").click().run()
+    assert not any("/api/geocode" in str(call) for call in dashboard[2].call_args_list)
+
+
+def test_preset_shortcut_still_sets_coordinates(dashboard):
+    app = dashboard[0]
+    app.run()
+    next(box for box in app.selectbox if box.label == "Location shortcut").set_value(
+        "Singapore Botanic Gardens").run()
+    assert not app.exception
+    assert coordinates(app) == ("1.3521", "103.8198")
+
+
+def test_search_result_survives_into_the_analysis_request(dashboard):
+    app = search(dashboard[0], "Karol Bagh, Delhi")
+    next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
+    assert not app.exception
+    sent = dashboard[1].call_args.kwargs.get("data") or {}
+    # The app parses the text inputs to floats before sending.
+    assert float(sent["imagery_lat"]) == pytest.approx(28.655)
+    assert float(sent["imagery_lng"]) == pytest.approx(77.1888)
+
+
+def test_a_map_click_is_applied_on_the_next_run(dashboard):
+    # The picker cannot write the coordinate widgets itself, so it defers the
+    # click and the next run applies it. This is that handover.
+    app = dashboard[0]
+    app.run()
+    app.session_state["pending_coordinate"] = (1.2897, 103.754, "Chosen from the map")
+    app.run()
+    assert not app.exception
+    assert coordinates(app) == ("1.289700", "103.754000")
+
+
+def test_an_applied_map_click_is_not_replayed_on_later_runs(dashboard):
+    app = dashboard[0]
+    app.run()
+    app.session_state["pending_coordinate"] = (1.2897, 103.754, "Chosen from the map")
+    app.run()
+    next(box for box in app.text_input if box.label == "Latitude").set_value("5.000000").run()
+    # A stale pending click would stamp the map coordinate back over the edit.
+    assert coordinates(app)[0] == "5.000000"
+
+
+def test_pending_coordinates_are_applied_before_the_widgets_exist():
+    # The live failure this guards: the picker renders after the sidebar, so
+    # writing imagery_latitude from inside it raised
+    # StreamlitWidgetAlreadyInstantiatedError on every map click.
+    source = Path(APP).read_text()
+    # Match the module-level call, not the def, or moving the call would pass.
+    call = re.search(r"^apply_pending_coordinate\(\)$", source, re.MULTILINE)
+    assert call, "the app must call apply_pending_coordinate() at module level"
+    assert call.start() < source.index('key="imagery_latitude"'), (
+        "apply_pending_coordinate() must run before the coordinate widgets"
+    )

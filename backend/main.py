@@ -13,6 +13,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from services import alert_dispatcher, database, vision_analyzer
 from tools import climate_service
 from tools.climate_service import get_latest_temperature
+from tools.geocoding_service import GeocodingError, GeocodingNoMatch, geocode_place
 from services.vision_analyzer import HotspotAnalysisResult, IdentitySource, VisionAnalysisError, analyze_urban_hotspot
 from services.database import DatabaseError, save_hotspot_report, get_recent_reports, publish_public_alert
 from services.alert_dispatcher import dispatch_heat_alert
@@ -251,6 +252,29 @@ async def get_satellite_imagery(
         media_type=imagery["mime_type"],
         headers={"Cache-Control": "public, max-age=3600"},
     )
+
+
+class GeocodeResult(BaseModel):
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
+    formatted_address: str = Field(min_length=1)
+
+
+@app.get(
+    "/api/geocode",
+    response_model=GeocodeResult,
+    responses={404: {"description": "No place matched that search."},
+               502: {"description": "Location search is unavailable."}},
+)
+async def geocode(q: Annotated[str, Query(min_length=1, max_length=200)]):
+    """Resolve a place name to coordinates. Keeps the Maps key server-side."""
+    try:
+        place = await asyncio.to_thread(geocode_place, q)
+    except GeocodingNoMatch as error:
+        raise HTTPException(status_code=404, detail=str(error)) from None
+    except GeocodingError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from None
+    return place
 
 
 def _validate_analysis_form(form) -> None:

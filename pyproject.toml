@@ -26,6 +26,7 @@ dependencies = [
 [dependency-groups]
 frontend = [
     "streamlit>=1.33.0",
+    "streamlit-folium>=0.21.0",
 ]
 dev = [
     "httpx>=0.27.0",
