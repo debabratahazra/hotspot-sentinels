@@ -156,7 +156,7 @@ def test_offline_api_report_renders_current_dashboard_fields_without_none_metric
     dashboard[1].return_value = response
     app = click(dashboard[0], "Run HotSpot Analysis")
     assert not app.exception
-    assert len(app.metric) == 7
+    assert len(app.metric) == 9
     assert all(metric.value not in {"None", "-"} for metric in app.metric)
     assert any("Published successfully" in element.value for element in app.error)
     stored = api_environment[4].collection.return_value.document.return_value.set.call_args.args[0]

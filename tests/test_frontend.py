@@ -66,7 +66,7 @@ def test_no_metric_or_history_value_renders_none(dashboard, valid_report, view, 
     values.extend(element.label for element in app.expander)
     assert all("None" not in value for value in values)
     if view == "Run HotSpot Analysis":
-        assert len(app.metric) == 7
+        assert len(app.metric) == 9
         assert app.metric[2].label == "Projected Cooling Drop"
         assert app.metric[2].value == ("-" if missing else "6.8 \u00b0C")
         if missing:
@@ -408,7 +408,11 @@ def test_surface_breakdown_is_charted_with_fixed_material_colours(dashboard, val
         "range": ["#555555", "#181818", "#c9cdd1", "#43b879"],
     }
     assert spec["encoding"]["x"]["scale"]["domain"] == [0, 100]
-    assert [metric.value for metric in app.metric[3:]] == ["55%", "30%", "10%", "5%"]
+    # Selected by label rather than position: the blueprint gained metric cards,
+    # and an index slice silently picks up whatever happens to render next.
+    surfaces = {metric.label: metric.value for metric in app.metric}
+    assert [surfaces[label] for label in ("Asphalt", "Dark Roofs", "Concrete", "Green Canopy")] == \
+        ["55%", "30%", "10%", "5%"]
 
 
 def test_corridor_orientation_is_shown(dashboard):
@@ -418,8 +422,11 @@ def test_corridor_orientation_is_shown(dashboard):
 
 def test_coating_area_and_projected_drop_use_metric_units(dashboard):
     app = click(dashboard[0], "Run HotSpot Analysis")
-    assert any(text.value == "4200 m\u00b2" for text in app.text)
-    assert any(text.value == "6.8 \u00b0C" for text in app.text)
+    # Rendered as metric cards rather than plain text since the blueprint was made
+    # legible at presentation scale; the units are what this test actually guards.
+    rendered = [text.value for text in app.text] + [metric.value for metric in app.metric]
+    assert "4200 m\u00b2" in rendered
+    assert "6.8 \u00b0C" in rendered
 
 
 def test_micro_canopy_interventions_are_listed(dashboard, valid_report):
