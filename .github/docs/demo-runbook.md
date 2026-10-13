@@ -25,11 +25,12 @@ a brand-new revision returned the 640×640 PNG a different instance had fetched.
 Two consequences for recording:
 
 - `--max-instances=1` is **no longer required**. Leave autoscaling alone.
-- The opener is an upload and never calls the Maps API at all, so the CRITICAL
-  result and the alert cannot be taken out by a cold cache either way.
+- Both demo beats are now coordinates, so both depend on the Maps imagery cache.
+  Warm both in the pre-flight. If one misbehaves, the upload fallback opener
+  calls no Maps API at all and cannot be taken out by a cold cache.
 
-Still warm the contrast coordinate before recording. The first fetch after a
-24-hour gap re-requests from Maps and is slower.
+The first fetch after a 24-hour gap re-requests from Maps and is slower, which is
+why the pre-flight warms the opener as well as the contrast.
 
 ## Pre-flight
 
@@ -44,27 +45,33 @@ U=https://hotspot-backend-153692178986.asia-southeast1.run.app
 # Throwaway call to absorb the container cold start.
 curl -sS -o /dev/null -X POST "$U/api/analyze" -F file=@data_samples/industrial_hotspot.jpg
 
-# Warm the contrast coordinate.
+# Warm the opener (Pasir Panjang Terminal) and the contrast (Botanic Gardens).
+curl -sS -o /dev/null -X POST "$U/api/analyze" -F imagery_lat=1.2816 -F imagery_lng=103.7571
 curl -sS -o /dev/null -X POST "$U/api/analyze" -F imagery_lat=1.3521 -F imagery_lng=103.8198
 
-# Must print 200.
+# Both must print 200.
+curl -sS -o /dev/null -w 'pasir panjang  %{http_code}\n' "$U/api/imagery?lat=1.2816&lng=103.7571"
 curl -sS -o /dev/null -w 'botanic gardens %{http_code}\n' "$U/api/imagery?lat=1.3521&lng=103.8198"
 
 # All four dependencies must read "ready".
 curl -sS "$U/api/health"
 ```
 
+The opener run above publishes a CRITICAL alert, which adds a card to the public
+wall. Rehearsals add more. To show a clean wall, trim duplicates first — or leave
+them and call them repeat detections, which is what they are.
+
 ## Measured timings
 
 Re-measured against the deployed stack on 2026-10-13.
 
-| Step                                   | API only    | Notes                              |
-| -------------------------------------- | ----------- | ---------------------------------- |
-| **Opener — Pasir Panjang Terminal**     | **21.6 s**  | 3 runs: 22.5 / 21.4 / 20.8 s       |
-| Fallback opener — industrial upload     | **17.2 s**  | 3 runs: 17.4 / 17.5 / 16.7 s       |
-| Contrast — Botanic Gardens coordinate   | **12.6 s**  | 3 runs: 13.0 / 12.3 / 12.9 s       |
-| **Total spent waiting (coordinate opener)** | **~34 s** | ~30 s if you use the upload opener |
-| First call after idle                  | **15.9 s**  | cold start is now close to warm    |
+| Step                                        | API only   | Notes                              |
+| ------------------------------------------- | ---------- | ---------------------------------- |
+| **Opener — Pasir Panjang Terminal**         | **21.6 s** | 3 runs: 22.5 / 21.4 / 20.8 s       |
+| Fallback opener — industrial upload         | **17.2 s** | 3 runs: 17.4 / 17.5 / 16.7 s       |
+| Contrast — Botanic Gardens coordinate       | **12.6 s** | 3 runs: 13.0 / 12.3 / 12.9 s       |
+| **Total spent waiting (coordinate opener)** | **~34 s**  | ~30 s if you use the upload opener |
+| First call after idle                       | **15.9 s** | cold start is now close to warm    |
 
 The coordinate opener costs about twice the contrast, and that is not cold cache:
 it reproduced at 25–27 s with imagery already cached. Budget for it. Either extend
@@ -117,24 +124,41 @@ spending a beat on the upload. If the imagery cache misbehaves during rehearsal,
 fall back to the upload opener — the script works either way, only the number and
 the surface mix change.
 
-## Flow gotcha
+## What the page looks like on load
 
-The sidebar collapses once a result renders. That used to force a fumbly reopen
-with the `»` control to reach the Location shortcut. It no longer does: the map
-panel carries its own search box, so the contrast location can be chosen from the
-main area without touching the sidebar. Use that path on camera.
+Verified against the deployed app on 2026-10-13. Nothing needs setting up on
+camera — the dashboard opens ready to run the opener:
+
+- **Location shortcut** is already on *Singapore Port Terminal*, and latitude and
+  longitude already read `1.2816` and `103.7571`.
+- **The map is already open** with the marker on that point. The picker no longer
+  starts collapsed, so there is no expander to click.
+- Both search boxes are present, one in the sidebar and one above the map.
+
+So the opening move is simply **Run HotSpot Analysis**. Everything before that is
+narration over a screen that is already in the right state.
+
+The sidebar still collapses once a result renders. You do not need it again: the
+map panel has its own search box, so the contrast location is chosen from the
+main area.
 
 ## What to show from location discovery
 
 These cost no analysis time — they are interactive, so only the two analyses
-spend the clock. All were verified against the deployed stack on 2026-10-12.
+spend the clock. Verified on the deployed stack on 2026-10-13.
 
 | Feature             | On camera                                                                          |
 | ------------------- | ---------------------------------------------------------------------------------- |
+| Shortcut list       | 15 Asian places ordered most built-up to most green, so the list itself is the risk scale |
 | Place autocomplete  | Type three characters; a dropdown of real places appears, neighbourhoods included  |
 | Synced search boxes | Choosing in one box updates the other, so the active location is never ambiguous   |
 | Map click naming    | Click anywhere; the point is named (`Padang City, Indonesia`, `Mediterranean Sea`) |
 | Public alert wall   | A Firebase-hosted page where citizens see CRITICAL zones appear live               |
+
+The shortcut list is the cheapest reach proof there is: opening it shows Dhaka,
+Kolkata, Manila, Mumbai, Bangkok, Tokyo, Delhi, Kuala Lumpur and Singapore in one
+glance, graded from a container terminal at the top to a national park at the
+bottom. It costs two seconds and no API call.
 
 The alert wall is the pay-off for the Pub/Sub beat: it shows the alert reaching
 someone outside the dashboard. Open it in a second tab **before** recording, so
@@ -164,18 +188,22 @@ Bracketed text is the action, not the words.
 
 ### 0:20–0:38 · Reach: anywhere on earth
 
-> [Type `Pasir Panjang T` into "Search a city or area". Suggestions refine as you
-> type. Pick **"Pasir Panjang Terminal, Singapore"** — the first result.]
+> [Open the **Location shortcut** dropdown. Scroll it slowly — Dhaka, Kolkata,
+> Manila, Mumbai, Bangkok, Tokyo, Delhi, Kuala Lumpur. Close it again on
+> *Singapore Port Terminal*, which is already selected.]
 >
-> "You can point it anywhere on earth. It starts suggesting after three
-> characters and narrows as you type — real places, down to the neighbourhood.
-> Or click the map. Or paste coordinates.
+> "You can point it anywhere on earth. These are real places across Asia, and the
+> list runs from the most built-up at the top to the greenest at the bottom —
+> that ordering is the risk scale.
 >
-> I'm going to point it at a working container port."
+> You can also type any place name and it suggests as you go, click a point on
+> the map, or paste coordinates. I'm starting with a working container port."
 
-**Why this exact text:** the dropdown is Google Places, so it only returns real
-places. `Pasir Panjang` alone puts a Malaysian town first; you need `Pasir
-Panjang T` for the Singapore terminal to top the list. Verified 2026-10-13.
+**Why the dropdown and not the search box:** the page already opens on Pasir
+Panjang Terminal, so searching for it would be theatre. The dropdown proves reach
+in two seconds with no API call and no typing to fumble. If you would rather show
+the typeahead live, type `Pasir Panjang T` — shorter prefixes put a Malaysian
+town first, because the suggestions are real Google Places results.
 
 ### 0:38–1:02 · Run it
 
@@ -275,17 +303,17 @@ Panjang T` for the Singapore terminal to top the list. Verified 2026-10-13.
 
 ### Beat summary
 
-| Time      | Beat          | Must land                                 |
-| --------- | ------------- | ----------------------------------------- |
-| 0:00–0:20 | Problem       | Heat kills; nobody can rank a block       |
-| 0:20–0:35 | Reach         | Any place on earth, three ways            |
-| 0:35–1:02 | Run           | Gemini + real NOAA data, no thermal kit   |
-| 1:02–1:32 | Verdict       | **8.6 CRITICAL**, 65% asphalt, 0% canopy  |
-| 1:30–1:50 | Alert wall    | The alert actually reached people         |
-| 1:50–2:15 | Blueprint     | 10,000 m², **10 °C** drop                 |
-| 2:15–2:45 | Contrast      | **1.5 LOW** — trees are the fix           |
-| 2:45–3:05 | Honest limits | inferred vs supplied, guard rails         |
-| 3:05–3:30 | Close         | Architecture + the one-line pitch         |
+| Time      | Beat          | Must land                                |
+| --------- | ------------- | ---------------------------------------- |
+| 0:00–0:20 | Problem       | Heat kills; nobody can rank a block      |
+| 0:20–0:35 | Reach         | Any place on earth, three ways           |
+| 0:35–1:02 | Run           | Gemini + real NOAA data, no thermal kit  |
+| 1:02–1:32 | Verdict       | **8.6 CRITICAL**, 65% asphalt, 0% canopy |
+| 1:30–1:50 | Alert wall    | The alert actually reached people        |
+| 1:50–2:15 | Blueprint     | 10,000 m², **10 °C** drop                |
+| 2:15–2:45 | Contrast      | **1.5 LOW** — trees are the fix          |
+| 2:45–3:05 | Honest limits | inferred vs supplied, guard rails        |
+| 3:05–3:30 | Close         | Architecture + the one-line pitch        |
 
 If it runs long, cut the city map sentence first, then trim the problem statement.
 **Do not cut the alert wall or the honest-limits beat** — the first proves the
@@ -334,19 +362,19 @@ if `data_samples/` is empty — they are not committed.
 Measured 2026-10-13, each on three consecutive runs. These are the numbers the
 narration quotes.
 
-| Field                   | Opener (coordinate)          | Fallback (upload)                | Contrast (coordinate) |
-| ----------------------- | ---------------------------- | -------------------------------- | --------------------- |
-| Input                   | 1.2816, 103.7571             | `industrial_hotspot.jpg`         | 1.3521, 103.8198      |
-| Zone name               | Container Terminal and Car Storage | Industrial Hotspot         | Dense Tropical Forest |
-| HVI / band              | **8.6 CRITICAL**             | **8.6 CRITICAL**                 | **1.5 LOW**           |
-| Asphalt / dark roof     | 65% / 20%                    | 38% / 55%                        | 0% / 0%               |
-| Concrete / green canopy | 15% / **0%**                 | 5% / **2%**                      | 0% / **100%**         |
-| Ambient (source)        | 31.0 °C (`bigquery`)         | 31.0 °C (`bigquery` — real NOAA) | 31.0 °C (`bigquery`)  |
-| Retroreflective coating | **300,000 m²**               | 4,000 m²                         | 0 m²                  |
-| Projected temp drop     | **7.0 °C**                   | 8.0 °C                           | 1.0 °C                |
-| Alert dispatched        | **true**                     | **true**                         | false                 |
-| Coordinate provenance   | supplied                     | **inferred** (model guessed LA)  | supplied              |
-| Latency                 | 21.6 s                       | 17.2 s                           | 12.6 s                |
+| Field                   | Opener (coordinate)                | Fallback (upload)                | Contrast (coordinate) |
+| ----------------------- | ---------------------------------- | -------------------------------- | --------------------- |
+| Input                   | 1.2816, 103.7571                   | `industrial_hotspot.jpg`         | 1.3521, 103.8198      |
+| Zone name               | Container Terminal and Car Storage | Industrial Hotspot               | Dense Tropical Forest |
+| HVI / band              | **8.6 CRITICAL**                   | **8.6 CRITICAL**                 | **1.5 LOW**           |
+| Asphalt / dark roof     | 65% / 20%                          | 38% / 55%                        | 0% / 0%               |
+| Concrete / green canopy | 15% / **0%**                       | 5% / **2%**                      | 0% / **100%**         |
+| Ambient (source)        | 31.0 °C (`bigquery`)               | 31.0 °C (`bigquery` — real NOAA) | 31.0 °C (`bigquery`)  |
+| Retroreflective coating | **300,000 m²**                     | 4,000 m²                         | 0 m²                  |
+| Projected temp drop     | **7.0 °C**                         | 8.0 °C                           | 1.0 °C                |
+| Alert dispatched        | **true**                           | **true**                         | false                 |
+| Coordinate provenance   | supplied                           | **inferred** (model guessed LA)  | supplied              |
+| Latency                 | 21.6 s                             | 17.2 s                           | 12.6 s                |
 
 The canopy pair is the whole environmental argument in two numbers: **0% canopy
 scores 8.6 CRITICAL, 100% canopy scores 1.5 LOW**, same model and same pipeline.
@@ -390,9 +418,12 @@ clean "Recent municipal audits" list, simply do not press Refresh.
 
 ## After recording
 
-Restore normal autoscaling, since `--max-instances=1` is a demo-time setting and
-not a production one:
+Nothing to undo. Both services already run at `maxScale=3` and the demo no longer
+pins `--max-instances=1`, so there is no demo-time setting left to restore.
 
-```bash
-gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=3
-```
+Two things worth doing:
+
+- **Trim the public alert wall.** Every rehearsal that scores CRITICAL adds a
+  card, and they stack up as duplicates of the same zone.
+- **Paste the video URL into slide 14** of `HotSpot_Sentinels_Submission.pptx`,
+  which is the last remaining placeholder in the deck.
