@@ -58,45 +58,54 @@ curl -sS "$U/api/health"
 
 Re-measured against the deployed stack on 2026-10-13.
 
-| Step                                 | API only    | Notes                           |
-| ------------------------------------ | ----------- | ------------------------------- |
-| Opening analysis (industrial upload) | **17.2 s**  | 3 runs: 17.4 / 17.5 / 16.7 s    |
-| Contrast analysis (Botanic Gardens)  | **13.3 s**  | 3 runs: 13.7 / 12.8 / 13.4 s    |
-| **Total spent waiting**              | **~30.5 s** |                                 |
-| First call after idle                | **17.8 s**  | cold start is now close to warm |
+| Step                                   | API only    | Notes                              |
+| -------------------------------------- | ----------- | ---------------------------------- |
+| **Opener — Pasir Panjang Terminal**     | **21.6 s**  | 3 runs: 22.5 / 21.4 / 20.8 s       |
+| Fallback opener — industrial upload     | **17.2 s**  | 3 runs: 17.4 / 17.5 / 16.7 s       |
+| Contrast — Botanic Gardens coordinate   | **12.6 s**  | 3 runs: 13.0 / 12.3 / 12.9 s       |
+| **Total spent waiting (coordinate opener)** | **~34 s** | ~30 s if you use the upload opener |
+| First call after idle                  | **15.9 s**  | cold start is now close to warm    |
 
-That leaves roughly **180 seconds of a 210-second (3:30) target** for narration.
+The coordinate opener costs about twice the contrast, and that is not cold cache:
+it reproduced at 25–27 s with imagery already cached. Budget for it. Either extend
+the narration over the spinner, as the script below does, or cut the wait in the
+edit — do not record it in silence.
+
+That leaves roughly **170 seconds of a 210-second (3:30) target** for narration.
 The rules allow 3 to 4 minutes while the submission template says 3 minutes, so
 3:00–3:30 is the window that satisfies both; do not come in under 3:00. Add a few
-seconds for UI rendering on top of the API figures. Either narrate over the spinner
-or cut the wait in the edit; do not record it in silence.
+seconds for UI rendering on top of the API figures.
 
 The first analysis after an idle period used to be much the slower one. That gap
-has closed: on 2026-10-13 the cold call took 17.8 s against 17.2 s warm. Still run
-one throwaway analysis before recording, but a cold start is no longer the hazard
-it was.
+has closed: on 2026-10-13 the cold call took 15.9 s. Still run one throwaway
+analysis before recording, but a cold start is no longer the hazard it was.
 
 ## Two openers now work — pick one and rehearse it
 
-The port terminal coordinate `1.2897, 103.7540` was documented in October as
-having regressed to `HVI 6.7 HIGH`, which cost the demo its climax. **That is no
-longer true.** Four consecutive runs on 2026-10-13 returned:
+The old opener coordinate `1.2897, 103.7540` is **open sea**, which was only found
+by fetching its imagery and looking at it. The model reads that dark water as
+100% asphalt, scores it 9.1 CRITICAL and fires a real Pub/Sub alert. Do not use
+it, and do not quote its 9.1 anywhere: it is a false positive, not a result.
+
+The preset now points at **Pasir Panjang Terminal** itself, `1.2816, 103.7571`,
+which is genuinely the container yard. Three consecutive runs on 2026-10-13:
 
 ```
-HVI 9.1  CRITICAL  alert=True  asphalt 100%  canopy 0%
+HVI 8.6  CRITICAL  alert=True  asphalt 65%  dark roof 20%  concrete 15%  canopy 0%
+zone: "Container Terminal and Car Storage"
 ```
 
 So there are two viable openers. They are genuinely different arguments, not just
 different numbers:
 
-| | Port terminal coordinate | Industrial upload |
-| --- | --- | --- |
-| Score | **9.1 CRITICAL**, 100% asphalt | **8.6 CRITICAL**, 2% canopy |
-| Imagery | real Google satellite | synthetic sample |
-| Time | 13.3 s | 17.2 s |
-| Shows | it works on a **real place** you can look up | it reads **any** photo, no coverage needed |
-| Risk | depends on the Maps imagery cache | none — no Maps call at all |
-| Coordinates | supplied, so honest | **inferred** — the model guesses Los Angeles |
+|             | Pasir Panjang Terminal                       | Industrial upload                            |
+| ----------- | -------------------------------------------- | -------------------------------------------- |
+| Score       | **8.6 CRITICAL**, 0% canopy                  | **8.6 CRITICAL**, 2% canopy                  |
+| Imagery     | real Google satellite                        | synthetic sample                             |
+| Time        | 26.1 s                                       | 17.2 s                                       |
+| Shows       | it works on a **real place** you can look up | it reads **any** photo, no coverage needed   |
+| Risk        | depends on the Maps imagery cache            | none — no Maps call at all                   |
+| Coordinates | supplied, so honest                          | **inferred** — the model guesses Los Angeles |
 
 The coordinate is the stronger opening claim: a judge can check Singapore's port
 on a map. The upload is the safer one and sets up the honest-limits beat, because
@@ -153,36 +162,51 @@ Bracketed text is the action, not the words.
 >
 > HotSpot Sentinels answers that in about fifteen seconds."
 
-### 0:20–0:35 · Reach: anywhere on earth
+### 0:20–0:38 · Reach: anywhere on earth
 
-> [Type `Port` into "Search a city or area". Dropdown appears. Pick Singapore's
-> port terminal, or use the Singapore Port Terminal shortcut.]
+> [Type `Pasir Panjang T` into "Search a city or area". Suggestions refine as you
+> type. Pick **"Pasir Panjang Terminal, Singapore"** — the first result.]
 >
-> "You can point it anywhere on earth — type three letters and it finds real
-> places, down to the neighbourhood. Or click the map. Or paste coordinates.
+> "You can point it anywhere on earth. It starts suggesting after three
+> characters and narrows as you type — real places, down to the neighbourhood.
+> Or click the map. Or paste coordinates.
 >
 > I'm going to point it at a working container port."
 
-### 0:35–0:55 · Run it
+**Why this exact text:** the dropdown is Google Places, so it only returns real
+places. `Pasir Panjang` alone puts a Malaysian town first; you need `Pasir
+Panjang T` for the Singapore terminal to top the list. Verified 2026-10-13.
 
-> [Click Run. Satellite imagery appears.]
+### 0:38–1:02 · Run it
+
+> [Click Run. Satellite imagery appears. **This wait is ~22 s** — the longest in
+> the video. The words below are written to fill it; do not rush them.]
 >
 > "That's live Google satellite imagery, pulled by the backend — not a stock
 > photo. Gemini 2.5 Flash is reading the actual surface materials: what fraction
-> is asphalt, dark roofing, concrete, tree canopy. At the same time the backend
-> pulls real ambient temperature from NOAA's global weather archive in BigQuery.
-> Not a simulation — measured data."
-
-### 0:55–1:30 · The verdict
-
-> [Result renders: HVI 9.1 CRITICAL]
+> is asphalt, what's dark roofing, concrete, tree canopy.
 >
-> "Heat Vulnerability Index: **9.1 out of 10. Critical.**
+> At the same time the backend is querying NOAA's global weather archive in
+> BigQuery for the real ambient temperature at that exact location. Not a
+> simulation, not an average — measured data from the nearest station.
 >
-> And here's why, which matters more than the number — **one hundred percent
-> asphalt. Zero percent tree canopy.** Every surface in that frame absorbs heat
-> during the day and radiates it back after dark, which is why these places never
-> cool down overnight.
+> And this is the part that matters for a city that can't afford a survey: there
+> is no thermal camera here, no LiDAR, no drone flight. It is reading ordinary
+> colour imagery that already exists for most of the planet. If your city is on
+> a satellite map, you can do this today."
+
+### 1:02–1:32 · The verdict
+
+> [Result renders: HVI 8.6 CRITICAL, "Container Terminal and Car Storage"]
+>
+> "It has named it for what it is — a container terminal and car storage yard.
+> Heat Vulnerability Index: **8.6 out of 10. Critical.**
+>
+> And here's why, which matters more than the number — sixty-five percent
+> asphalt, twenty percent dark roofing, fifteen percent concrete. **Zero percent
+> tree canopy.** Every surface in that frame absorbs heat through the day and
+> radiates it back after dark, which is why places like this never cool down
+> overnight.
 >
 > Because it crossed critical, the system didn't wait to be asked. It published
 > an alert automatically."
@@ -196,16 +220,16 @@ Bracketed text is the action, not the words.
 > clicking send. Residents don't need access to the planning dashboard to find out
 > their street is dangerous."
 
-### 1:50–2:15 · The prescription
+### 1:52–2:16 · The prescription
 
 > [Back to dashboard, scroll to the passive cooling blueprint]
 >
 > "A score alone changes nothing. So it prescribes: orient the ventilation
-> corridor northeast-to-southwest to catch the prevailing wind. Coat **ten
-> thousand square metres** in retroreflective material. Plant street trees, add
-> shade structures, use cool pavements.
+> corridor to catch the prevailing wind. Coat **three hundred thousand square
+> metres** in retroreflective material. Plant street trees, add shade structures,
+> use cool pavements.
 >
-> Projected surface temperature drop: **ten degrees Celsius.** That is the
+> Projected surface temperature drop: **seven degrees Celsius.** That is the
 > difference between a heatwave that is survivable and one that is not — and a
 > direct cut in the air-conditioning load that would otherwise burn more carbon."
 
@@ -218,7 +242,7 @@ Bracketed text is the action, not the words.
 >
 > **One point five. Low.** A hundred percent canopy, nothing to coat, one degree
 > of headroom. The score isn't guessing a mood, it's tracking what's physically on
-> the ground. And the gap between 9.1 and 1.5 *is* the intervention — that gap is
+> the ground. And the gap between 8.6 and 1.5 *is* the intervention — that gap is
 > what trees buy you."
 
 ### 2:45–3:05 · What it does not pretend to do
@@ -251,17 +275,17 @@ Bracketed text is the action, not the words.
 
 ### Beat summary
 
-| Time      | Beat          | Must land                           |
-| --------- | ------------- | ----------------------------------- |
-| 0:00–0:20 | Problem       | Heat kills; nobody can rank a block |
-| 0:20–0:35 | Reach         | Any place on earth, three ways      |
-| 0:35–0:55 | Run           | Gemini + real NOAA data             |
-| 0:55–1:30 | Verdict       | **9.1 CRITICAL**, 100% asphalt, 0% canopy |
-| 1:30–1:50 | Alert wall    | The alert actually reached people   |
-| 1:50–2:15 | Blueprint     | 10,000 m², **10 °C** drop            |
-| 2:15–2:45 | Contrast      | **1.5 LOW** — trees are the fix     |
-| 2:45–3:05 | Honest limits | inferred vs supplied, guard rails   |
-| 3:05–3:30 | Close         | Architecture + the one-line pitch   |
+| Time      | Beat          | Must land                                 |
+| --------- | ------------- | ----------------------------------------- |
+| 0:00–0:20 | Problem       | Heat kills; nobody can rank a block       |
+| 0:20–0:35 | Reach         | Any place on earth, three ways            |
+| 0:35–1:02 | Run           | Gemini + real NOAA data, no thermal kit   |
+| 1:02–1:32 | Verdict       | **8.6 CRITICAL**, 65% asphalt, 0% canopy  |
+| 1:30–1:50 | Alert wall    | The alert actually reached people         |
+| 1:50–2:15 | Blueprint     | 10,000 m², **10 °C** drop                 |
+| 2:15–2:45 | Contrast      | **1.5 LOW** — trees are the fix           |
+| 2:45–3:05 | Honest limits | inferred vs supplied, guard rails         |
+| 3:05–3:30 | Close         | Architecture + the one-line pitch         |
 
 If it runs long, cut the city map sentence first, then trim the problem statement.
 **Do not cut the alert wall or the honest-limits beat** — the first proves the
@@ -296,7 +320,7 @@ script as captions or a voiceover afterwards. The timings above hold either way.
 
 | Scenario        | Input                           | Expected                           |
 | --------------- | ------------------------------- | ---------------------------------- |
-| Critical opener | coordinate 1.2897, 103.7540     | HVI 9.1 CRITICAL, alert dispatched |
+| Critical opener | coordinate 1.2816, 103.7571     | HVI 8.6 CRITICAL, alert dispatched |
 | Fallback opener | upload `industrial_hotspot.jpg` | HVI 8.6 CRITICAL, alert dispatched |
 | Low contrast    | coordinate 1.3521, 103.8198     | HVI 1.5 LOW, no alert              |
 
@@ -310,22 +334,22 @@ if `data_samples/` is empty — they are not committed.
 Measured 2026-10-13, each on three consecutive runs. These are the numbers the
 narration quotes.
 
-| Field                   | Opener (coordinate)   | Fallback (upload)                | Contrast (coordinate) |
-| ----------------------- | --------------------- | -------------------------------- | --------------------- |
-| Input                   | 1.2897, 103.7540      | `industrial_hotspot.jpg`         | 1.3521, 103.8198      |
-| Zone name               | Dark Impervious Surface Zone | Industrial Hotspot        | Dense Tropical Forest |
-| HVI / band              | **9.1 CRITICAL**      | **8.6 CRITICAL**                 | **1.5 LOW**           |
-| Asphalt / dark roof     | **100%** / 0%         | 38% / 55%                        | 0% / 0%               |
-| Concrete / green canopy | 0% / **0%**           | 5% / **2%**                      | 0% / **100%**         |
-| Ambient (source)        | 31.0 °C (`bigquery`)  | 31.0 °C (`bigquery` — real NOAA) | 31.0 °C (`bigquery`)  |
-| Retroreflective coating | **10,000 m²**         | 4,000 m²                         | 0 m²                  |
-| Projected temp drop     | **10.0 °C**           | 8.0 °C                           | 1.0 °C                |
-| Alert dispatched        | **true**              | **true**                         | false                 |
-| Coordinate provenance   | supplied              | **inferred** (model guessed LA)  | supplied              |
-| Latency                 | 13.3 s                | 17.2 s                           | 13.3 s                |
+| Field                   | Opener (coordinate)          | Fallback (upload)                | Contrast (coordinate) |
+| ----------------------- | ---------------------------- | -------------------------------- | --------------------- |
+| Input                   | 1.2816, 103.7571             | `industrial_hotspot.jpg`         | 1.3521, 103.8198      |
+| Zone name               | Container Terminal and Car Storage | Industrial Hotspot         | Dense Tropical Forest |
+| HVI / band              | **8.6 CRITICAL**             | **8.6 CRITICAL**                 | **1.5 LOW**           |
+| Asphalt / dark roof     | 65% / 20%                    | 38% / 55%                        | 0% / 0%               |
+| Concrete / green canopy | 15% / **0%**                 | 5% / **2%**                      | 0% / **100%**         |
+| Ambient (source)        | 31.0 °C (`bigquery`)         | 31.0 °C (`bigquery` — real NOAA) | 31.0 °C (`bigquery`)  |
+| Retroreflective coating | **300,000 m²**               | 4,000 m²                         | 0 m²                  |
+| Projected temp drop     | **7.0 °C**                   | 8.0 °C                           | 1.0 °C                |
+| Alert dispatched        | **true**                     | **true**                         | false                 |
+| Coordinate provenance   | supplied                     | **inferred** (model guessed LA)  | supplied              |
+| Latency                 | 21.6 s                       | 17.2 s                           | 12.6 s                |
 
 The canopy pair is the whole environmental argument in two numbers: **0% canopy
-scores 9.1 CRITICAL, 100% canopy scores 1.5 LOW**, same model and same pipeline.
+scores 8.6 CRITICAL, 100% canopy scores 1.5 LOW**, same model and same pipeline.
 Lead with it.
 
 ### Honest-limits beat — verified evidence

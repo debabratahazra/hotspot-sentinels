@@ -58,7 +58,7 @@ def main() -> None:
 
     draw.text((PAD, 18), "HotSpot Sentinels — live prototype", fill=INK, font=font(34, bold=True))
     draw.text((PAD, 62),
-              "Singapore Port Terminal analysed from Google satellite imagery, 2026-10-13",
+              "Pasir Panjang Terminal, Singapore, analysed from Google satellite imagery, 2026-10-13",
               fill=MUTED, font=font(20))
 
     # Two columns of two: a narrow sidebar or a thin banner is unreadable once
@@ -68,13 +68,13 @@ def main() -> None:
     row_h = (CANVAS[1] - top - PAD * 2) // 2
 
     place(canvas, "02-hvi-metrics.png", (PAD, top, col_w, row_h),
-          "HVI 9.1 CRITICAL · 31.0 °C measured from NOAA GSOD · alert dispatched", draw)
+          "HVI 8.6 CRITICAL · 31.0 °C measured from NOAA GSOD · alert dispatched", draw)
     place(canvas, "09-alert-wall.png", (PAD * 2 + col_w, top, col_w, row_h),
           "Public alert wall — citizens see CRITICAL zones live, no sign-in", draw)
 
     bottom = top + row_h + PAD
     place(canvas, "08-surface-chart.png", (PAD, bottom, col_w, row_h),
-          "Surface breakdown driving the score: 100% asphalt, 0% canopy", draw)
+          "Surface breakdown driving the score: 65% asphalt, 0% canopy", draw)
     place(canvas, "03-breakdown-and-blueprint.png", (PAD * 2 + col_w, bottom, col_w, row_h),
           "Passive cooling blueprint, in metric quantities", draw)
 

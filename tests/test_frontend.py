@@ -9,6 +9,23 @@ import requests
 import streamlit as st
 from streamlit.testing.v1 import AppTest
 
+APP = Path(__file__).resolve().parents[1] / "frontend/app.py"
+
+
+def _opening_preset():
+    """Follow whichever preset the dashboard opens on rather than pinning a coordinate."""
+    for node in ast.walk(ast.parse(APP.read_text())):
+        if isinstance(node, ast.Assign) and any(
+                isinstance(target, ast.Name) and target.id == "CITY_COORDINATES"
+                for target in node.targets):
+            labels = [ast.literal_eval(key) for key in node.value.keys]
+            first = tuple(ast.literal_eval(element) for element in node.value.values[0].elts)
+            return labels, first
+    raise AssertionError("CITY_COORDINATES not found in the dashboard")
+
+
+PRESET_LABELS, (OPENING_LAT, OPENING_LNG) = _opening_preset()
+
 
 @pytest.fixture
 def dashboard(monkeypatch, valid_report, sample_png_bytes):
@@ -167,8 +184,8 @@ def test_location_coordinate_inclusive_boundaries_are_accepted(dashboard, label,
     assert not app.exception
     dashboard[1].assert_called_once()
     data = dashboard[1].call_args.kwargs["data"]
-    assert data["imagery_lat"] == (-90.0 if label == "Latitude" and value == "-90" else 90.0 if label == "Latitude" else 1.2897)
-    assert data["imagery_lng"] == (-180.0 if label == "Longitude" and value == "-180" else 180.0 if label == "Longitude" else 103.754)
+    assert data["imagery_lat"] == (-90.0 if label == "Latitude" and value == "-90" else 90.0 if label == "Latitude" else OPENING_LAT)
+    assert data["imagery_lng"] == (-180.0 if label == "Longitude" and value == "-180" else 180.0 if label == "Longitude" else OPENING_LNG)
     assert dashboard[1].call_args.kwargs["files"] is None
 
 
@@ -250,10 +267,7 @@ def test_city_image_and_default_off_what_if_temperature_controls_are_present(das
     app = dashboard[0].run()
     assert not app.exception
     assert app.segmented_control[0].value == "Satellite location"
-    assert app.selectbox[0].options == [
-        "Singapore Port Terminal", "Singapore Urban Core", "Singapore Botanic Gardens",
-        "Bangkok City Centre", "Delhi Karol Bagh", "Custom coordinates",
-    ]
+    assert app.selectbox[0].options == [*PRESET_LABELS, "Custom coordinates"]
     assert app.selectbox[0].label == "Location shortcut"
     uploader.assert_not_called()
     assert len(app.toggle) == 1
@@ -264,7 +278,7 @@ def test_city_image_and_default_off_what_if_temperature_controls_are_present(das
     next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
     assert not app.exception
     dashboard[1].assert_called_once()
-    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.2897, "imagery_lng": 103.754}
+    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": OPENING_LAT, "imagery_lng": OPENING_LNG}
     assert dashboard[1].call_args.kwargs["files"] is None
 
 
@@ -275,8 +289,8 @@ def test_demo_opens_on_the_critical_hotspot_with_a_low_risk_contrast_available(d
     assert not app.exception
     # Selected by label: a search box now precedes the coordinate inputs.
     coordinates = {box.label: box.value for box in app.text_input}
-    assert coordinates["Latitude"] == "1.2897"
-    assert coordinates["Longitude"] == "103.754"
+    assert coordinates["Latitude"] == str(OPENING_LAT)
+    assert coordinates["Longitude"] == str(OPENING_LNG)
 
     shortcut = next(control for control in app.selectbox if control.label == "Location shortcut")
     assert shortcut.options[0] == "Singapore Port Terminal"
@@ -316,7 +330,7 @@ def test_enabled_what_if_temperature_sends_chosen_value_and_inclusive_boundaries
     assert not app.exception
     dashboard[1].assert_called_once()
     assert dashboard[1].call_args.kwargs["data"] == {
-        "ambient_temp_c": temperature, "imagery_lat": 1.2897, "imagery_lng": 103.754,
+        "ambient_temp_c": temperature, "imagery_lat": OPENING_LAT, "imagery_lng": OPENING_LNG,
     }
     assert dashboard[1].call_args.kwargs["files"] is None
 
@@ -334,7 +348,7 @@ def test_disabling_what_if_temperature_omits_previously_chosen_value(dashboard):
     next(button for button in app.button if button.label == "Run HotSpot Analysis").click().run()
     assert not app.exception
     dashboard[1].assert_called_once()
-    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": 1.2897, "imagery_lng": 103.754}
+    assert dashboard[1].call_args.kwargs["data"] == {"imagery_lat": OPENING_LAT, "imagery_lng": OPENING_LNG}
     assert dashboard[1].call_args.kwargs["files"] is None
 
 
@@ -534,7 +548,7 @@ def test_criterion_2_dashboard_uses_api_imagery_without_maps_url_or_api_key(dash
     assert not app.exception
     dashboard[2].assert_called_once_with(
         f"{api_base_url.rstrip('/')}/api/imagery",
-        params={"lat": 1.2897, "lng": 103.754},
+        params={"lat": OPENING_LAT, "lng": OPENING_LNG},
         timeout=(5, 60),
     )
     outbound_requests = repr(dashboard[1].call_args_list + dashboard[2].call_args_list)
