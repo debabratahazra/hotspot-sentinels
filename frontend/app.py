@@ -26,12 +26,27 @@ JPEG_MIME_TYPE = "image/jpeg"
 
 # Verified against the deployed backend on 2026-10-04. The first entry is the demo
 # opener and scores CRITICAL; Botanic Gardens is the low-risk contrast.
+# Ordered most built-up to most green, so scrolling the list walks down the risk
+# scale. Scores are indicative: measured once each on 2026-10-13, but the model
+# re-reads the imagery every run, so treat them as likely rather than fixed.
+# Every coordinate was checked to be on land — 1.2897, 103.7540 is open sea, and
+# the model reads that as 100% asphalt and scores it CRITICAL.
 CITY_COORDINATES = {
-    "Singapore Port Terminal": (1.2897, 103.7540),
-    "Singapore Urban Core": (1.3343, 103.8563),
-    "Singapore Botanic Gardens": (1.3521, 103.8198),
-    "Bangkok City Centre": (13.7563, 100.5018),
-    "Delhi Karol Bagh": (28.6450, 77.2200),
+    "Singapore Port Terminal": (1.2816, 103.7571),      # ~8.6 CRITICAL, 0% canopy
+    "Dhaka Old City": (23.7104, 90.4074),               # ~8.5 CRITICAL, 0% canopy
+    "Kolkata Burrabazar": (22.5760, 88.3550),           # ~8.2 CRITICAL
+    "Manila Tondo": (14.6150, 120.9680),                # ~8.1 CRITICAL
+    "Mumbai Dharavi": (19.0380, 72.8538),               # ~7.8 HIGH
+    "Bangkok City Centre": (13.7563, 100.5018),         # ~7.7 HIGH
+    "Ho Chi Minh District 1": (10.7769, 106.7009),      # ~7.7 HIGH
+    "Tokyo Shinjuku": (35.6938, 139.7036),              # ~7.6 HIGH
+    "Delhi Karol Bagh": (28.6450, 77.2200),             # ~7.5 HIGH
+    "Singapore Urban Core": (1.3343, 103.8563),         # ~6.9 HIGH
+    "Kuala Lumpur Taman Tugu": (3.1468, 101.6869),      # ~5.3 MODERATE
+    "Bangkok Lumpini Park": (13.7307, 100.5418),        # ~3.9 LOW
+    "Bengaluru Cubbon Park": (12.9763, 77.5929),        # ~3.2 LOW
+    "Mumbai Sanjay Gandhi Park": (19.2147, 72.9106),    # ~1.5 LOW, 100% canopy
+    "Singapore Botanic Gardens": (1.3521, 103.8198),    # ~1.5 LOW, 100% canopy
 }
 RISK_COLORS = {"LOW": "green", "MODERATE": "green", "HIGH": "orange", "CRITICAL": "red"}# Hex rather than named colours: st.map needs explicit values per point.
 MAP_RISK_COLOURS = {"CRITICAL": "#ff4d4f", "HIGH": "#ff9f43", "MODERATE": "#ffd166", "LOW": "#2dd4a7"}
@@ -497,7 +512,7 @@ if analysis_ready:
         else:
             st.subheader("Selected location")
             st.text(f"Latitude: {latitude} | Longitude: {longitude}")
-            with st.expander("Pick a location on the map", icon=":material/map:"):
+            with st.expander("Pick a location on the map", icon=":material/map:", expanded=True):
                 render_place_search(SEARCHBOX_KEYS[1], placeholder="Search here, or click the map")
                 render_location_picker()
             satellite_preview = st.empty()

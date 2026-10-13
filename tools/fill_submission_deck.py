@@ -33,9 +33,9 @@ IMAGES: dict[int, tuple[str, str]] = {
         "Two containers on Cloud Run in asia-southeast1. The Maps key is mounted from "
         "Secret Manager and proxied by the backend, so it never reaches a browser."),
     11: ("montage-prototype.png",
-         "Live analysis of Singapore Port Terminal from Google satellite imagery: HVI 9.1 "
-         "CRITICAL, 100% asphalt, 0% canopy, ambient 31.0 °C measured from NOAA GSOD, and the "
-         "Pub/Sub alert already visible to citizens on the public wall."),
+         "Live analysis of Pasir Panjang Terminal, Singapore, from Google satellite "
+         "imagery: HVI 8.6 CRITICAL, 0% tree canopy, ambient 31.0 °C measured from NOAA "
+         "GSOD, and the Pub/Sub alert already visible to citizens on the public wall."),
 }
 
 # Keyed by slide number. Each entry is a list of (text, level, bold) paragraphs.
@@ -119,7 +119,7 @@ CONTENT: dict[int, list[tuple[str, int, bool]]] = {
         ("Latency — 17.2 s for an uploaded image, 13.3 s for a coordinate (which also fetches and "
          "renders satellite imagery). Cold start 17.8 s, close to warm.", 0, False),
         ("Representative results, each reproduced on three consecutive runs:", 0, False),
-        ("Singapore Port Terminal — HVI 9.1 CRITICAL, 100% asphalt, alert published", 1, False),
+        ("Pasir Panjang Terminal, Singapore — HVI 8.6 CRITICAL, 0% canopy, alert published", 1, False),
         ("Industrial district upload — HVI 8.6 CRITICAL, 2% canopy, alert published", 1, False),
         ("Singapore Botanic Gardens — HVI 1.5 LOW, 100% canopy, no alert", 1, False),
         ("Climate grounding — live NOAA GSOD telemetry at 31.0 °C via BigQuery", 0, False),
@@ -147,6 +147,10 @@ CONTENT: dict[int, list[tuple[str, int, bool]]] = {
         ("Google answers 200 with a Plus Code and no country over open water, not ZERO_RESULTS. "
          "That absent country became the signal for naming a point at sea.", 1, False),
         ("Known limitations, stated plainly", 0, True),
+        ("The model has no concept of water. Pointed at open sea it reads the dark surface "
+         "as asphalt and scores it CRITICAL. Found by fetching the imagery for a shipping "
+         "lane and looking at it; the shipped presets are now all verified land, but a user "
+         "can still click the ocean. A water check is the next thing to build.", 1, False),
         ("HVI is model-inferred, so scores vary slightly between runs. It is a triage tool that "
          "says where to survey first; it does not replace the survey.", 1, False),
         ("Given an image with no location metadata the model guesses coordinates, and can guess "
