@@ -22,7 +22,7 @@ Progress below is derived from [agile/backlog.json](../../agile/backlog.json), w
 | EPIC-12 (backlog only)                                    | Public Real-Time Heat Alert Wall         | `public/index.html`, `firestore.rules`         | 04, 06     | 2/2 done   |
 | EPIC-13 (backlog only)                                    | Dashboard Experience Upgrade             | `frontend/app.py` layout                       | 07         | 1/1 done   |
 | EPIC-14 (backlog only)                                    | City-Wide Heat Map                       | `render_city_map`                              | 07         | 1/1 done   |
-| EPIC-15 (backlog only)                                    | Operator Identity (Firebase Auth)        | — deprioritised, see README                   | 07         | 0/1        |
+| EPIC-15 (backlog only)                                    | Operator Identity (Firebase Auth)        | — deprioritised, see README                    | 07         | 0/1        |
 | EPIC-16 (backlog only)                                    | Location Discovery                       | `geocoding_service.py`, map picker             | 05, 07     | 2/2 done   |
 | EPIC-17 (backlog only)                                    | Place Autocomplete                       | `places_service.py`, `/api/places/suggest`     | 16         | 3/3 done   |
 | EPIC-18 (backlog only)                                    | Name the Place Behind a Map Click        | `water_bodies.py`, `/api/geocode/reverse`      | 16         | 3/3 done   |
