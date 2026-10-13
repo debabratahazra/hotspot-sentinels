@@ -4,7 +4,9 @@
 
 Cities trap heat. Asphalt, dark roofs and missing tree canopy can push a neighbourhood several degrees above the city around it, and the people living in those blocks carry the health cost. Finding which blocks, and knowing what to do about them, normally takes a survey team.
 
-HotSpot Sentinels does it from an aerial photograph. It sends the image and the local ambient temperature to **Gemini 2.5 Flash on Vertex AI**, scores a **Heat Vulnerability Index**, returns a costed passive-cooling plan — shade corridors, cool-roof coatings, ventilation alignment — and publishes a Pub/Sub alert the moment a zone crosses into CRITICAL.
+HotSpot Sentinels does it from imagery alone. Name a place — or upload an aerial photograph — and it sends the image and the local ambient temperature to **Gemini 2.5 Flash on Vertex AI**, scores a **Heat Vulnerability Index**, returns a costed passive-cooling plan — shade corridors, cool-roof coatings, ventilation alignment — and publishes a Pub/Sub alert the moment a zone crosses into CRITICAL. Critical zones also appear on a public web page, so residents learn their street is dangerous without needing access to a planning dashboard.
+
+It needs no thermal camera, no LiDAR and no drone flight: it reads the ordinary colour satellite imagery that already exists for most of the planet.
 
 ## What it produces
 
@@ -41,6 +43,21 @@ Upload an aerial image to `POST /api/analyze` and you get a Heat Analysis Result
 | ≥ 8.0     | `CRITICAL` | publishes a Pub/Sub alert; `alert_dispatched` reflects whether the publish actually succeeded |
 
 `climate_source` tells you where `ambient_temp_c` came from — `bigquery` (live NOAA GSOD telemetry), `fallback` (offline), or `caller` (a what-if override). A what-if number is never presented as measured telemetry.
+
+## Choosing what to analyse
+
+The dashboard offers four ways to land on a coordinate, and they all converge on the same analysis:
+
+| Method | How it behaves |
+| ------ | -------------- |
+| **Shortcut list** | 15 places across Asia, ordered most built-up to most green — from a container terminal that scores CRITICAL to a national park that scores LOW |
+| **Type a place name** | Suggestions appear after three characters, down to neighbourhood level, from Google Places. The chosen suggestion is resolved by `place_id`, because several distinct places routinely share a name |
+| **Click the world map** | The clicked point is named automatically — city and country on land, or the sea or ocean at sea |
+| **Paste coordinates** | Latitude and longitude directly |
+
+Whichever you use, both search boxes and the coordinate fields update together, so the screen never names one place while analysing another. Every identity field is labelled `supplied` or `inferred`, so a planner can tell which values the model guessed.
+
+All place lookups are proxied by the backend. `GOOGLE_MAPS_API_KEY` never reaches the browser.
 
 ## Try it without a Google Cloud account
 
@@ -267,15 +284,24 @@ backend/
   services/
     vision_analyzer.py     Gemini multimodal analysis (async)
     alert_dispatcher.py    Pub/Sub critical alerts
-    database.py            Firestore 'hotspot_scans' persistence
+    database.py            Firestore 'hotspot_scans' + curated 'public_alerts'
   tools/
     climate_service.py     BigQuery NOAA GSOD telemetry + offline fallback
+    maps_imagery_service.py  Static Maps imagery + shared GCS cache
+    geocoding_service.py   Place name, place_id and reverse lookups
+    places_service.py      Places Autocomplete proxy for the typeahead
+    water_bodies.py        Sea and ocean names for points at sea
     seed_samples.py        Synthetic aerial test imagery
   verify_setup.py          Vertex AI connectivity smoke test
 frontend/app.py            Streamlit dashboard
+public/index.html          Firebase-hosted public alert wall
+firestore.rules            public_alerts is world-readable, never writable
+tools/                     deck and diagram generators (not shipped)
 tests/                     pytest suite
 data_samples/              Generated test images (git-ignored)
 ```
+
+Data flows one way: `main.py` orchestrates; `services/` and `tools/` never import `main` or each other. The one exception is `geocoding_service` importing `water_bodies`, which is a data table rather than a service.
 
 ## Import strategy
 

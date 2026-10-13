@@ -183,6 +183,12 @@ def render_satellite_imagery_unavailable(satellite_preview, report):
             st.info(IMAGERY_UNAVAILABLE_MESSAGE)
 
 
+def reset_place_searchboxes():
+    """Drop both typeaheads so they re-seed from resolved_place and cannot disagree."""
+    for searchbox in SEARCHBOX_KEYS:
+        st.session_state.pop(searchbox, None)
+
+
 def apply_location_preset():
     location = st.session_state.get("location_preset")
     if location in CITY_COORDINATES:
@@ -190,6 +196,7 @@ def apply_location_preset():
         st.session_state["imagery_latitude"] = str(latitude)
         st.session_state["imagery_longitude"] = str(longitude)
         st.session_state["resolved_place"] = location
+        reset_place_searchboxes()
 
 
 def render_blueprint(report):
@@ -361,10 +368,7 @@ def apply_pending_coordinate():
     pending = st.session_state.pop("pending_coordinate", None)
     if pending:
         set_coordinates(*pending)
-        # Dropping their state makes both typeaheads re-seed from resolved_place,
-        # so two boxes can never show different places for one coordinate.
-        for searchbox in SEARCHBOX_KEYS:
-            st.session_state.pop(searchbox, None)
+        reset_place_searchboxes()
 
 
 st.set_page_config(

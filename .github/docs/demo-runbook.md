@@ -147,13 +147,13 @@ main area.
 These cost no analysis time — they are interactive, so only the two analyses
 spend the clock. Verified on the deployed stack on 2026-10-13.
 
-| Feature             | On camera                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------- |
+| Feature             | On camera                                                                                 |
+| ------------------- | ----------------------------------------------------------------------------------------- |
 | Shortcut list       | 15 Asian places ordered most built-up to most green, so the list itself is the risk scale |
-| Place autocomplete  | Type three characters; a dropdown of real places appears, neighbourhoods included  |
-| Synced search boxes | Choosing in one box updates the other, so the active location is never ambiguous   |
-| Map click naming    | Click anywhere; the point is named (`Padang City, Indonesia`, `Mediterranean Sea`) |
-| Public alert wall   | A Firebase-hosted page where citizens see CRITICAL zones appear live               |
+| Place autocomplete  | Type three characters; a dropdown of real places appears, neighbourhoods included         |
+| Synced search boxes | Choosing in one box updates the other, so the active location is never ambiguous          |
+| Map click naming    | Click anywhere; the point is named (`Padang City, Indonesia`, `Mediterranean Sea`)        |
+| Public alert wall   | A Firebase-hosted page where citizens see CRITICAL zones appear live                      |
 
 The shortcut list is the cheapest reach proof there is: opening it shows Dhaka,
 Kolkata, Manila, Mumbai, Bangkok, Tokyo, Delhi, Kuala Lumpur and Singapore in one

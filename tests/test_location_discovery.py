@@ -23,6 +23,7 @@ APP = str(Path(__file__).resolve().parents[1] / "frontend/app.py")
 
 GEOCODED = {"lat": 28.655, "lng": 77.1888, "formatted_address": "Karol Bagh, New Delhi, Delhi, India"}
 REVERSE_GEOCODED = {"lat": 1.2897, "lng": 103.754, "formatted_address": "Singapore"}
+SEARCHBOX_KEYS = ("place_search_sidebar", "place_search_map")
 SUGGESTIONS = {"suggestions": [
     {"description": "Karol Bagh, New Delhi, Delhi, India", "place_id": "PLACE-1"},
     {"description": "Karol Bagh Metro Station, New Delhi, India", "place_id": "PLACE-2"},
@@ -210,6 +211,38 @@ def test_preset_shortcut_still_sets_coordinates(dashboard):
         "Singapore Botanic Gardens").run()
     assert not app.exception
     assert coordinates(app) == ("1.3521", "103.8198")
+
+
+def test_a_preset_clears_search_text_left_over_from_an_earlier_place(dashboard):
+    # The map moved but both boxes still read the previous search, so the screen
+    # named one place while analysing another. The component keeps its displayed
+    # text under its own key, so seed that rather than driving the stub.
+    app = dashboard[0]
+    app.run()
+    for key in SEARCHBOX_KEYS:
+        app.session_state[key] = {"result": None, "search": "Karol Bagh, New Delhi, Delhi, India"}
+
+    next(box for box in app.selectbox if box.label == "Location shortcut").set_value(
+        "Singapore Botanic Gardens").run()
+    assert not app.exception
+    assert app.session_state["resolved_place"] == "Singapore Botanic Gardens"
+    # The component re-seeds its own key on render, so what matters is the text
+    # it now displays, not whether the key was momentarily dropped.
+    for key in SEARCHBOX_KEYS:
+        assert app.session_state[key]["search"] == "Singapore Botanic Gardens", (
+            f"{key} still names the previous place"
+        )
+
+
+def test_every_path_that_moves_the_coordinate_clears_the_searchboxes():
+    # Three paths set a coordinate — preset, search and map click. A path that
+    # forgets this leaves the boxes naming somewhere the map is no longer showing.
+    source = Path(APP).read_text()
+    assert source.count("reset_place_searchboxes()") >= 3, (
+        "preset, pending-coordinate and the helper itself must all be present"
+    )
+    preset = source[source.index("def apply_location_preset"):]
+    assert "reset_place_searchboxes()" in preset[:preset.index("\ndef ", 1)]
 
 
 def test_search_result_survives_into_the_analysis_request(dashboard, choose_suggestion):
