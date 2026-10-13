@@ -163,6 +163,15 @@ def test_tools_package_init_exists():
     assert (ROOT / "backend/tools/__init__.py").is_file()
 
 
+def test_the_submission_deck_and_its_template_are_still_present():
+    # Both were deleted once and the loss rode through a `git add -A` unnoticed.
+    # They are the submission itself, so absence must fail the build, not a review.
+    for name in ("HotSpot_Sentinels_Submission.pptx", "Submission Template _ AI Builder Cup.pptx"):
+        deck = ROOT / name
+        assert deck.is_file(), f"{name} is missing; restore it from git history"
+        assert deck.stat().st_size > 100_000, f"{name} is suspiciously small"
+
+
 def test_services_and_tools_import_from_backend_working_directory():
     result = local_command(
         [sys.executable, "-c", "import services.vision_analyzer; import tools; print('backend imports PASS')"],
