@@ -42,24 +42,20 @@ U=https://hotspot-backend-153692178986.asia-southeast1.run.app
 # Generate the samples if data_samples/ is empty; they are not committed.
 .venv/bin/python backend/tools/seed_samples.py
 
-# Throwaway call to absorb the container cold start.
-curl -sS -o /dev/null -X POST "$U/api/analyze" -F file=@data_samples/industrial_hotspot.jpg
-
-# Warm the opener (Pasir Panjang Terminal) and the contrast (Botanic Gardens).
-curl -sS -o /dev/null -X POST "$U/api/analyze" -F imagery_lat=1.2816 -F imagery_lng=103.7571
+# Absorb the container cold start on the LOW contrast coordinate. Warming on a
+# CRITICAL one instead would publish an alert and add a card to the public wall.
 curl -sS -o /dev/null -X POST "$U/api/analyze" -F imagery_lat=1.3521 -F imagery_lng=103.8198
 
-# Both must print 200.
-curl -sS -o /dev/null -w 'pasir panjang  %{http_code}\n' "$U/api/imagery?lat=1.2816&lng=103.7571"
+# Warm the opener's imagery without analysing it, so no alert is published.
+curl -sS -o /dev/null -w 'pasir panjang   %{http_code}\n' "$U/api/imagery?lat=1.2816&lng=103.7571"
 curl -sS -o /dev/null -w 'botanic gardens %{http_code}\n' "$U/api/imagery?lat=1.3521&lng=103.8198"
 
 # All four dependencies must read "ready".
 curl -sS "$U/api/health"
 ```
 
-The opener run above publishes a CRITICAL alert, which adds a card to the public
-wall. Rehearsals add more. To show a clean wall, trim duplicates first — or leave
-them and call them repeat detections, which is what they are.
+Only the recorded run should publish an alert. `/api/imagery` warms the cache
+without analysing, so the opener's imagery is hot while the wall stays clean.
 
 ## Measured timings
 

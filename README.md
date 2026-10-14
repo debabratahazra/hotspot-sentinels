@@ -48,12 +48,12 @@ Upload an aerial image to `POST /api/analyze` and you get a Heat Analysis Result
 
 The dashboard offers four ways to land on a coordinate, and they all converge on the same analysis:
 
-| Method | How it behaves |
-| ------ | -------------- |
-| **Shortcut list** | 15 places across Asia, ordered most built-up to most green — from a container terminal that scores CRITICAL to a national park that scores LOW |
-| **Type a place name** | Suggestions appear after three characters, down to neighbourhood level, from Google Places. The chosen suggestion is resolved by `place_id`, because several distinct places routinely share a name |
-| **Click the world map** | The clicked point is named automatically — city and country on land, or the sea or ocean at sea |
-| **Paste coordinates** | Latitude and longitude directly |
+| Method                  | How it behaves                                                                                                                                                                                      |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Shortcut list**       | 15 places across Asia, ordered most built-up to most green — from a container terminal that scores CRITICAL to a national park that scores LOW                                                      |
+| **Type a place name**   | Suggestions appear after three characters, down to neighbourhood level, from Google Places. The chosen suggestion is resolved by `place_id`, because several distinct places routinely share a name |
+| **Click the world map** | The clicked point is named automatically — city and country on land, or the sea or ocean at sea                                                                                                     |
+| **Paste coordinates**   | Latitude and longitude directly                                                                                                                                                                     |
 
 Whichever you use, both search boxes and the coordinate fields update together, so the screen never names one place while analysing another. Every identity field is labelled `supplied` or `inferred`, so a planner can tell which values the model guessed.
 
