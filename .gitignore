@@ -36,6 +36,11 @@ data_samples/
 # PowerPoint/Word lock files
 ~$*
 
+# Keynote's own copy of the deck. Opening the .pptx on macOS can leave one
+# behind, and twice it replaced the .pptx the submission actually needs.
+# The deck is submitted as .pptx in the prescribed template format.
+*.key
+
 # Editor config; keep local workspace settings out of a public repo
 .vscode/
 
