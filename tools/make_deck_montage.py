@@ -9,7 +9,7 @@ Run with:  uv run --with pillow --no-project python tools/make_deck_montage.py
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "docs" / "deck-assets"
@@ -32,6 +32,13 @@ def font(size, bold=False):
     return ImageFont.load_default()
 
 
+def autocrop(image):
+    """Trim uniform background. Element screenshots carry large empty margins."""
+    background = Image.new("RGB", image.size, image.getpixel((image.width - 1, image.height - 1)))
+    bbox = ImageChops.difference(image, background).getbbox()
+    return image.crop(bbox) if bbox else image
+
+
 def place(canvas, filename, box, caption, draw):
     """Fit an asset inside box (x, y, w, h), captioned beneath."""
     source = ASSETS / filename
@@ -40,7 +47,7 @@ def place(canvas, filename, box, caption, draw):
     x, y, w, h = box
     caption_space = 34
     frame_h = h - caption_space
-    image = Image.open(source).convert("RGB")
+    image = autocrop(Image.open(source).convert("RGB"))
     scale = min(w / image.width, frame_h / image.height)
     size = (max(1, int(image.width * scale)), max(1, int(image.height * scale)))
     image = image.resize(size, Image.LANCZOS)
@@ -58,7 +65,7 @@ def main() -> None:
 
     draw.text((PAD, 18), "HotSpot Sentinels — live prototype", fill=INK, font=font(34, bold=True))
     draw.text((PAD, 62),
-              "Pasir Panjang Terminal, Singapore, analysed from Google satellite imagery, 2026-10-13",
+              "Pasir Panjang Terminal, Singapore, analysed from Google satellite imagery, 2026-10-14",
               fill=MUTED, font=font(20))
 
     # Two columns of two: a narrow sidebar or a thin banner is unreadable once
