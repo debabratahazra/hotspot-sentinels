@@ -140,7 +140,7 @@ def architecture() -> Path:
     box(ax, col(1), 0.125, width, 0.09, "Secret Manager", "mounted, not env vars", GOOD, "#edf8f0")
     box(ax, col(2), 0.125, width, 0.09, "GitHub Actions", "WIF · zero key files", GOOD, "#edf8f0")
     box(ax, col(0), 0.04, width * 3 + gap * 2, 0.07,
-        "One runtime service account · six narrow roles · 812 tests · 96% backend coverage",
+        "One runtime service account · six narrow roles · 815 tests · 96% backend coverage",
         "", INK, "#ffffff")
 
     path = ASSETS / "diagram-architecture.png"

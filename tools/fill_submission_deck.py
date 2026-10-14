@@ -59,9 +59,9 @@ CONTENT: dict[int, list[tuple[str, int, bool]]] = {
     ],
     4: [
         ("Why this matters — environment, people, animals", 0, True),
-        ("Measured on the live system: a block at 2% tree canopy scores 8.6 CRITICAL; a park at "
-         "100% canopy scores 1.5 LOW. Same model, same pipeline. That gap is exactly what tree "
-         "cover and reflective surfaces buy a city.", 1, False),
+        ("Measured on the live system: a container terminal at 0% tree canopy scores 8.6 CRITICAL; "
+         "a national park at 100% canopy scores 1.5 LOW. Same model, same pipeline. That gap is "
+         "exactly what tree cover and reflective surfaces buy a city.", 1, False),
         ("The blueprint for one CRITICAL zone projects an 8–10 °C surface temperature drop — the "
          "difference between a heatwave that is survivable and one that is not, and a direct cut "
          "in cooling energy demand.", 1, False),
@@ -78,10 +78,14 @@ CONTENT: dict[int, list[tuple[str, int, bool]]] = {
     ],
     5: [
         ("Analyse anywhere — four ways to choose a location", 0, True),
+        ("A shortcut list of 15 places across Asia, ordered most built-up to most green, so the "
+         "list itself runs from CRITICAL down to LOW", 1, False),
         ("Type three characters and pick from live Google Places suggestions, down to "
-         "neighbourhood level; click any point on a world map; use a preset; or paste coordinates", 1, False),
-        ("A clicked point is named automatically — city and country on land, or the sea or ocean "
-         "at sea", 1, False),
+         "neighbourhood level; click any point on a world map; or paste coordinates", 1, False),
+        ("A clicked point is named automatically — city and country on land, or the sea or "
+         "ocean at sea", 1, False),
+        ("Whichever method is used, both search boxes and the coordinate fields update "
+         "together, so the screen never names one place while analysing another", 1, False),
         ("Analysis", 0, True),
         ("Upload an aerial image, or analyse a coordinate from live Google satellite imagery", 1, False),
         ("0–10 Heat Vulnerability Index with LOW / MODERATE / HIGH / CRITICAL banding", 1, False),
@@ -115,15 +119,16 @@ CONTENT: dict[int, list[tuple[str, int, bool]]] = {
         ("GitHub Actions CI/CD with Workload Identity Federation — no service-account keys exist", 1, False),
     ],
     12: [
-        ("Measured against the deployed stack on 2026-10-13, not estimated", 0, True),
-        ("Latency — 17.2 s for an uploaded image, 13.3 s for a coordinate (which also fetches and "
-         "renders satellite imagery). Cold start 17.8 s, close to warm.", 0, False),
+        ("Measured against the deployed stack on 2026-10-14, not estimated", 0, True),
+        ("Latency — 21.6 s for the container-terminal coordinate, 12.6 s for the park, 17.2 s for "
+         "an uploaded image. Coordinates also fetch and render satellite imagery. Cold start "
+         "is now close to warm.", 0, False),
         ("Representative results, each reproduced on three consecutive runs:", 0, False),
         ("Pasir Panjang Terminal, Singapore — HVI 8.6 CRITICAL, 0% canopy, alert published", 1, False),
-        ("Industrial district upload — HVI 8.6 CRITICAL, 2% canopy, alert published", 1, False),
+        ("Old Dhaka — HVI 8.5 CRITICAL, 0% canopy · Kolkata — 8.2 · Manila — 8.1", 1, False),
         ("Singapore Botanic Gardens — HVI 1.5 LOW, 100% canopy, no alert", 1, False),
         ("Climate grounding — live NOAA GSOD telemetry at 31.0 °C via BigQuery", 0, False),
-        ("Quality — 812 automated tests, all offline; 96% backend coverage with no file below a "
+        ("Quality — 815 automated tests, all offline; 96% backend coverage with no file below a "
          "70% floor; 0 open P0 defects", 0, False),
         ("Reliability — /api/health reports gemini, firestore, pubsub and bigquery independently; "
          "all four ready in production", 0, False),
