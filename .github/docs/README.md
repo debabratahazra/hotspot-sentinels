@@ -54,17 +54,17 @@ EPIC-08 runs alongside 02–07 rather than after them — tests are written in t
 
 [Epics_Stories.md](./epics/Epics_Stories.md) defined five build epics. This catalogue keeps all of them and adds the four an end-to-end delivery needs.
 
-| Original                           | Here                                                                  |
-| ---------------------------------- | --------------------------------------------------------------------- |
-| Epic 1 Multimodal Perception       | EPIC-02                                                               |
-| Epic 2 Climate Telemetry           | EPIC-03                                                               |
-| Epic 3 Event-Driven Pipeline       | EPIC-04                                                               |
-| Epic 4 FastAPI Service (Story 4.1) | EPIC-05                                                               |
-| Epic 4 Docker (Story 4.2)          | EPIC-06, expanded to cover deploy, IAM and verification               |
-| Epic 5 Streamlit UI                | EPIC-07                                                               |
-| —                                  | EPIC-01 Foundation, implied by `scripts/setup_gcp.sh` but never scoped        |
-| —                                  | EPIC-08 QA, required by the coverage reporting in the sprint workflow |
-| —                                  | EPIC-09 Demo & submission, the actual hackathon deliverable           |
+| Original                           | Here                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------- |
+| Epic 1 Multimodal Perception       | EPIC-02                                                                |
+| Epic 2 Climate Telemetry           | EPIC-03                                                                |
+| Epic 3 Event-Driven Pipeline       | EPIC-04                                                                |
+| Epic 4 FastAPI Service (Story 4.1) | EPIC-05                                                                |
+| Epic 4 Docker (Story 4.2)          | EPIC-06, expanded to cover deploy, IAM and verification                |
+| Epic 5 Streamlit UI                | EPIC-07                                                                |
+| —                                  | EPIC-01 Foundation, implied by `scripts/setup_gcp.sh` but never scoped |
+| —                                  | EPIC-08 QA, required by the coverage reporting in the sprint workflow  |
+| —                                  | EPIC-09 Demo & submission, the actual hackathon deliverable            |
 
 ## How these feed the sprint workflow
 
