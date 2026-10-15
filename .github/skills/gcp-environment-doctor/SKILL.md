@@ -27,7 +27,7 @@ Run it before proposing any fix — a guessed diagnosis wastes more time than th
 | `403` publishing to Pub/Sub            | Missing `roles/pubsub.publisher`    | Grant it to the caller or runtime service account                                      |
 | `SERVICE_DISABLED` / "API not enabled" | API off in this project             | `gcloud services enable <api>.googleapis.com`                                          |
 | `404` on the model                     | Model unavailable in the region     | Region must be `asia-southeast1` and model `gemini-2.5-flash`                          |
-| `404 NotFound` on a bucket or topic    | Resource never provisioned          | Re-run `./setup_gcp.sh`                                                                |
+| `404 NotFound` on a bucket or topic    | Resource never provisioned          | Re-run `./scripts/setup_gcp.sh`                                                                |
 | `429` / quota exceeded                 | Rate or quota limit                 | Back off and retry; for BigQuery let `climate_service` use its offline fallback        |
 | `ModuleNotFoundError: google.genai`    | Wrong interpreter or missing deps   | `source venv/bin/activate && pip install -r requirements.txt`                          |
 | Firestore `NOT_FOUND` on write         | Database never created              | `gcloud firestore databases create --location=asia-southeast1 --type=firestore-native` |
@@ -45,4 +45,4 @@ Run it before proposing any fix — a guessed diagnosis wastes more time than th
 - DO NOT create service-account key files. This project uses Application Default Credentials only.
 - DO NOT print `.env` contents, tokens, or full cloud error payloads into the transcript.
 - DO NOT fix a permission error by granting `roles/owner` or `roles/editor`. Grant the specific role.
-- DO NOT run `./setup_gcp.sh` yourself — it mutates cloud resources and needs an interactive login. Tell the user to run it.
+- DO NOT run `./scripts/setup_gcp.sh` yourself — it mutates cloud resources and needs an interactive login. Tell the user to run it.

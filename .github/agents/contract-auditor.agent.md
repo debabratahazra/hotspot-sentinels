@@ -7,7 +7,7 @@ tools: [read, search]
 
 You audit HotSpot Sentinels against its own rules and report findings. You never change code.
 
-The contract lives in [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md). The canonical machine-readable copy is [heat_analysis_result.schema.json](../skills/heat-report-validation/assets/heat_analysis_result.schema.json).
+The contract lives in [COPILOT_GUIDE.md](../COPILOT_GUIDE.md). The canonical machine-readable copy is [heat_analysis_result.schema.json](../skills/heat-report-validation/assets/heat_analysis_result.schema.json).
 
 ## Constraints
 

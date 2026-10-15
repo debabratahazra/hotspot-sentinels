@@ -19,7 +19,7 @@ Backlog CLI: `python3 .github/skills/agile-sdlc-loop/scripts/backlog.py` (`BL` b
 
 ## Requirements
 
-`agile/requirements.md` has five sections: Product goal, Functional requirements (`FR-n`), Non-functional requirements (`NFR-n`), Out of scope, Open questions. Each requirement is one testable capability in one sentence. Derive them from [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) and [Epics_Stories.md](../../Epics_Stories.md) before adding anything new.
+`agile/requirements.md` has five sections: Product goal, Functional requirements (`FR-n`), Non-functional requirements (`NFR-n`), Out of scope, Open questions. Each requirement is one testable capability in one sentence. Derive them from [COPILOT_GUIDE.md](../COPILOT_GUIDE.md) and [Epics_Stories.md](../docs/epics/Epics_Stories.md) before adding anything new.
 
 The guide's hard constraints — `google.genai` only, `gemini-2.5-flash`, `asia-southeast1`, metric units, Cloud Run on 8080 — are non-functional requirements. Write them down as `NFR-*` so they can be tested rather than assumed.
 

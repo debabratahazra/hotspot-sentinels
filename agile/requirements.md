@@ -154,8 +154,8 @@ The IDs and titles below are those returned by `python3 .github/skills/agile-sdl
 
 **Coverage:** 39/39 functional requirements map to exactly one epic; 11/11 epics receive at least one functional requirement; no FR or epic is uncovered. The 17 non-functional requirements apply across their cited scopes. OQ-1, OQ-3, OQ-4, OQ-6 and OQ-7 are resolved; OQ-2 and OQ-5 remain unresolved decisions for their affected items, so the full Phase 0 exit remains conditional on those answers.
 
-[G]: ../COPILOT_GUIDE.md
-[B]: ../Epics_Stories.md
+[G]: ../.github/COPILOT_GUIDE.md
+[B]: ../.github/docs/epics/Epics_Stories.md
 [C]: ../.github/copilot-instructions.md
 [E1]: ../.github/docs/epics/EPIC-01-foundation-environment.md
 [E2]: ../.github/docs/epics/EPIC-02-multimodal-perception.md

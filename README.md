@@ -77,8 +77,8 @@ The climate service degrades to a clearly labelled fallback reading when BigQuer
 ## Run it against Google Cloud
 
 ```bash
-cp .env.example .env            # ./setup_gcp.sh writes the real .env for you
-./setup_gcp.sh                  # provisions APIs, bucket, Pub/Sub topic, Firestore
+cp .env.example .env            # ./scripts/setup_gcp.sh writes the real .env for you
+./scripts/setup_gcp.sh          # provisions APIs, bucket, Pub/Sub topic, Firestore
 python backend/verify_setup.py  # Vertex AI connectivity check; exits non-zero on failure
 
 (cd backend && uvicorn main:app --reload --port 8080)
@@ -197,7 +197,7 @@ All temperatures are °C and all areas are m². Conversion happens at the source
 
 ## Configuration
 
-Every value comes from the environment, never from a literal in source. [.env.example](.env.example) is the template; `./setup_gcp.sh` writes the real `.env`, which is git-ignored and must never be committed.
+Every value comes from the environment, never from a literal in source. [.env.example](.env.example) is the template; `./scripts/setup_gcp.sh` writes the real `.env`, which is git-ignored and must never be committed.
 
 | Variable                             | Default                  | Used by                                             |
 | ------------------------------------ | ------------------------ | --------------------------------------------------- |
@@ -296,9 +296,11 @@ backend/
 frontend/app.py            Streamlit dashboard
 public/index.html          Firebase-hosted public alert wall
 firestore.rules            public_alerts is world-readable, never writable
+scripts/                   GCP provisioning and demo-time helpers
 tools/                     deck and diagram generators (not shipped)
 tests/                     pytest suite
 data_samples/              Generated test images (git-ignored)
+reports/                   Coverage artefacts (git-ignored)
 ```
 
 Data flows one way: `main.py` orchestrates; `services/` and `tools/` never import `main` or each other. The one exception is `geocoding_service` importing `water_bodies`, which is a data table rather than a service.
@@ -354,7 +356,7 @@ Four items are deliberately open. Each needs a human decision or unimplemented f
 | ----------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TASK-006`  | the demo recording                       | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
 | `STORY-031` | scan records linked to retained imagery  | `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record still carries no object URI, so you cannot retrieve the exact image a given scan used. The storage path now exists; the linkage does not.                                                                                                                                    |
-| `TASK-011`  | correction of protected foundation specs | `COPILOT_GUIDE.md` and `Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
+| `TASK-011`  | correction of protected foundation specs | `.github/COPILOT_GUIDE.md` and `.github/docs/epics/Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
 | `STORY-048` | operator sign-in (Firebase Auth)         | Deliberately deprioritised. A login wall adds friction to a judged demo for little evaluation value, and the dashboard holds no per-user data to protect. The public alert wall is already read-only by Firestore rule rather than by authentication.                                                                                                                      |
 
 ### Recently closed

@@ -19,8 +19,8 @@ __pycache__/
 .pytest_cache/
 
 # Test and coverage artefacts
-.coverage
-coverage.json
+reports/*
+!reports/.gitkeep
 htmlcov/
 .pytest-report.xml
 

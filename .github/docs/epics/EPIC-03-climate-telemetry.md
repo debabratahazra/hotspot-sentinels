@@ -3,7 +3,7 @@
 |                |                                                                                                                                                    |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | Ground Gemini's analysis in real ambient temperature readings, and degrade gracefully to realistic synthetic values when the cloud is unavailable. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 2                                                                                               |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 2                                                                                               |
 | **Priority**   | P2                                                                                                                                                 |
 | **Status**     | Not started                                                                                                                                        |
 | **Depends on** | EPIC-01                                                                                                                                            |

@@ -3,7 +3,7 @@
 |                |                                                                                                                                         |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | One HTTP surface that orchestrates perception, telemetry, persistence, and alerting, and returns a single unified Heat Analysis Result. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 4, Story 4.1                                                                         |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 4, Story 4.1                                                                         |
 | **Priority**   | P1                                                                                                                                      |
 | **Status**     | Not started                                                                                                                             |
 | **Depends on** | EPIC-02, EPIC-03, EPIC-04                                                                                                               |

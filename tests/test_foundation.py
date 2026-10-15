@@ -64,7 +64,7 @@ def test_no_env_or_credential_file_is_tracked():
 @pytest.mark.parametrize("filename", [
     ".env", "credentials.json", "qa-key.json", "qa_key.json", "service-account-qa.json",
     "qa.pem", "qa.p12", "qa.pfx", "venv/lib", "__pycache__/qa.pyc",
-    ".pytest_cache/qa", ".coverage", "coverage.json", "data_samples/qa.png",
+    ".pytest_cache/qa", "reports/.coverage", "reports/coverage.json", "data_samples/qa.png",
 ])
 def test_secrets_and_build_artifacts_are_ignored(filename):
     assert local_command(["git", "check-ignore", "-q", filename]).returncode == 0
@@ -113,7 +113,7 @@ def test_env_example_documents_every_variable_the_code_reads_without_secrets():
 
 
 def test_setup_script_honours_a_supplied_pubsub_topic_id():
-    source = (ROOT / "setup_gcp.sh").read_text(encoding="utf-8")
+    source = (ROOT / "scripts/setup_gcp.sh").read_text(encoding="utf-8")
     assert re.search(r'export PUBSUB_TOPIC="\$\{PUBSUB_TOPIC_ID:-heat-resilience-alerts\}"', source), (
         "setup_gcp.sh must provision the configured topic, not a bare literal"
     )
@@ -124,8 +124,10 @@ def test_setup_script_honours_a_supplied_pubsub_topic_id():
 
 
 def test_setup_script_emits_allowed_origins_and_all_contract_variables():
-    source = (ROOT / "setup_gcp.sh").read_text(encoding="utf-8")
-    match = re.search(r"cat\s*<<\s*EOF\s*>\s*\.env\s*\n(.*?)\nEOF", source, re.DOTALL)
+    source = (ROOT / "scripts/setup_gcp.sh").read_text(encoding="utf-8")
+    # The script lives in scripts/ and writes .env to the resolved repository root,
+    # so the redirect target is a path expression rather than a bare filename.
+    match = re.search(r'cat\s*<<\s*EOF\s*>\s*"?[^"\n]*\.env"?\s*\n(.*?)\nEOF', source, re.DOTALL)
     assert match is not None
     # The heredoc carries explanatory comments, so parse it the way a real .env
     # reader would rather than assuming every line is KEY=VALUE.
@@ -148,14 +150,15 @@ def test_setup_script_emits_allowed_origins_and_all_contract_variables():
 
 
 def test_execution_spec_uses_existing_setup_script():
-    source = (ROOT / "Epics_Stories.md").read_text(encoding="utf-8")
-    assert "source setup_gcp.sh" in source
+    source = (ROOT / ".github/docs/epics/Epics_Stories.md").read_text(encoding="utf-8")
+    assert "source scripts/setup_gcp.sh" in source
     assert "setup_gcp" + ".zsh" not in source
-    assert (ROOT / "setup_gcp.sh").is_file()
+    assert (ROOT / "scripts/setup_gcp.sh").is_file()
 
 
 def test_active_execution_docs_have_no_obsolete_setup_command():
-    for filename in ("README.md", "COPILOT_GUIDE.md", "Epics_Stories.md", "setup_gcp.sh"):
+    for filename in ("README.md", ".github/COPILOT_GUIDE.md",
+                     ".github/docs/epics/Epics_Stories.md", "scripts/setup_gcp.sh"):
         assert "setup_gcp" + ".zsh" not in (ROOT / filename).read_text(encoding="utf-8")
 
 
@@ -166,7 +169,8 @@ def test_tools_package_init_exists():
 def test_the_submission_deck_and_its_template_are_still_present():
     # Both were deleted once and the loss rode through a `git add -A` unnoticed.
     # They are the submission itself, so absence must fail the build, not a review.
-    for name in ("HotSpot_Sentinels_Submission.pptx", "Submission Template _ AI Builder Cup.pptx"):
+    for name in ("docs/ppt/HotSpot_Sentinels_Submission.pptx",
+                 "docs/ppt/Submission Template _ AI Builder Cup.pptx"):
         deck = ROOT / name
         assert deck.is_file(), f"{name} is missing; restore it from git history"
         assert deck.stat().st_size > 100_000, f"{name} is suspiciously small"

@@ -65,7 +65,7 @@ Stated plainly rather than omitted. None of these is a defect; each needs a huma
 | ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `TASK-006`  | the 3-minute recording                                                  | **Blocks submission.** Everything else in the package is done and evidenced.                                                   |
 | `STORY-031` | scan records linked to retained imagery                                 | None. `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record carries no object URI yet. |
-| `TASK-011`  | correction of the human-owned `COPILOT_GUIDE.md` and `Epics_Stories.md` | None on the running system; those documents carry statements predating later ratified decisions.                               |
+| `TASK-011`  | correction of the human-owned `.github/COPILOT_GUIDE.md` and `.github/docs/epics/Epics_Stories.md` | None on the running system; those documents carry statements predating later ratified decisions.                               |
 
 `STORY-043` and `TASK-046` were closed on 2026-10-05 and verified live — see Quality evidence above.
 

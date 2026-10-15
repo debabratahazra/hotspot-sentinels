@@ -102,5 +102,5 @@ Then end your turn. Resume only when the user answers.
 - **Definition of done** for a story: code written, tests written and passing, coverage not regressed, `contract-auditor` clean, and acceptance criteria demonstrably met. Anything less stays `in_progress`.
 - **Stop on a red build.** If phase 6 fails, file bugs and return to phase 5 for the same sprint. Do not deploy a failing build.
 - **Deployment is gated.** `.github/hooks/guard-cloud-commands.json` forces confirmation for `gcloud run deploy`. Never work around it. If the user is absent, mark the deploy task `blocked` and carry on.
-- **Honour the project constraints** in [COPILOT_GUIDE.md](../../../COPILOT_GUIDE.md) — they are enforced by hooks and will block non-compliant edits.
+- **Honour the project constraints** in [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) — they are enforced by hooks and will block non-compliant edits.
 - **Retro items are real items.** Each retro finding becomes a backlog item with `--source retro`, or it does not count.

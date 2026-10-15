@@ -420,6 +420,8 @@ pins `--max-instances=1`, so there is no demo-time setting left to restore.
 Two things worth doing:
 
 - **Trim the public alert wall.** Every rehearsal that scores CRITICAL adds a
-  card, and they stack up as duplicates of the same zone.
-- **Paste the video URL into slide 14** of `HotSpot_Sentinels_Submission.pptx`,
+  card, and they stack up as duplicates of the same zone. Run
+  `./scripts/alert_wall.sh` and pick the option you want; it backs up before
+  deleting, so a bad take can be undone with the restore option.
+- **Paste the video URL into slide 14** of `docs/ppt/HotSpot_Sentinels_Submission.pptx`,
   which is the last remaining placeholder in the deck.

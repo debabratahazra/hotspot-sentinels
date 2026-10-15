@@ -16,7 +16,7 @@ Item types: `epic`, `story`, `task`, `bug`, `test`. Statuses flow
 **Agent:** `product-owner`
 
 1. `BL init` if `agile/backlog.json` does not exist.
-2. Write `agile/requirements.md`. Source it from [COPILOT_GUIDE.md](../../../../COPILOT_GUIDE.md) and [Epics_Stories.md](../../../../Epics_Stories.md), plus whatever the user adds. Structure:
+2. Write `agile/requirements.md`. Source it from [COPILOT_GUIDE.md](../../../COPILOT_GUIDE.md) and [Epics_Stories.md](../../../docs/epics/Epics_Stories.md), plus whatever the user adds. Structure:
    - **Product goal** — one paragraph.
    - **Functional requirements** — numbered `FR-1`, `FR-2`, … Each is one testable capability.
    - **Non-functional requirements** — numbered `NFR-1`, … covering performance, security, cost, region, units.

@@ -3,7 +3,7 @@
 |                |                                                                                                                        |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | The backend runs as a reproducible, credential-free container on Cloud Run in `asia-southeast1`, reachable over HTTPS. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 4, Story 4.2 — expanded to cover deployment, IAM, and verification  |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 4, Story 4.2 — expanded to cover deployment, IAM, and verification  |
 | **Priority**   | P1                                                                                                                     |
 | **Status**     | Not started                                                                                                            |
 | **Depends on** | EPIC-05                                                                                                                |

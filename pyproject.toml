@@ -36,12 +36,10 @@ dev = [
     "pyyaml>=6.0.0",
 ]
 
-[project.scripts]
-hotspot-sentinels = "hotspot_sentinels:main"
-
-[build-system]
-requires = ["uv_build>=0.12.3,<0.13.0"]
-build-backend = "uv_build"
+# Nothing here is imported as a library — backend/ and frontend/ are run directly,
+# so there is no package to build and no src/ tree to keep in sync.
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 pythonpath = ["backend"]

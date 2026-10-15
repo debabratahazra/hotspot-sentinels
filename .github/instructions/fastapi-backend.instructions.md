@@ -12,7 +12,7 @@ applyTo:
 - All handlers are `async def`. Prefix API routes with `/api`.
 - Handlers orchestrate only: validate input, call `services/` and `tools/`, shape the response. Business logic and SDK calls belong in the service modules.
 - Wrap synchronous service helpers in `asyncio.to_thread` so the event loop is never blocked.
-- Declare `response_model` with Pydantic v2 models mirroring the Heat Analysis Result Schema in [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md). Do not return bare dicts.
+- Declare `response_model` with Pydantic v2 models mirroring the Heat Analysis Result Schema in [COPILOT_GUIDE.md](../COPILOT_GUIDE.md). Do not return bare dicts.
 
 ## Upload validation
 

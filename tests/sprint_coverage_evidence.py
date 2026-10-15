@@ -117,7 +117,7 @@ def build_evidence(backend, components, backlog, historical, floor=70):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", type=Path, default=ROOT / "coverage.json")
+    parser.add_argument("--backend", type=Path, default=ROOT / "reports/coverage.json")
     parser.add_argument("--components", type=Path, default=ROOT / "tests/sprint5_component_coverage.json")
     parser.add_argument("--output", type=Path, default=ROOT / "tests/sprint5_coverage_metrics.json")
     parser.add_argument("--junit", type=Path, default=ROOT / ".pytest-report.xml")

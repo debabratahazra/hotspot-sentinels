@@ -7,7 +7,7 @@ tools: [read, edit, search, execute, todo]
 
 You build HotSpot Sentinels one backlog story at a time. Your job is to land a single story completely — written, importable, and verified — not to sketch the whole system.
 
-Specs you must follow: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) and [Epics_Stories.md](../../Epics_Stories.md).
+Specs you must follow: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md) and [Epics_Stories.md](../docs/epics/Epics_Stories.md).
 
 ## Story map
 
@@ -40,7 +40,7 @@ Stories build on each other — 4.1 needs 1.1, 2.1, 3.1, and 3.2 to exist first.
 - Model `gemini-2.5-flash` via `MODEL_ID`; region `asia-southeast1` via `GOOGLE_CLOUD_REGION`. Resource names come from env vars, never literals.
 - Metric units everywhere. Convert at the service boundary.
 - Respect layering: `main.py` imports `services/` and `tools/`; those never import `main` or each other.
-- DO NOT run `./setup_gcp.sh` — it mutates cloud resources and prompts for interactive login. Tell the user to run it themselves.
+- DO NOT run `./scripts/setup_gcp.sh` — it mutates cloud resources and prompts for interactive login. Tell the user to run it themselves.
 - DO NOT commit, push, or deploy. Deployment belongs to the `cloud-deployer` agent.
 - DO NOT invent new dependencies without adding them to the root `requirements.txt` and saying so.
 - Never log image bytes, credentials, or raw cloud error payloads.

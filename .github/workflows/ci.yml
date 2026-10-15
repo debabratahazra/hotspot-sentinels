@@ -40,13 +40,13 @@ jobs:
         run: |
           uv run python -m pytest -o addopts='' -q \
             --cov-config=tests/coverage.ini --cov=backend \
-            --cov-report=term-missing --cov-report=json:coverage.json
+            --cov-report=term-missing --cov-report=json:reports/coverage.json
 
       - name: Enforce the 70 percent per-file coverage floor
         run: |
           uv run python -c "
           import json, sys
-          data = json.load(open('coverage.json'))
+          data = json.load(open('reports/coverage.json'))
           print('total coverage:', round(data['totals']['percent_covered'], 1), '%')
           below = {path: round(entry['summary']['percent_covered'], 1)
                    for path, entry in data['files'].items()

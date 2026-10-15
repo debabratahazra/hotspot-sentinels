@@ -25,6 +25,7 @@
 **/.coverage
 **/coverage.json
 **/htmlcov/
+**/reports/
 
 # Non-runtime content
 **/tests/

@@ -27,7 +27,7 @@ def main():
         lines.append(f"Next story: {story} -> {path}")
     else:
         lines.append("All backlog stories exist.")
-    lines.append("Configured: .env present." if Path(".env").is_file() else "Configured: .env MISSING — ./setup_gcp.sh has not been run.")
+    lines.append("Configured: .env present." if Path(".env").is_file() else "Configured: .env MISSING — ./scripts/setup_gcp.sh has not been run.")
 
     context = "\n".join(lines)
     json.dump(

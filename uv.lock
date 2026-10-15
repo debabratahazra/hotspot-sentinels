@@ -1056,7 +1056,7 @@ wheels = [
 [[package]]
 name = "hotspot-sentinels"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "google-cloud-aiplatform" },
