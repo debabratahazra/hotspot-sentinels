@@ -308,10 +308,10 @@ analysis and spends no model time.
 Verified on the deployed app on 2026-10-15, after the two analyses in this
 script, it draws exactly this:
 
-| Marker                | Where                      | Why it looks like that            |
-| --------------------- | -------------------------- | --------------------------------- |
-| **Large red dot**     | Pasir Panjang, lower left  | CRITICAL `#ff4d4f`, radius ∝ 8.6  |
-| **Small green dot**   | Botanic Gardens, upper right | LOW `#2dd4a7`, radius ∝ 1.5     |
+| Marker              | Where                        | Why it looks like that           |
+| ------------------- | ---------------------------- | -------------------------------- |
+| **Large red dot**   | Pasir Panjang, lower left    | CRITICAL `#ff4d4f`, radius ∝ 8.6 |
+| **Small green dot** | Botanic Gardens, upper right | LOW `#2dd4a7`, radius ∝ 1.5      |
 
 Two dots, two colours, two sizes, one city — that is the whole argument in one
 frame, and it is why the line "ordered worst-first" lands. Point the cursor at
@@ -467,5 +467,8 @@ Two things worth doing:
   card, and they stack up as duplicates of the same zone. Run
   `./scripts/alert_wall.sh` and pick the option you want; it backs up before
   deleting, so a bad take can be undone with the restore option.
-- **Paste the video URL into slide 14** of `docs/ppt/HotSpot_Sentinels_Submission.pptx`,
-  which is the last remaining placeholder in the deck.
+- **Paste the video URL into slide 13** of `docs/ppt/HotSpot_Sentinels_Submission.pptx`,
+  which is the last remaining placeholder in the deck. It is the "Provide links
+  to your:" slide, under *Demo Video Link*, replacing
+  `[INSERT VIDEO URL — 3 to 4 minutes, publicly accessible]`. The deck has 14
+  slides but the last one is blank, so the links slide is the 13th.
