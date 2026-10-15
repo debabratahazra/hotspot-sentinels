@@ -5,8 +5,10 @@
 # same zone. Clearing it before a take lets the recorded analysis be the alert
 # that appears live.
 #
-# Deletes are permanent, so every destructive command writes a JSON backup first
-# and `restore` puts those documents back.
+# Deletes are permanent, so every option that removes alerts writes a JSON backup
+# first, and the restore option puts those documents back.
+#
+# Run it with no arguments and pick from the menu.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -15,30 +17,64 @@ BACKUP_DIR="$ROOT/.alert-backups"
 PROJECT="${GOOGLE_CLOUD_PROJECT:-hotspot-sentinels-7364}"
 WALL_URL="https://hotspot-sentinels-7364.web.app"
 
-usage() {
-  cat <<'USAGE'
-Manage the HotSpot Sentinels public alert wall.
+print_menu() {
+  cat <<'MENU'
 
-  ./scripts/alert_wall.sh list              show every alert, newest first
-  ./scripts/alert_wall.sh clear             delete all alerts (backed up first)
-  ./scripts/alert_wall.sh keep N            keep the N newest, delete the rest
-  ./scripts/alert_wall.sh oldest N          delete the N oldest
-  ./scripts/alert_wall.sh dedupe            keep the newest per zone name
-  ./scripts/alert_wall.sh restore [FILE]    restore from a backup (default: latest)
+  1  Show the alerts on the wall
+  2  Clear the wall completely          (do this before a take)
+  3  Keep only the newest few
+  4  Delete the oldest few
+  5  Keep one alert per zone
+  6  Restore alerts from a backup
+  q  Quit
 
-Options:
-  -y, --yes    skip the confirmation prompt
-
-Before recording, `clear` gives an empty wall so the alert you publish on camera
-is visibly the first one. If the recorded run fails, `restore` puts the previous
-alerts back.
-USAGE
+MENU
 }
 
 confirm() {
-  [[ "${ASSUME_YES:-0}" == "1" ]] && return 0
-  read -r -p "$1 [y/N] " reply
+  local reply
+  read -r -p "  $1 [y/N] " reply || return 1
   [[ "$reply" =~ ^[Yy]$ ]]
+}
+
+# Sets COUNT. Fails on anything that is not a plain number, so a stray keystroke
+# cannot turn into a delete of the wrong size.
+ask_count() {
+  local reply
+  read -r -p "  $1 " reply || return 1
+  if [[ ! "$reply" =~ ^[0-9]+$ ]]; then
+    echo "  '$reply' is not a number — nothing done"
+    return 1
+  fi
+  COUNT="$reply"
+}
+
+# Sets BACKUP_FILE from the snapshots on disk, newest first.
+pick_backup() {
+  local files=() file reply index=1
+  while IFS= read -r file; do
+    files+=("$file")
+  done < <(ls -t "$BACKUP_DIR"/alerts-*.json 2>/dev/null || true)
+
+  if [[ ${#files[@]} -eq 0 ]]; then
+    echo "  no backups yet — one is written automatically before anything is deleted"
+    return 1
+  fi
+
+  echo "  backups, newest first:"
+  for file in "${files[@]}"; do
+    printf "    %d  %s  (%s alerts)\n" "$index" "$(basename "$file")" \
+      "$(grep -c '"hvi_score"' "$file" || true)"
+    index=$((index + 1))
+  done
+
+  read -r -p "  which one? [1] " reply || return 1
+  reply="${reply:-1}"
+  if [[ ! "$reply" =~ ^[0-9]+$ ]] || [[ "$reply" -lt 1 ]] || [[ "$reply" -gt ${#files[@]} ]]; then
+    echo "  no such backup — nothing done"
+    return 1
+  fi
+  BACKUP_FILE="${files[$((reply - 1))]}"
 }
 
 require_python() {
@@ -136,49 +172,66 @@ print(f"  wall now holds {remaining} alert(s)")
 PY
 }
 
-ASSUME_YES=0
-args=()
-for arg in "$@"; do
-  case "$arg" in
-    -y|--yes) ASSUME_YES=1 ;;
-    -h|--help) usage; exit 0 ;;
-    *) args+=("$arg") ;;
+require_python
+[[ -t 0 ]] || { echo "error: this script is interactive — run it from a terminal" >&2; exit 1; }
+
+echo "Public alert wall — $WALL_URL"
+run_python list "" "$BACKUP_DIR" "$PROJECT"
+
+while true; do
+  print_menu
+  read -r choice || { echo; break; }
+
+  case "${choice:-}" in
+    1)
+      run_python list "" "$BACKUP_DIR" "$PROJECT"
+      ;;
+    2)
+      if confirm "Delete EVERY alert on the public wall?"; then
+        run_python clear "" "$BACKUP_DIR" "$PROJECT"
+      else
+        echo "  cancelled"
+      fi
+      ;;
+    3)
+      if ask_count "How many of the newest should stay?"; then
+        if confirm "Keep the $COUNT newest and delete the rest?"; then
+          run_python keep "$COUNT" "$BACKUP_DIR" "$PROJECT"
+        else
+          echo "  cancelled"
+        fi
+      fi
+      ;;
+    4)
+      if ask_count "How many of the oldest should go?"; then
+        if confirm "Delete the $COUNT oldest?"; then
+          run_python oldest "$COUNT" "$BACKUP_DIR" "$PROJECT"
+        else
+          echo "  cancelled"
+        fi
+      fi
+      ;;
+    5)
+      if confirm "Keep only the newest alert per zone?"; then
+        run_python dedupe "" "$BACKUP_DIR" "$PROJECT"
+      else
+        echo "  cancelled"
+      fi
+      ;;
+    6)
+      if pick_backup && confirm "Restore from $(basename "$BACKUP_FILE")?"; then
+        run_python restore "$BACKUP_FILE" "$BACKUP_DIR" "$PROJECT"
+      fi
+      ;;
+    q|Q|quit|exit)
+      break
+      ;;
+    "")
+      ;;
+    *)
+      echo "  '$choice' is not an option — pick 1-6 or q"
+      ;;
   esac
 done
-set -- "${args[@]:-}"
 
-command="${1:-list}"
-require_python
-
-case "$command" in
-  list)
-    run_python list "" "$BACKUP_DIR" "$PROJECT"
-    ;;
-  clear)
-    confirm "Delete every alert on the public wall?" || { echo "  cancelled"; exit 0; }
-    run_python clear "" "$BACKUP_DIR" "$PROJECT"
-    echo "  wall: $WALL_URL"
-    ;;
-  keep|oldest)
-    [[ "${2:-}" =~ ^[0-9]+$ ]] || { echo "error: $command needs a number, e.g. $command 3" >&2; exit 1; }
-    confirm "Run '$command $2' against the public wall?" || { echo "  cancelled"; exit 0; }
-    run_python "$command" "$2" "$BACKUP_DIR" "$PROJECT"
-    ;;
-  dedupe)
-    confirm "Keep only the newest alert per zone?" || { echo "  cancelled"; exit 0; }
-    run_python dedupe "" "$BACKUP_DIR" "$PROJECT"
-    ;;
-  restore)
-    file="${2:-}"
-    if [[ -z "$file" ]]; then
-      file="$(ls -t "$BACKUP_DIR"/alerts-*.json 2>/dev/null | head -1 || true)"
-      [[ -n "$file" ]] || { echo "error: no backups in $BACKUP_DIR" >&2; exit 1; }
-    fi
-    confirm "Restore alerts from $(basename "$file")?" || { echo "  cancelled"; exit 0; }
-    run_python restore "$file" "$BACKUP_DIR" "$PROJECT"
-    ;;
-  *)
-    usage
-    exit 1
-    ;;
-esac
+echo "  wall: $WALL_URL"
