@@ -36,6 +36,10 @@ data_samples/
 # PowerPoint/Word lock files
 ~$*
 
+# Alert-wall snapshots taken before a destructive scripts/alert_wall.sh run.
+# Local safety net for demo recordings, not project history.
+.alert-backups/
+
 # Keynote's own copy of the deck. Opening the .pptx on macOS can leave one
 # behind, and twice it replaced the .pptx the submission actually needs.
 # The deck is submitted as .pptx in the prescribed template format.
