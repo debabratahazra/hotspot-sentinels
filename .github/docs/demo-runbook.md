@@ -286,7 +286,8 @@ town first, because the suggestions are real Google Places results.
 
 ### 3:05–3:30 · Close
 
-> [City map of analysed zones, then architecture slide or the repo]
+> [Scroll to the bottom, click **Refresh Recent Audits**, wait ~2 s for the
+> **City-wide heat map** to appear, then cut to the architecture slide or the repo]
 >
 > "Every zone analysed, on one map, coloured by risk — that's a city-wide
 > retrofit queue, ordered worst-first.
@@ -297,6 +298,43 @@ town first, because the suggestions are real Google Places results.
 >
 > That's HotSpot Sentinels."
 
+#### What the city map actually shows
+
+It is **not on screen by default**. It lives at the very bottom under *Recent
+municipal audits* and only renders after you click **Refresh Recent Audits**.
+That click is a cheap `/api/scans?limit=5` call, roughly two seconds — it runs no
+analysis and spends no model time.
+
+Verified on the deployed app on 2026-10-15, after the two analyses in this
+script, it draws exactly this:
+
+| Marker                | Where                      | Why it looks like that            |
+| --------------------- | -------------------------- | --------------------------------- |
+| **Large red dot**     | Pasir Panjang, lower left  | CRITICAL `#ff4d4f`, radius ∝ 8.6  |
+| **Small green dot**   | Botanic Gardens, upper right | LOW `#2dd4a7`, radius ∝ 1.5     |
+
+Two dots, two colours, two sizes, one city — that is the whole argument in one
+frame, and it is why the line "ordered worst-first" lands. Point the cursor at
+the red dot as you say it. The caption underneath spells out the legend
+(CRITICAL / HIGH / MODERATE / LOW and "marker size scales with HVI"), so you do
+not have to narrate the colour coding.
+
+Below the map it also renders a table of the five scans and an expander per
+scan. You do not need either on camera; the map alone carries the beat.
+
+**Two things that will spoil this shot:**
+
+- **Analyse only Singapore before recording.** The map auto-zooms to fit every
+  plotted point. Two Singapore points span about 0.07° and frame the island
+  nicely. Rehearse on Dhaka or Manila first and the span jumps past 20°, the
+  zoom drops to world level, and your two dots become specks in a map of Asia.
+- **Uploads never appear on it.** The map deliberately plots only scans whose
+  `image_source` is `google_maps`, because an uploaded image has coordinates the
+  model guessed — and it has guessed Los Angeles. So if you take the upload
+  fallback opener, the opener will be missing from this map and only the
+  contrast will show. With the upload opener, cut this beat and close on the
+  architecture slide instead.
+
 ### Beat summary
 
 | Time      | Beat          | Must land                                |
@@ -306,7 +344,7 @@ town first, because the suggestions are real Google Places results.
 | 0:35–1:02 | Run           | Gemini + real NOAA data, no thermal kit  |
 | 1:02–1:32 | Verdict       | **8.6 CRITICAL**, 65% asphalt, 0% canopy |
 | 1:30–1:50 | Alert wall    | The alert actually reached people        |
-| 1:50–2:15 | Blueprint     | 10,000 m², **10 °C** drop                |
+| 1:50–2:15 | Blueprint     | **300,000 m²**, **7.0 °C** drop          |
 | 2:15–2:45 | Contrast      | **1.5 LOW** — trees are the fix          |
 | 2:45–3:05 | Honest limits | inferred vs supplied, guard rails        |
 | 3:05–3:30 | Close         | Architecture + the one-line pitch        |
@@ -409,8 +447,14 @@ this out loud costs nothing and buys credibility that an overclaiming demo canno
 ## Reset between takes
 
 No reset is required. Every run appends a scan to Firestore and the dashboard
-reads the most recent ones, so repeated takes are additive and harmless. To see a
-clean "Recent municipal audits" list, simply do not press Refresh.
+reads the most recent ones, so repeated takes are additive and harmless.
+
+One caveat for the closing beat: it needs **Refresh Recent Audits** pressed, and
+that list shows the five most recent scans whichever take produced them. Repeated
+takes of the same two locations are fine — duplicates stack on the same two map
+points and still read as one red dot and one green one. Analysing a *different
+city* mid-rehearsal is what breaks the shot, by forcing the map to zoom out far
+enough to contain it.
 
 ## After recording
 
