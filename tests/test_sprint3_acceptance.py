@@ -111,14 +111,14 @@ def test_collected_tests_include_the_underlying_no_sys_path_invariant(pytestconf
 
 
 def test_guide_defines_climate_source_values_and_response_storage_placement():
-    guide = (ROOT / "COPILOT_GUIDE.md").read_text()
+    guide = (ROOT / ".github/COPILOT_GUIDE.md").read_text()
     assert "`climate_source`" in guide
     assert "`bigquery` \\| `fallback`" in guide or "`bigquery` | `fallback`" in guide
     assert "API response and the persisted scan" in guide
 
 
 def test_guide_and_nfr_1_document_us_noaa_only_location_exception():
-    guide = (ROOT / "COPILOT_GUIDE.md").read_text()
+    guide = (ROOT / ".github/COPILOT_GUIDE.md").read_text()
     requirements = (ROOT / "agile/requirements.md").read_text()
     region = next(line for line in guide.splitlines() if line.startswith("- Region:"))
     nfr = next(line for line in requirements.splitlines() if "**NFR-1 " in line)
@@ -157,7 +157,7 @@ def test_http_model_agrees_with_canonical_report_and_documented_provenance(api_e
     main = api_environment[0]
     for name, field in vision_analyzer.HotspotAnalysisResult.model_fields.items():
         assert main.AnalysisResponse.model_fields[name].annotation == field.annotation
-    assert "`climate_source`" in (ROOT / "COPILOT_GUIDE.md").read_text()
+    assert "`climate_source`" in (ROOT / ".github/COPILOT_GUIDE.md").read_text()
 
 
 def test_analysis_persists_scan_and_returns_generated_doc_id(api_environment, sample_png_bytes):

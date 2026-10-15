@@ -28,7 +28,7 @@ Budget real sprint capacity for this. It is the one epic that cannot be done at 
 - **Estimate:** 2 · **Priority:** P1 · **Status:** Not started
 - **Acceptance criteria:**
   - [ ] Opens with the problem, the approach, and the "Sustainability and Social Impact" theme fit in under 200 words
-  - [ ] Setup in copy-pasteable commands: venv, `pip install -r requirements.txt`, `./setup_gcp.sh`, `verify_setup.py`, uvicorn, streamlit
+  - [ ] Setup in copy-pasteable commands: venv, `pip install -r requirements.txt`, `./scripts/setup_gcp.sh`, `verify_setup.py`, uvicorn, streamlit
   - [ ] States the stack explicitly: Gemini 2.5 Flash on Vertex AI, Cloud Run, Firestore, Pub/Sub, BigQuery, `asia-southeast1`
   - [ ] Links the deployed URL and the epic catalogue
   - [ ] Contains no secrets, no project IDs, and no screenshots with a project ID visible

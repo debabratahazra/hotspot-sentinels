@@ -44,7 +44,7 @@ The script prints the API log path and the captured payload path on failure. Rea
 
 ## Prerequisites
 
-`.env` must exist (`./setup_gcp.sh`), dependencies installed (`pip install -r requirements.txt`), and `backend/main.py` must exist. Before Story 4.1 lands there is no API to test — run the `gcp-environment-doctor` skill instead.
+`.env` must exist (`./scripts/setup_gcp.sh`), dependencies installed (`pip install -r requirements.txt`), and `backend/main.py` must exist. Before Story 4.1 lands there is no API to test — run the `gcp-environment-doctor` skill instead.
 
 ## Constraints
 

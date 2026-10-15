@@ -8,7 +8,7 @@ tools: ["edit", "search", "runCommands", "problems"]
 
 Build the interactive heat visualizer for HotSpot Sentinels (Epic 5 / Story 5.1).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md). The UI consumes the FastAPI service from Epic 4.
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md). The UI consumes the FastAPI service from Epic 4.
 
 ## Target file
 

@@ -8,7 +8,7 @@ tools: ["edit", "search", "runCommands", "problems"]
 
 Build the mock satellite asset seeder for HotSpot Sentinels (Epic 1 / Story 1.2).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md).
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md).
 
 ## Target file
 
@@ -30,7 +30,7 @@ Each scene should be visually distinguishable enough that a vision model can inf
 - Upload to the bucket named by the `GCS_BUCKET_NAME` env var using `google.cloud.storage`, under a `samples/` prefix.
 - If `GCS_BUCKET_NAME` is unset or the upload fails, log a clear warning and still exit successfully with local files written — the seeder must work offline.
 - Expose `generate_samples() -> list[Path]` and `upload_samples(paths: list[Path]) -> list[str]`, wired together under `if __name__ == "__main__":`.
-- Use `python-dotenv` to load `.env` so the script matches the env produced by [setup_gcp.sh](../../setup_gcp.sh).
+- Use `python-dotenv` to load `.env` so the script matches the env produced by [setup_gcp.sh](../../scripts/setup_gcp.sh).
 
 ## Done when
 

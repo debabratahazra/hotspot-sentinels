@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 cd "$ROOT"
 
-[[ -f .env ]] || { echo "No .env — run ./setup_gcp.sh first" >&2; exit 1; }
+[[ -f .env ]] || { echo "No .env — run ./scripts/setup_gcp.sh first" >&2; exit 1; }
 set -a; source .env; set +a
 
 SERVICE="${SERVICE_NAME:-hotspot-backend}"

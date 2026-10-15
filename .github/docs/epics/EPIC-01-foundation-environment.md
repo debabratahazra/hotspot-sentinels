@@ -3,11 +3,11 @@
 |                |                                                                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | Every developer and every agent can reach Google Cloud, read configuration from one place, and import the backend packages without surprises. |
-| **Source**     | [COPILOT_GUIDE.md](../../../COPILOT_GUIDE.md) §2 Hard Technical Constraints; [setup_gcp.sh](../../../setup_gcp.sh)                            |
+| **Source**     | [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) §2 Hard Technical Constraints; [setup_gcp.sh](../../../scripts/setup_gcp.sh)                            |
 | **Priority**   | P1                                                                                                                                            |
 | **Status**     | In progress                                                                                                                                   |
 | **Depends on** | —                                                                                                                                             |
-| **Delivers**   | `setup_gcp.sh`, `.env`, `requirements.txt`, `.gitignore`, `backend/verify_setup.py`, package `__init__.py` files                              |
+| **Delivers**   | `scripts/setup_gcp.sh`, `.env`, `requirements.txt`, `.gitignore`, `backend/verify_setup.py`, package `__init__.py` files                              |
 
 ## Why this epic exists
 
@@ -49,13 +49,13 @@ Each story has a detailed specification with Given/When/Then acceptance criteria
 | 1.5   | [US-01.5 Backend package layout](../user-stories/US-01.5-backend-package-layout.md)                     | P1       | 1   | In progress |
 
 ### Story 1.1 — GCP provisioning script
-- **File:** `setup_gcp.sh`
+- **File:** `scripts/setup_gcp.sh`
 - **Estimate:** 2 · **Priority:** P1 · **Status:** Done
 - **Acceptance criteria:**
   - [x] Enables aiplatform, run, storage, bigquery, pubsub, firestore APIs
   - [x] Creates the GCS bucket, Pub/Sub topic, and Firestore native database in `asia-southeast1` if absent, and is safe to re-run
   - [x] Writes `.env` with all five core variables
-- **Known gaps:** does not emit `ALLOWED_ORIGINS`; [Epics_Stories.md](../../../Epics_Stories.md) refers to `setup_gcp.zsh`, the real filename is `setup_gcp.sh`.
+- **Known gaps:** does not emit `ALLOWED_ORIGINS`; [Epics_Stories.md](./Epics_Stories.md) refers to `setup_gcp.zsh`, the real filename is `scripts/setup_gcp.sh`.
 
 ### Story 1.2 — Vertex AI connectivity check
 - **File:** `backend/verify_setup.py`
@@ -95,7 +95,7 @@ Each story has a detailed specification with Given/When/Then acceptance criteria
 
 ## Definition of done
 
-`./setup_gcp.sh` provisions cleanly from scratch, `python backend/verify_setup.py` prints a Gemini response and exits 0, `python3 .github/skills/gcp-environment-doctor/scripts/doctor.py` reports all green, and `git status` is free of secrets.
+`./scripts/setup_gcp.sh` provisions cleanly from scratch, `python backend/verify_setup.py` prints a Gemini response and exits 0, `python3 .github/skills/gcp-environment-doctor/scripts/doctor.py` reports all green, and `git status` is free of secrets.
 
 ## Risks
 

@@ -8,7 +8,7 @@ tools: ["edit", "search", "problems"]
 
 Build the climate telemetry retriever for HotSpot Sentinels (Epic 2 / Story 2.1).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md).
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md).
 
 ## Target file
 

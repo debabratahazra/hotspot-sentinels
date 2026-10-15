@@ -1,6 +1,6 @@
 # HotSpot Sentinels — Epic Catalogue
 
-Every epic required to take this project from an empty workspace to a submitted hackathon entry. Each document is the authoritative scope for its epic; [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) remains the authority on technical constraints and the Heat Analysis Result schema.
+Every epic required to take this project from an empty workspace to a submitted hackathon entry. Each document is the authoritative scope for its epic; [COPILOT_GUIDE.md](../COPILOT_GUIDE.md) remains the authority on technical constraints and the Heat Analysis Result schema.
 
 Progress below is derived from [agile/backlog.json](../../agile/backlog.json), which is the source of truth. EPIC-10 onwards were added after this catalogue was first written and have no separate scope document; their stories live in the backlog.
 
@@ -52,7 +52,7 @@ EPIC-08 runs alongside 02–07 rather than after them — tests are written in t
 
 ## Traceability to the original backlog
 
-[Epics_Stories.md](../../Epics_Stories.md) defined five build epics. This catalogue keeps all of them and adds the four an end-to-end delivery needs.
+[Epics_Stories.md](./epics/Epics_Stories.md) defined five build epics. This catalogue keeps all of them and adds the four an end-to-end delivery needs.
 
 | Original                           | Here                                                                  |
 | ---------------------------------- | --------------------------------------------------------------------- |
@@ -62,7 +62,7 @@ EPIC-08 runs alongside 02–07 rather than after them — tests are written in t
 | Epic 4 FastAPI Service (Story 4.1) | EPIC-05                                                               |
 | Epic 4 Docker (Story 4.2)          | EPIC-06, expanded to cover deploy, IAM and verification               |
 | Epic 5 Streamlit UI                | EPIC-07                                                               |
-| —                                  | EPIC-01 Foundation, implied by `setup_gcp.sh` but never scoped        |
+| —                                  | EPIC-01 Foundation, implied by `scripts/setup_gcp.sh` but never scoped        |
 | —                                  | EPIC-08 QA, required by the coverage reporting in the sprint workflow |
 | —                                  | EPIC-09 Demo & submission, the actual hackathon deliverable           |
 

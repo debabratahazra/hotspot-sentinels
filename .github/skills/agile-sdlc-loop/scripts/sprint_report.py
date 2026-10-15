@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[4]
 BACKLOG = ROOT / "agile" / "backlog.json"
 REPORTS = ROOT / "agile" / "reports"
-COVERAGE_JSON = ROOT / "coverage.json"
+COVERAGE_JSON = ROOT / "reports" / "coverage.json"
 COVERAGE_CONFIG = ROOT / "tests" / "coverage.ini"
 
 

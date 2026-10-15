@@ -3,7 +3,7 @@
 |                |                                                                                                                                                       |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | Make urban heat risk obvious in ten seconds: an aerial image, an HVI badge, a passive cooling blueprint, and an alert banner when a zone is critical. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 5                                                                                                  |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 5                                                                                                  |
 | **Priority**   | P1                                                                                                                                                    |
 | **Status**     | Not started                                                                                                                                           |
 | **Depends on** | EPIC-05                                                                                                                                               |

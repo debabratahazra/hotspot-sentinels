@@ -8,7 +8,7 @@ tools: ["edit", "search", "problems"]
 
 Build the event-driven alert publisher for HotSpot Sentinels (Epic 3 / Story 3.1).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md).
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md).
 
 ## Target file
 

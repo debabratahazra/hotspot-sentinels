@@ -13,7 +13,7 @@ ANALYZE_JSON="$(mktemp -t hotspot-analyze)"
 log() { printf '\n==> %s\n' "$1"; }
 fail() { printf '\nFAIL: %s\n' "$1" >&2; exit 1; }
 
-[[ -f .env ]] || fail "No .env — run ./setup_gcp.sh first"
+[[ -f .env ]] || fail "No .env — run ./scripts/setup_gcp.sh first"
 [[ -d venv ]] && source venv/bin/activate
 
 log "1/6 Environment"

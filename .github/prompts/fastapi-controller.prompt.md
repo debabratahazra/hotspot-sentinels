@@ -8,7 +8,7 @@ tools: ["edit", "search", "runCommands", "problems"]
 
 Build the agentic API controller for HotSpot Sentinels (Epic 4 / Story 4.1).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md). All routes are `async def`.
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md). All routes are `async def`.
 
 ## Target file
 

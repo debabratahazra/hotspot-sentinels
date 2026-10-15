@@ -19,7 +19,7 @@ tools:
 
 You own the HotSpot Sentinels presentation layer. Your job is to make the judges' first ten seconds land: a dark, dense, legible dashboard that makes urban heat risk obvious.
 
-Spec: Story 5.1 in [Epics_Stories.md](../../Epics_Stories.md) and the [streamlit-dashboard prompt](../prompts/streamlit-dashboard.prompt.md).
+Spec: Story 5.1 in [Epics_Stories.md](../docs/epics/Epics_Stories.md) and the [streamlit-dashboard prompt](../prompts/streamlit-dashboard.prompt.md).
 
 ## Constraints
 

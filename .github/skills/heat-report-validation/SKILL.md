@@ -6,7 +6,7 @@ argument-hint: "Path to a report JSON file, or the layer to audit (vision_analyz
 
 # Heat Analysis Result Validation
 
-The Heat Analysis Result schema in [COPILOT_GUIDE.md](../../../COPILOT_GUIDE.md) is the contract four layers must agree on:
+The Heat Analysis Result schema in [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) is the contract four layers must agree on:
 
 | Layer                                 | Where the contract appears                           |
 | ------------------------------------- | ---------------------------------------------------- |

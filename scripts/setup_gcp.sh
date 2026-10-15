@@ -6,6 +6,10 @@
 
 set -e # Exit immediately on error
 
+# The script lives in scripts/ but every path it writes belongs to the repository
+# root, so resolve that rather than trusting the caller's working directory.
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
 echo "=========================================="
 echo " Starting HotSpot Sentinels GCP Setup"
 echo "=========================================="
@@ -84,7 +88,7 @@ gcloud firestore databases describe --format="value(name)" >/dev/null 2>&1 || {
 
 # 6. Generate local .env file
 echo "\n[Step 5/5] Generating local .env configuration..."
-cat << EOF > .env
+cat << EOF > "$ROOT/.env"
 GOOGLE_CLOUD_PROJECT=${PROJECT_ID}
 GOOGLE_CLOUD_REGION=${REGION}
 GCS_BUCKET_NAME=${BUCKET_NAME}
@@ -106,5 +110,6 @@ EOF
 echo "\n=========================================="
 echo " [SUCCESS] HotSpot Sentinels GCP Environment Configured"
 echo " Project: $PROJECT_ID | Region: $REGION"
+echo " Wrote: $ROOT/.env"
 echo " Run 'python backend/verify_setup.py' to run end-to-end check."
 echo "=========================================="

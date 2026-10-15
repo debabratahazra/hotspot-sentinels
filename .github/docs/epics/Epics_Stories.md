@@ -76,7 +76,7 @@
 
 ### Step-by-Step Execution Sequence in VS Code
 
-1. Run `source setup_gcp.sh` inside the VS Code integrated terminal to ensure all credentials and `.env` variables are active.
-2. Create `COPILOT_GUIDE.md` in the project root.
+1. Run `source scripts/setup_gcp.sh` inside the VS Code integrated terminal to ensure all credentials and `.env` variables are active.
+2. Read `.github/COPILOT_GUIDE.md`, which carries the hard constraints and the Heat Analysis Result schema.
 3. Open VS Code Copilot Chat and start with **Story 1.1**, letting Copilot scaffold `backend/services/vision_analyzer.py`.
 4. Proceed sequentially through Epics 1 to 5. Run tests at each step using `python backend/main.py` and `streamlit run frontend/app.py`.

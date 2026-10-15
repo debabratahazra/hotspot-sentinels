@@ -42,7 +42,7 @@ config=types.GenerateContentConfig(
 )
 ```
 
-The schema must match the Heat Analysis Result Schema in [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) exactly — same keys, same nesting, metric units.
+The schema must match the Heat Analysis Result Schema in [COPILOT_GUIDE.md](../COPILOT_GUIDE.md) exactly — same keys, same nesting, metric units.
 
 ## HVI rubric
 

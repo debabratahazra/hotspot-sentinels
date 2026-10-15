@@ -7,7 +7,7 @@ tools: ["edit", "search", "runCommands"]
 
 Write the Cloud Run container definition for HotSpot Sentinels (Epic 4 / Story 4.2).
 
-Project rules: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md).
+Project rules: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md).
 
 ## Target files
 

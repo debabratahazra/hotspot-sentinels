@@ -3,7 +3,7 @@
 |                |                                                                                                                                                        |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Goal**       | Turn an aerial image plus an ambient temperature into a contract-valid Heat Analysis Result: surface breakdown, HVI score, and a passive cooling plan. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 1; [COPILOT_GUIDE.md](../../../COPILOT_GUIDE.md) §3                                                 |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 1; [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) §3                                                 |
 | **Priority**   | P1                                                                                                                                                     |
 | **Status**     | In progress                                                                                                                                            |
 | **Depends on** | EPIC-01                                                                                                                                                |

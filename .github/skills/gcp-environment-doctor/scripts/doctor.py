@@ -45,11 +45,11 @@ def read_env_file() -> dict:
 
 def main() -> int:
     env_file = read_env_file()
-    check(".env exists", bool(env_file), f"{len(env_file)} key(s)", "Run ./setup_gcp.sh")
+    check(".env exists", bool(env_file), f"{len(env_file)} key(s)", "Run ./scripts/setup_gcp.sh")
 
     for key in REQUIRED_ENV:
         present = bool(env_file.get(key) or os.getenv(key))
-        check(f".env has {key}", present, "", "Re-run ./setup_gcp.sh to regenerate .env")
+        check(f".env has {key}", present, "", "Re-run ./scripts/setup_gcp.sh to regenerate .env")
 
     region = env_file.get("GOOGLE_CLOUD_REGION", os.getenv("GOOGLE_CLOUD_REGION", ""))
     check("region is asia-southeast1", region == "asia-southeast1", region or "(unset)",
@@ -76,7 +76,7 @@ def main() -> int:
     configured = env_file.get("GOOGLE_CLOUD_PROJECT", "")
     check("gcloud project matches .env", bool(active_project) and active_project == configured,
           f"gcloud={active_project or '(unset)'} .env={configured or '(unset)'}",
-          f"gcloud config set project {configured}" if configured else "Run ./setup_gcp.sh")
+          f"gcloud config set project {configured}" if configured else "Run ./scripts/setup_gcp.sh")
 
     code, enabled, _ = gcloud("services", "list", "--enabled", "--format=value(config.name)", timeout=60)
     if code == 0:

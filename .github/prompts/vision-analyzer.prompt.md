@@ -8,7 +8,7 @@ tools: ["edit", "search", "problems"]
 
 Implement the multimodal vision inference module for HotSpot Sentinels (Epic 1 / Story 1.1).
 
-Authoritative spec: [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md). Follow its hard technical constraints and reproduce the **Heat Analysis Result Schema** field-for-field.
+Authoritative spec: [COPILOT_GUIDE.md](../COPILOT_GUIDE.md). Follow its hard technical constraints and reproduce the **Heat Analysis Result Schema** field-for-field.
 
 ## Target file
 

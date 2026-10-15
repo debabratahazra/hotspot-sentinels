@@ -3,7 +3,7 @@
 |                |                                                                                                                      |
 | -------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | Persist every scan for later review, and page someone automatically when a zone crosses the critical heat threshold. |
-| **Source**     | [Epics_Stories.md](../../../Epics_Stories.md) Epic 3                                                                 |
+| **Source**     | [Epics_Stories.md](./Epics_Stories.md) Epic 3                                                                 |
 | **Priority**   | P1                                                                                                                   |
 | **Status**     | Not started                                                                                                          |
 | **Depends on** | EPIC-01                                                                                                              |
