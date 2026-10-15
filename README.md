@@ -65,7 +65,7 @@ The whole test suite and the container run with **no credentials**:
 
 ```bash
 uv sync --group frontend --group dev          # or: pip install -r requirements.txt
-pytest                                        # 685 tests, fully offline
+pytest                                        # 815 tests, fully offline
 
 # Build either image: both run as a non-root user and need no credentials.
 docker build -f backend/Dockerfile backend
@@ -89,8 +89,8 @@ streamlit run frontend/app.py
 
 |                  |                                                                                                                                                                                                                                                                                                           |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tests            | **685 passing**, every one offline with mocked cloud clients                                                                                                                                                                                                                                              |
-| Backend coverage | **98.2%**, no file below the 70% per-file floor                                                                                                                                                                                                                                                           |
+| Tests            | **815 passing**, every one offline with mocked cloud clients                                                                                                                                                                                                                                              |
+| Backend coverage | **96.4%**, no file below the 70% per-file floor                                                                                                                                                                                                                                                           |
 | Schema drift     | a standing cross-layer gate statically fails the build if the analyzer, the API and the dashboard disagree                                                                                                                                                                                                |
 | Containers       | both multi-stage and non-root (uid 10001), honouring the `PORT` Cloud Run injects, with no credentials or build tooling in either image                                                                                                                                                                   |
 | Deploy           | one script builds, deploys and verifies **both** services, each with its own build context and its own health endpoint                                                                                                                                                                                    |
@@ -136,7 +136,7 @@ Every cloud dependency degrades rather than fails: BigQuery falls back to a labe
 
 ## API client guide
 
-Three endpoints. Errors share one shape: `{"code": "...", "message": "..."}`.
+Eight endpoints. Errors share one shape: `{"code": "...", "message": "..."}`.
 
 ```bash
 curl -X POST "$API/api/analyze" \
@@ -166,6 +166,8 @@ Anything you omit is inferred by Gemini, and `identity_source` tells you per fie
 | `503`  | scan storage is unavailable                                    |
 
 `GET /api/scans?limit=N` returns recent scans newest-first, `limit` clamped to 1..100. `GET /api/health` reports per-dependency readiness; `GET /api/live` is a cheap liveness check with no cloud calls — use that one for container restart probes.
+
+`GET /api/imagery?lat=&lng=` serves the satellite image an analysis already fetched, cached for an hour. It is deliberately **cache-only**: a miss returns `502` rather than spending Maps quota, so opening a scan can never bill a fresh fetch.
 
 `GET /api/places/suggest?q=Karol+Ba` powers the dashboard's typeahead:
 
@@ -296,7 +298,9 @@ backend/
 frontend/app.py            Streamlit dashboard
 public/index.html          Firebase-hosted public alert wall
 firestore.rules            public_alerts is world-readable, never writable
-scripts/                   GCP provisioning and demo-time helpers
+scripts/
+  setup_gcp.sh             Provisions GCP and writes .env
+  alert_wall.sh            Menu-driven alert-wall cleanup for demo recordings
 tools/                     deck and diagram generators (not shipped)
 tests/                     pytest suite
 data_samples/              Generated test images (git-ignored)
@@ -322,6 +326,7 @@ Consequences worth knowing:
 - **No `sys.path` manipulation anywhere.** No `sys.path.append`, no `sys.path.insert`, and no `conftest.py` that mutates the path. `tests/test_package_layout.py::test_no_sys_path_manipulation` fails the build if one appears.
 - **`testpaths = ["tests"]`** keeps collection out of `backend/`, so no script placed there can be auto-collected and make live cloud calls during a test run. The former ad-hoc scripts `backend/test_analyzer.py` and `backend/test_pipeline.py` were retired in sprint 7; their coverage now lives in the opt-in `pipeline-smoke-test` workflow, and `tests/test_foundation.py::test_no_cloud_calling_scripts_live_under_backend` fails the build if either returns.
 - **Layering is one-way.** `main` orchestrates; modules under `services/` and `tools/` import neither `main` nor each other. A service must not import a sibling service, and a tool must not import a service. `tests/test_package_layout.py::test_service_layer_does_not_import_main` enforces this.
+- **Nothing here is an installable package.** `backend/` and `frontend/` are run directly, so `pyproject.toml` sets `[tool.uv] package = false` and there is no build backend and no `src/` tree. `uv.lock` records the project as `virtual`.
 
 ## Tests
 
@@ -338,7 +343,7 @@ Every push and pull request runs five independent checks, all without cloud cred
 
 | Check                                    | What it guards                                       |
 | ---------------------------------------- | ---------------------------------------------------- |
-| Offline suite and coverage floor         | 685 tests plus a per-file 70% floor                  |
+| Offline suite and coverage floor         | 815 tests plus a per-file 70% floor                  |
 | Generated dependency exports are current | the three `requirements.txt` exports match `uv.lock` |
 | Build backend image                      | `backend/Dockerfile`, `linux/amd64`                  |
 | Build frontend image                     | `frontend/Dockerfile`, `linux/amd64`                 |
@@ -356,7 +361,7 @@ Four items are deliberately open. Each needs a human decision or unimplemented f
 | ----------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TASK-006`  | the demo recording                       | Everything else in the submission package is done and evidenced: the repository is public with no secrets in history, the deployed URL is reachable, and the contract audit is clean. Only the 3-minute video is outstanding, and it needs a person. See [demo-runbook.md](.github/docs/demo-runbook.md) and [docs/submission-checklist.md](docs/submission-checklist.md). |
 | `STORY-031` | scan records linked to retained imagery  | `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record still carries no object URI, so you cannot retrieve the exact image a given scan used. The storage path now exists; the linkage does not.                                                                                                                                    |
-| `TASK-011`  | correction of protected foundation specs | `.github/COPILOT_GUIDE.md` and `.github/docs/epics/Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                                             |
+| `TASK-011`  | correction of protected foundation specs | `.github/COPILOT_GUIDE.md` and `.github/docs/epics/Epics_Stories.md` are human-owned and carry statements that predate later ratified decisions. They need an editor with authority over those documents.                                                                                                                                                                  |
 | `STORY-048` | operator sign-in (Firebase Auth)         | Deliberately deprioritised. A login wall adds friction to a judged demo for little evaluation value, and the dashboard holds no per-user data to protect. The public alert wall is already read-only by Firestore rule rather than by authentication.                                                                                                                      |
 
 ### Recently closed
