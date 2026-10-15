@@ -27,6 +27,11 @@ htmlcov/
 # Generated assets
 data_samples/
 
+# Demo recording masters. The submitted cut is hosted on YouTube; the local file
+# is ~210 MB, over GitHub's 100 MB per-file limit, so committing it would wedge
+# the push and bake an unremovable blob into history.
+docs/video/
+
 # OS
 .DS_Store
 
