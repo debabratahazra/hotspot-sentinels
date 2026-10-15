@@ -3,11 +3,11 @@
 |                |                                                                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Goal**       | Every developer and every agent can reach Google Cloud, read configuration from one place, and import the backend packages without surprises. |
-| **Source**     | [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) §2 Hard Technical Constraints; [setup_gcp.sh](../../../scripts/setup_gcp.sh)                            |
+| **Source**     | [COPILOT_GUIDE.md](../../COPILOT_GUIDE.md) §2 Hard Technical Constraints; [setup_gcp.sh](../../../scripts/setup_gcp.sh)                       |
 | **Priority**   | P1                                                                                                                                            |
 | **Status**     | In progress                                                                                                                                   |
 | **Depends on** | —                                                                                                                                             |
-| **Delivers**   | `scripts/setup_gcp.sh`, `.env`, `requirements.txt`, `.gitignore`, `backend/verify_setup.py`, package `__init__.py` files                              |
+| **Delivers**   | `scripts/setup_gcp.sh`, `.env`, `requirements.txt`, `.gitignore`, `backend/verify_setup.py`, package `__init__.py` files                      |
 
 ## Why this epic exists
 
