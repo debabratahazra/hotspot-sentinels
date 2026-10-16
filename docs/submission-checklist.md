@@ -11,9 +11,9 @@ Prototype module closes **2026-10-18**. An earlier revision of this file recorde
 | Repository shared with no secrets in history | **MET**                            | `github.com/debabratahazra/hotspot-sentinels`, public. gitleaks v8.21.2 scanned the full history: no leaks, and it now runs as a required check on every push and pull request. `.env` never committed; `.env.example` carries `GOOGLE_MAPS_API_KEY` with an empty value. |
 | Deployed URL reachable                       | **MET**                            | `/api/live` 200, `/api/health` `operational` with gemini, firestore, pubsub and bigquery all `ready`. Frontend `/_stcore/health` ok.                                                                                                                                      |
 | Contract audit clean                         | **MET** — see reconciliation below | Full audit run 2026-10-04; no finding survived reconciliation as a genuine contract violation.                                                                                                                                                                            |
-| Recording uploaded                           | **OUTSTANDING**                    | Needs a human. Follow [demo-runbook.md](../.github/docs/demo-runbook.md).                                                                                                                                                                                                 |
+| Recording uploaded                           | **MET**                            | Recorded, uploaded unlisted and verified reachable signed-out: the YouTube oEmbed endpoint resolves the title without credentials, which it refuses to do for a Private video. The URL is on slide 13 of the deck.                                                        |
 
-**One item remains: the recording.** Everything else is done and evidenced.
+**Submitted 2026-10-16.** All four acceptance criteria are met.
 
 ## Live system
 
@@ -21,8 +21,8 @@ Prototype module closes **2026-10-18**. An earlier revision of this file recorde
 | ----------------- | ------------------------------------------------------------------------ |
 | Dashboard         | https://hotspot-frontend-153692178986.asia-southeast1.run.app            |
 | Backend           | https://hotspot-backend-153692178986.asia-southeast1.run.app             |
-| Backend revision  | `hotspot-backend-00009-bvp`                                              |
-| Frontend revision | `hotspot-frontend-00008-snq`                                             |
+| Backend revision  | `hotspot-backend-00035-c5s`                                              |
+| Frontend revision | `hotspot-frontend-00030-vtq`                                             |
 | Runtime identity  | `hotspot-run@…` — six narrow roles, no editor or owner, zero key files   |
 | Region            | `asia-southeast1` (sole exception: `BIGQUERY_LOCATION=US` for NOAA GSOD) |
 
@@ -63,14 +63,20 @@ Stated plainly rather than omitted. None of these is a defect; each needs a huma
 
 | Item        | Missing                                                                                            | Impact on the submission                                                                                                       |
 | ----------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `TASK-006`  | the 3-minute recording                                                                             | **Blocks submission.** Everything else in the package is done and evidenced.                                                   |
 | `STORY-031` | scan records linked to retained imagery                                                            | None. `TASK-046` introduced durable imagery storage under deterministic prefixes, but a scan record carries no object URI yet. |
 | `TASK-011`  | correction of the human-owned `.github/COPILOT_GUIDE.md` and `.github/docs/epics/Epics_Stories.md` | None on the running system; those documents carry statements predating later ratified decisions.                               |
 
 `STORY-043` and `TASK-046` were closed on 2026-10-05 and verified live — see Quality evidence above.
 
-## Before submitting
+## Submitted
 
-1. Record the demo with [demo-runbook.md](../.github/docs/demo-runbook.md) — run the pre-flight first; the imagery cache goes cold when Cloud Run scales to zero.
-2. Re-verify the deployed URL on the day. A revision that was healthy a week earlier is not evidence it is healthy now.
-3. Restore autoscaling after recording: `gcloud run services update hotspot-backend --region asia-southeast1 --max-instances=3`.
+Submitted on **2026-10-16**, two days inside the 2026-10-18 close.
+
+Re-verified on the day of submission rather than assumed from an earlier sprint:
+`/api/health` returned `operational` with gemini, firestore, pubsub and bigquery
+all `ready`, on revisions `hotspot-backend-00035-c5s` and
+`hotspot-frontend-00030-vtq`.
+
+No autoscaling restore was needed. Both services already run at `maxScale=3`;
+the demo stopped pinning `--max-instances=1` once `TASK-046` moved the imagery
+cache into Cloud Storage, so there was no demo-time setting left to undo.
