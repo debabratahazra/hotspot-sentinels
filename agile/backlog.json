@@ -1218,12 +1218,12 @@
       "acceptance_criteria": [],
       "priority": "P1",
       "estimate": 11,
-      "status": "groomed",
+      "status": "done",
       "sprint": null,
       "files": [],
       "source": "manual",
       "created": "2026-10-01T05:14:35+00:00",
-      "updated": "2026-10-03T08:50:47+00:00"
+      "updated": "2026-10-16T00:00:00+00:00"
     },
     {
       "id": "STORY-026",
@@ -1298,7 +1298,7 @@
       "type": "task",
       "parent": "EPIC-009",
       "title": "Assemble and submit the competition package",
-      "description": "FR-28. OQ-4 answered 2026-10-04: deadline 2026-10-11, 3-minute recording cap, and sharing satisfied by GitHub or any Google-provided repository so no hosting migration is needed. Depends on STORY-028 for the recording. The deployed URL criterion is already met by the live backend revision and must be re-verified immediately before submission rather than assumed from this sprint's check. Secret-scan the full git history before sharing; the repository has never been pushed, so this is the first exposure of .env handling to a public remote.",
+      "description": "FR-28. SUBMITTED 2026-10-16, two days inside the 2026-10-18 close. The earlier 2026-10-11 deadline recorded against OQ-4 was wrong; the live portal date superseded it. All four criteria met: repository public with a clean gitleaks scan of full history; /api/health re-verified operational on the day of submission on revisions hotspot-backend-00035-c5s and hotspot-frontend-00030-vtq rather than assumed from an earlier sprint; recording uploaded unlisted and confirmed reachable signed-out via the YouTube oEmbed endpoint, which refuses Private videos; contract audit clean. Deck carries the repository, video, dashboard, alert-wall and health URLs.",
       "acceptance_criteria": [
         "repository shared with no secrets in history",
         "deployed URL reachable",
@@ -1307,14 +1307,14 @@
       ],
       "priority": "P1",
       "estimate": 2,
-      "status": "in_progress",
+      "status": "done",
       "sprint": null,
       "files": [
         "docs/submission-checklist.md"
       ],
       "source": "requirements",
       "created": "2026-10-01T05:14:36+00:00",
-      "updated": "2026-10-04T14:09:19+00:00"
+      "updated": "2026-10-16T00:00:00+00:00"
     },
     {
       "id": "STORY-029",

@@ -54,14 +54,14 @@ Budget real sprint capacity for this. It is the one epic that cannot be done at 
   - [ ] Rehearsed end to end at least once before recording
 
 ### Story 9.4 — Submission package
-- **Estimate:** 2 · **Priority:** P1 · **Status:** Not started
+- **Estimate:** 2 · **Priority:** P1 · **Status:** Done (submitted 2026-10-16)
 - **Acceptance criteria:**
-  - [ ] Repository public or shared as the rules require, with no secrets in history
-  - [ ] Deployed Cloud Run URL reachable and warm
-  - [ ] Demo recording produced and uploaded
-  - [ ] Every competition form field completed
-  - [ ] Final `contract-auditor` run is clean and the latest sprint report is committed
-  - [ ] Submitted before the deadline, not at it
+  - [x] Repository public or shared as the rules require, with no secrets in history
+  - [x] Deployed Cloud Run URL reachable and warm
+  - [x] Demo recording produced and uploaded
+  - [x] Every competition form field completed
+  - [x] Final `contract-auditor` run is clean and the latest sprint report is committed
+  - [x] Submitted before the deadline, not at it
 
 ## Definition of done
 
